@@ -1,0 +1,8 @@
+{
+  "database_restore": "passed",
+  "schema_revision": "0001",
+  "products_restored": 1320,
+  "image_references_verified": 1320,
+  "media_archive_restore": "passed",
+  "target": "isolated temporary PostgreSQL database; not production"
+}

@@ -1,0 +1,66 @@
+name: Verify MVP
+on:
+  push:
+  pull_request:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: fashion
+          POSTGRES_PASSWORD: ephemeral-ci-only
+          POSTGRES_DB: fashion_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fashion -d fashion_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://fashion:ephemeral-ci-only@localhost:5432/fashion_test
+      TEST_DATABASE_URL: postgresql+psycopg://fashion:ephemeral-ci-only@localhost:5432/fashion_test
+      MEDIA_ROOT: /tmp/styleai-ci-media
+      APP_ORIGIN: http://localhost:3000
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: pip install -r apps/api/requirements.txt
+      - run: ruff check apps/api scripts && ruff format --check apps/api
+      - run: pytest -q
+        working-directory: apps/api
+      - run: alembic check
+        working-directory: apps/api
+      - run: python scripts/export_openapi.py && git diff --exit-code contracts/openapi.json
+      - run: npm ci
+        working-directory: apps/web
+      - run: node scripts/generate-client.mjs
+      - run: git diff --exit-code packages/api-client/schema.d.ts apps/web/src/lib/schema.d.ts
+      - run: npm run format:check
+        working-directory: apps/web
+      - run: npm run typecheck && npm run build
+        working-directory: apps/web
+      - run: python -m app.seed demo
+        working-directory: apps/api
+      - run: uvicorn app.main:app --host 127.0.0.1 --port 8000 > /tmp/styleai-api.log 2>&1 &
+        working-directory: apps/api
+      - run: npm run start > /tmp/styleai-web.log 2>&1 &
+        working-directory: apps/web
+      - run: npx playwright install --with-deps chromium && npm run test:e2e
+        working-directory: apps/web
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: failure-evidence
+          path: |
+            apps/web/test-results
+            /tmp/styleai-api.log
+            /tmp/styleai-web.log

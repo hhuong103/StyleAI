@@ -1,0 +1,22 @@
+{
+  "license": "https://unsplash.com/license",
+  "usage": "Fashion inspiration photography, not photographs of the synthetic catalog inventory. Downloaded as WebP; no external requests at runtime.",
+  "photos": [
+    {
+      "file": "clean-edit.webp",
+      "author": "Rodrigo Rodrigues | WOLF Λ R T",
+      "source": "https://unsplash.com/photos/woman-in-beige-suit-leaning-on-railing-outside-building-g9ppKmYxtEo",
+      "image": "https://images.unsplash.com/photo-1763259405593-d30c6b820a3d"
+    },
+    {
+      "file": "everyday-edit.webp",
+      "author": "Tamara Bellis",
+      "source": "https://unsplash.com/photos/woman-in-white-shirt-and-blue-denim-bottoms-facing-the-wall-Gs4Ht2QUU1I",
+      "image": "https://images.unsplash.com/photo-1509003124559-eb6678fe452b"
+    },
+    {
+      "file": "city-edit.webp",
+      "source": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b"
+    }
+  ]
+}

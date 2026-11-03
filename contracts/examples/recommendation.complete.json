@@ -1,0 +1,574 @@
+{
+  "data": {
+    "recommendation_id": "20000000-0000-4000-8000-000000000001",
+    "status": "COMPLETE",
+    "algorithm_version": "weighted-v1+composer-v1",
+    "currency": "VND",
+    "budget_max_vnd": 1500000,
+    "slot_results": [
+      {
+        "slot_key": "top",
+        "role": "TOP",
+        "requested_categories": [
+          "SHIRT"
+        ],
+        "items": [
+          {
+            "recommendation_item_id": "60000000-0000-4000-8000-000000000001",
+            "product_id": "50000000-0000-4000-8000-000000000001",
+            "variant_id": "30000000-0000-4000-8000-000000000001",
+            "rank": 1,
+            "score": 0.9751,
+            "score_components": {
+              "category_match": 1,
+              "style_match": 1,
+              "color_match": 1,
+              "occasion_match": 1,
+              "budget_fit": 0.834
+            },
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "SHIRT"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "WHITE"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 249000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "product": {
+              "product_code": "DEMO_0001",
+              "name": "White Shirt",
+              "brand": "Demo",
+              "category": "SHIRT",
+              "gender": "FEMALE",
+              "color": "WHITE",
+              "size_code": "ONE_SIZE",
+              "price_vnd": 249000,
+              "price_source": "DEMO",
+              "image": {
+                "url": "/media/demo/top.webp",
+                "alt_text": "White Shirt"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "slot_key": "outerwear",
+        "role": "OUTERWEAR",
+        "requested_categories": [
+          "BLAZER"
+        ],
+        "items": [
+          {
+            "recommendation_item_id": "60000000-0000-4000-8000-000000000002",
+            "product_id": "50000000-0000-4000-8000-000000000002",
+            "variant_id": "30000000-0000-4000-8000-000000000002",
+            "rank": 1,
+            "score": 0.9301,
+            "score_components": {
+              "category_match": 1,
+              "style_match": 1,
+              "color_match": 1,
+              "occasion_match": 1,
+              "budget_fit": 0.534
+            },
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "BLAZER"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "BEIGE"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 699000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "product": {
+              "product_code": "DEMO_0002",
+              "name": "Beige Blazer",
+              "brand": "Demo",
+              "category": "BLAZER",
+              "gender": "FEMALE",
+              "color": "BEIGE",
+              "size_code": "ONE_SIZE",
+              "price_vnd": 699000,
+              "price_source": "DEMO",
+              "image": {
+                "url": "/media/demo/outerwear.webp",
+                "alt_text": "Beige Blazer"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "slot_key": "bottom",
+        "role": "BOTTOM",
+        "requested_categories": [
+          "TROUSERS"
+        ],
+        "items": [
+          {
+            "recommendation_item_id": "60000000-0000-4000-8000-000000000003",
+            "product_id": "50000000-0000-4000-8000-000000000003",
+            "variant_id": "30000000-0000-4000-8000-000000000003",
+            "rank": 1,
+            "score": 0.9651,
+            "score_components": {
+              "category_match": 1,
+              "style_match": 1,
+              "color_match": 1,
+              "occasion_match": 1,
+              "budget_fit": 0.767333
+            },
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "TROUSERS"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "BLACK"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 349000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "product": {
+              "product_code": "DEMO_0003",
+              "name": "Black Trousers",
+              "brand": "Demo",
+              "category": "TROUSERS",
+              "gender": "FEMALE",
+              "color": "BLACK",
+              "size_code": "ONE_SIZE",
+              "price_vnd": 349000,
+              "price_source": "DEMO",
+              "image": {
+                "url": "/media/demo/bottom.webp",
+                "alt_text": "Black Trousers"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "slot_key": "shoes",
+        "role": "SHOES",
+        "requested_categories": [
+          "LOAFERS"
+        ],
+        "items": [
+          {
+            "recommendation_item_id": "60000000-0000-4000-8000-000000000004",
+            "product_id": "50000000-0000-4000-8000-000000000004",
+            "variant_id": "30000000-0000-4000-8000-000000000004",
+            "rank": 1,
+            "score": 0.9801,
+            "score_components": {
+              "category_match": 1,
+              "style_match": 1,
+              "color_match": 1,
+              "occasion_match": 1,
+              "budget_fit": 0.867333
+            },
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "LOAFERS"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "BLACK"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 199000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "product": {
+              "product_code": "DEMO_0004",
+              "name": "Black Loafers",
+              "brand": "Demo",
+              "category": "LOAFERS",
+              "gender": "FEMALE",
+              "color": "BLACK",
+              "size_code": "ONE_SIZE",
+              "price_vnd": 199000,
+              "price_source": "DEMO",
+              "image": {
+                "url": "/media/demo/shoes.webp",
+                "alt_text": "Black Loafers"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "looks": [
+      {
+        "look_id": "40000000-0000-4000-8000-000000000001",
+        "label": "BEST_MATCH",
+        "name": "The Clean Edit",
+        "revision": 1,
+        "source_look_id": null,
+        "score": 0.9626,
+        "total_price_vnd": 1496000,
+        "budget_status": "WITHIN_BUDGET",
+        "reasons": [
+          {
+            "code": "OCCASION_TEMPLATE_MATCH",
+            "facts": {
+              "occasion": "INTERVIEW",
+              "rule_version": "interview_minimal@1"
+            }
+          },
+          {
+            "code": "STYLE_COVERAGE",
+            "facts": {
+              "style": "MINIMAL",
+              "matched_items": 4,
+              "total_items": 4
+            }
+          },
+          {
+            "code": "LOOK_WITHIN_BUDGET",
+            "facts": {
+              "total_price_vnd": 1496000,
+              "budget_max_vnd": 1500000,
+              "remaining_vnd": 4000
+            }
+          },
+          {
+            "code": "PALETTE_COVERAGE",
+            "facts": {
+              "family": "NEUTRAL",
+              "matched_items": 4,
+              "total_items": 4
+            }
+          }
+        ],
+        "visual": {
+          "kind": "COLLAGE",
+          "layout": "four-piece-v1",
+          "aspect_ratio": 0.8,
+          "hotspots": [
+            {
+              "slot_key": "top",
+              "x": 0.25,
+              "y": 0.25
+            },
+            {
+              "slot_key": "outerwear",
+              "x": 0.75,
+              "y": 0.25
+            },
+            {
+              "slot_key": "bottom",
+              "x": 0.25,
+              "y": 0.75
+            },
+            {
+              "slot_key": "shoes",
+              "x": 0.75,
+              "y": 0.75
+            }
+          ]
+        },
+        "items": [
+          {
+            "slot_key": "top",
+            "role": "TOP",
+            "product_id": "50000000-0000-4000-8000-000000000001",
+            "variant_id": "30000000-0000-4000-8000-000000000001",
+            "size_code": "ONE_SIZE",
+            "size_information_available": false,
+            "price_vnd": 249000,
+            "price_source": "DEMO",
+            "score": 0.9751,
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "SHIRT"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "WHITE"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 249000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "image": {
+              "url": "/media/demo/top.webp",
+              "alt_text": "White Shirt"
+            },
+            "name": "White Shirt"
+          },
+          {
+            "slot_key": "outerwear",
+            "role": "OUTERWEAR",
+            "product_id": "50000000-0000-4000-8000-000000000002",
+            "variant_id": "30000000-0000-4000-8000-000000000002",
+            "size_code": "ONE_SIZE",
+            "size_information_available": false,
+            "price_vnd": 699000,
+            "price_source": "DEMO",
+            "score": 0.9301,
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "BLAZER"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "BEIGE"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 699000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "image": {
+              "url": "/media/demo/outerwear.webp",
+              "alt_text": "Beige Blazer"
+            },
+            "name": "Beige Blazer"
+          },
+          {
+            "slot_key": "bottom",
+            "role": "BOTTOM",
+            "product_id": "50000000-0000-4000-8000-000000000003",
+            "variant_id": "30000000-0000-4000-8000-000000000003",
+            "size_code": "ONE_SIZE",
+            "size_information_available": false,
+            "price_vnd": 349000,
+            "price_source": "DEMO",
+            "score": 0.9651,
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "TROUSERS"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "BLACK"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 349000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "image": {
+              "url": "/media/demo/bottom.webp",
+              "alt_text": "Black Trousers"
+            },
+            "name": "Black Trousers"
+          },
+          {
+            "slot_key": "shoes",
+            "role": "SHOES",
+            "product_id": "50000000-0000-4000-8000-000000000004",
+            "variant_id": "30000000-0000-4000-8000-000000000004",
+            "size_code": "ONE_SIZE",
+            "size_information_available": false,
+            "price_vnd": 199000,
+            "price_source": "DEMO",
+            "score": 0.9801,
+            "reasons": [
+              {
+                "code": "CATEGORY_MATCH",
+                "facts": {
+                  "category": "LOAFERS"
+                }
+              },
+              {
+                "code": "STYLE_MATCH",
+                "facts": {
+                  "style": "MINIMAL"
+                }
+              },
+              {
+                "code": "COLOR_MATCH",
+                "facts": {
+                  "color": "BLACK"
+                }
+              },
+              {
+                "code": "OCCASION_MATCH",
+                "facts": {
+                  "occasion": "INTERVIEW"
+                }
+              },
+              {
+                "code": "WITHIN_BUDGET",
+                "facts": {
+                  "price_vnd": 199000,
+                  "budget_max_vnd": 1500000
+                }
+              }
+            ],
+            "image": {
+              "url": "/media/demo/shoes.webp",
+              "alt_text": "Black Loafers"
+            },
+            "name": "Black Loafers"
+          }
+        ]
+      }
+    ],
+    "diagnostics": {
+      "missing_slots": [],
+      "constraints": [],
+      "relaxation_options": [],
+      "fewer_looks_reason": "ONLY_ONE_UNIQUE_COMBINATION"
+    }
+  },
+  "meta": {
+    "request_id": "req_design_example_01"
+  }
+}

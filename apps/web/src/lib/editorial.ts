@@ -1,0 +1,32 @@
+export const editorialLooks = [
+  {
+    name: "The Clean Edit",
+    subtitle: "Minimal. Considered. Effortless.",
+    description: "Tự tin trong từng cuộc gặp",
+    image: "/images/editorial/clean-edit.webp",
+    alt: "Người mẫu mặc bộ vest và quần màu kem bên kiến trúc thành phố",
+    occasion: "OFFICE",
+    label: "01 / WORKDAY",
+    colors: ["#e8dfcc", "#b7ac99", "#32382e"],
+  },
+  {
+    name: "Off-duty, on point.",
+    subtitle: "Easy layers. Everyday confidence.",
+    description: "Nhẹ nhàng cho những ngày thảnh thơi",
+    image: "/images/editorial/everyday-edit.webp",
+    alt: "Chi tiết áo thun trắng và quần denim xanh trong một bộ đồ hằng ngày",
+    occasion: "DAILY",
+    label: "02 / EVERYDAY",
+    colors: ["#f6f4ee", "#adc4d0", "#687b87"],
+  },
+  {
+    name: "The City Muse",
+    subtitle: "A little colour. A new perspective.",
+    description: "Thêm một chút màu cho chuyến đi mới",
+    image: "/images/editorial/city-edit.webp",
+    alt: "Người mẫu mặc áo khoác xanh, túi hồng và bốt trắng trên phố Milan",
+    occasion: "TRAVEL",
+    label: "03 / CITY ESCAPE",
+    colors: ["#83afc9", "#d7b6b6", "#efebe1"],
+  },
+] as const;

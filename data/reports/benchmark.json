@@ -1,0 +1,15 @@
+{
+  "kind": "local HTTP smoke benchmark; small sample, not a production SLA",
+  "concurrent_users": 10,
+  "catalog": {
+    "samples": 10,
+    "p50_ms": 254.07,
+    "p95_ms": 273.63
+  },
+  "recommendations": {
+    "samples": 10,
+    "p50_ms": 2314.52,
+    "p95_ms": 2493.21
+  },
+  "budget_violations": 0
+}

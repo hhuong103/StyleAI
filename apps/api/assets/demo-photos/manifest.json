@@ -1,0 +1,74 @@
+[
+  {
+    "file": "white-tee.webp",
+    "category": "T_SHIRT",
+    "colors": [
+      "WHITE"
+    ],
+    "alt": "Ảnh chụp tham khảo áo thun trắng",
+    "source_url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+    "attribution": "Unsplash; https://unsplash.com/license; reference photo for synthetic DEMO, not merchant inventory."
+  },
+  {
+    "file": "shirt.webp",
+    "category": "SHIRT",
+    "colors": [
+      "BLUE"
+    ],
+    "alt": "Ảnh chụp tham khảo sơ mi xanh trên móc áo",
+    "source_url": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c",
+    "attribution": "Unsplash; https://unsplash.com/license; reference photo for synthetic DEMO, not merchant inventory."
+  },
+  {
+    "file": "shirt-white.webp",
+    "category": "SHIRT",
+    "colors": [
+      "WHITE"
+    ],
+    "alt": "Ảnh chụp tham khảo sơ mi trắng trên móc áo",
+    "source_url": "https://images.unsplash.com/photo-1603252109303-2751441dd157",
+    "attribution": "Nimble Made / Unsplash; https://unsplash.com/license; reference photo for synthetic DEMO, not merchant inventory."
+  },
+  {
+    "file": "jeans.webp",
+    "category": "JEANS",
+    "colors": [
+      "BLUE",
+      "NAVY",
+      "BLACK"
+    ],
+    "alt": "Ảnh chụp tham khảo quần jeans xanh và đen",
+    "source_url": "https://images.unsplash.com/photo-1542272604-787c3835535d",
+    "attribution": "Unsplash; https://unsplash.com/license; reference photo for synthetic DEMO, not merchant inventory."
+  },
+  {
+    "file": "jacket.webp",
+    "category": "LIGHT_JACKET",
+    "colors": [
+      "BROWN"
+    ],
+    "alt": "Ảnh chụp tham khảo áo khoác bomber nâu",
+    "source_url": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea",
+    "attribution": "Unsplash; https://unsplash.com/license; reference photo for synthetic DEMO, not merchant inventory."
+  },
+  {
+    "file": "sneakers.webp",
+    "category": "SNEAKERS",
+    "colors": [
+      "WHITE"
+    ],
+    "alt": "Ảnh chụp tham khảo giày sneaker trắng",
+    "source_url": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28",
+    "attribution": "Unsplash; https://unsplash.com/license; reference photo for synthetic DEMO, not merchant inventory."
+  },
+  {
+    "file": "loafers-brown.webp",
+    "category": "LOAFERS",
+    "colors": [
+      "BROWN"
+    ],
+    "alt": "Ảnh chụp tham khảo giày loafer da lộn nâu",
+    "source_url": "https://images.unsplash.com/photo-1576792741377-eb0f4f6d1a47",
+    "attribution": "David Lezcano / Unsplash; https://unsplash.com/license; reference photo for synthetic DEMO, not merchant inventory."
+  }
+]
