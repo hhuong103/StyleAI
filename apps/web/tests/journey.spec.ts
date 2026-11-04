@@ -189,6 +189,42 @@ test("Circular runway previews garments and opens their separate details", async
       (filter) => Number(filter.match(/brightness\((.+?)\)/)?.[1]) < 0.25,
     ),
   ).toBe(true);
+
+  const nextStyle = page.getByRole("button", {
+    name: "Next style",
+    exact: true,
+  });
+  await nextStyle.click();
+  await nextStyle.click();
+  await expect(nextStyle).toBeEnabled();
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Modern utility" }),
+  ).toBeVisible();
+
+  if (!isMobile) {
+    const stage = page.locator(".runway-stage");
+    const box = await stage.boundingBox();
+    await page.mouse.move(
+      box!.x + box!.width * 0.18,
+      box!.y + box!.height * 0.4,
+    );
+    await page.mouse.down();
+    await page.mouse.move(
+      box!.x + box!.width * 0.3,
+      box!.y + box!.height * 0.4,
+      {
+        steps: 4,
+      },
+    );
+    await expect(stage).toHaveAttribute("data-dragging", "true");
+    await page.mouse.up();
+    await expect(stage).toHaveAttribute("data-dragging", "false");
+  }
+
+  await page.locator(".runway-dots button").first().click();
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Coral confidence" }),
+  ).toBeVisible();
   const piece = page.getByRole("link", {
     name: "View Cherry A-line skirt",
     exact: true,
@@ -198,9 +234,33 @@ test("Circular runway previews garments and opens their separate details", async
     await expect(
       page.getByRole("complementary", { name: "Garment preview" }),
     ).toContainText("Cherry A-line skirt");
+    await expect(piece.locator(".runway-garment-hit polygon")).not.toHaveCount(
+      0,
+    );
+    await expect(
+      piece.locator(".runway-garment-outline polygon"),
+    ).not.toHaveCount(0);
+    await expect
+      .poll(() =>
+        piece
+          .locator(".runway-garment-outline polygon")
+          .first()
+          .evaluate((polygon) => getComputedStyle(polygon).pointerEvents),
+      )
+      .toBe("none");
     await expect(page.locator(".runway-preview-card")).toContainText(
       "Available sizes",
     );
+    const isolatedPreview = page.locator(".runway-preview-image svg");
+    await expect(isolatedPreview).toBeVisible();
+    expect(
+      await isolatedPreview.locator("clipPath polygon").count(),
+    ).toBeGreaterThan(0);
+    await expect(isolatedPreview.locator("image")).toHaveAttribute(
+      "clip-path",
+      /url\(#.+\)/,
+    );
+    await expect(page.locator(".runway-preview-image > img")).toHaveCount(0);
     await page.locator(".runway-preview-detail").hover();
     await expect(page.locator(".runway-preview-card")).toBeVisible();
   }
@@ -270,4 +330,45 @@ test("Circular runway previews garments and opens their separate details", async
       () => document.documentElement.scrollWidth - innerWidth,
     ),
   ).toBeLessThanOrEqual(0);
+});
+
+test("Expanded Hot Trend models provide complete three-view galleries", async ({
+  page,
+  request,
+}) => {
+  for (const look of [
+    "city-denim",
+    "neo-prep",
+    "elevated-active",
+    "monochrome-edge",
+  ]) {
+    const response = await request.get(
+      `/images/shop-the-look/${look}-poses.png`,
+    );
+    expect(response.ok()).toBe(true);
+    expect((await response.body()).byteLength).toBeGreaterThan(100_000);
+  }
+
+  await page.goto("/outfits/city-denim/cropped-denim-jacket");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Cropped denim jacket" }),
+  ).toBeVisible();
+
+  for (const pose of ["Front view", "Walking pose", "Back view"]) {
+    const selector = page.getByRole("button", { name: pose, exact: true });
+    await expect(selector).toBeVisible();
+    await selector.click();
+    await expect(selector).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator(".runway-gallery-tag")).toContainText(pose);
+    await expect
+      .poll(() =>
+        page
+          .locator(".runway-gallery-photo img")
+          .evaluate(
+            (image: HTMLImageElement) =>
+              image.complete && image.naturalWidth > 0,
+          ),
+      )
+      .toBe(true);
+  }
 });

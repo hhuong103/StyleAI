@@ -30,6 +30,7 @@ body {
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
 }
 a {
   color: inherit;
@@ -183,6 +184,10 @@ label {
   background: #333;
   transform: translateY(-1px);
 }
+.button:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 100ms;
+}
 .button svg:last-child {
   margin-left: 8px;
 }
@@ -218,9 +223,15 @@ label {
   min-height: 44px;
   padding: 4px 0;
   border-bottom: 1px solid transparent;
+  transition:
+    transform 100ms ease-out,
+    border-color 160ms ease;
 }
 .text-button:hover {
   border-color: var(--text);
+}
+.text-button:active {
+  transform: scale(0.97);
 }
 .icon-button {
   display: inline-flex;
@@ -230,9 +241,15 @@ label {
   height: 44px;
   flex-shrink: 0;
   border-radius: 50%;
+  transition:
+    transform 100ms ease-out,
+    background 160ms ease;
 }
 .icon-button:hover {
   background: #e5e2d9;
+}
+.icon-button:active {
+  transform: scale(0.92);
 }
 .skip-link {
   position: fixed;
@@ -248,12 +265,22 @@ label {
 }
 .header {
   height: 88px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
   position: sticky;
   top: 0;
   z-index: 40;
-  background: #f5f4f0ed;
-  backdrop-filter: blur(14px);
+  background: #f5f4f0c9;
+  box-shadow: 0 14px 28px -30px #141712;
+  backdrop-filter: blur(20px) saturate(155%);
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+}
+.header::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: 12px;
+  pointer-events: none;
+  background: linear-gradient(#343b2d0b, transparent);
 }
 .header-inner {
   height: 100%;
@@ -293,6 +320,12 @@ label {
   align-items: center;
   position: relative;
   min-height: 44px;
+  transition:
+    transform 100ms ease-out,
+    color 160ms ease;
+}
+.nav > a:active {
+  transform: scale(0.96);
 }
 .nav > a.active:after {
   position: absolute;
@@ -2324,6 +2357,26 @@ td small,
   .look-card:hover .collage-piece > img,
   .editorial-tile:hover > img {
     transform: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .header {
+    background: var(--bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (prefers-contrast: more) {
+  .header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--text);
+  }
+  .header::after {
+    display: none;
+  }
+  .nav > a,
+  .language-switch button {
+    font-weight: 600;
   }
 }
 

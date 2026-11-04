@@ -10,8 +10,8 @@ import "./fonts.css";
 import "./runway.css";
 export const metadata: Metadata = {
   title: {
-    default: "STYLEAI — Your style, thoughtfully put together.",
-    template: "%s | STYLEAI",
+    default: "STYLE — Your style, thoughtfully put together.",
+    template: "%s | STYLE",
   },
   description:
     "Personal outfit recommendations for your style, occasion, and budget.",

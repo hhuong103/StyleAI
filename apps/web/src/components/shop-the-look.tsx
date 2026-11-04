@@ -17,10 +17,17 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
 } from "react";
 import { useI18n } from "@/components/locale-provider";
 import { TransitionLink } from "@/components/route-transition";
-import { featuredLooks, garmentAreas, runwayProductUrl } from "@/lib/runway";
+import {
+  featuredLooks,
+  garmentAreas,
+  garmentOutlineAreas,
+  garmentPreviewAreas,
+  runwayProductUrl,
+} from "@/lib/runway";
 
 const STEP = (Math.PI * 2) / featuredLooks.length;
 
@@ -41,19 +48,70 @@ function orbitStyle(index: number, rotation: number): CSSProperties {
   } as CSSProperties;
 }
 
+function garmentPreviewGeometry(productId: string) {
+  const source =
+    garmentPreviewAreas[productId] ?? garmentAreas[productId] ?? [];
+  const polygons = source.map((shape) =>
+    shape
+      .trim()
+      .split(/\s+/)
+      .map((pair) => {
+        const [x, y] = pair.split(",").map(Number);
+        return { x, y: y * 1.5 };
+      }),
+  );
+  const points = polygons.flat();
+  if (!points.length) return null;
+
+  const minX = Math.max(0, Math.min(...points.map((point) => point.x)) - 4);
+  const maxX = Math.min(100, Math.max(...points.map((point) => point.x)) + 4);
+  const minY = Math.max(0, Math.min(...points.map((point) => point.y)) - 6);
+  const maxY = Math.min(150, Math.max(...points.map((point) => point.y)) + 6);
+
+  return {
+    viewBox: `${minX} ${minY} ${maxX - minX} ${maxY - minY}`,
+    polygons: polygons.map((polygon) =>
+      polygon.map((point) => `${point.x},${point.y}`).join(" "),
+    ),
+  };
+}
+
 export function ShopTheLook() {
   const { tr, money, locale, setLocale } = useI18n();
   const [activeIndex, setActiveIndex] = useState(0);
   const [inspectedId, setInspectedId] = useState<string | null>(null);
   const [moving, setMoving] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const models = useRef<(HTMLDivElement | null)[]>([]);
+  const activeIndexRef = useRef(0);
   const rotation = useRef(0);
+  const targetRotation = useRef(0);
+  const angularVelocity = useRef(0);
+  const lastFrame = useRef(0);
   const frame = useRef<number | null>(null);
-  const busy = useRef(false);
+  const drag = useRef<{
+    pointerId: number;
+    startX: number;
+    startRotation: number;
+    lastX: number;
+    lastTime: number;
+    velocity: number;
+    moved: boolean;
+  } | null>(null);
+  const suppressClick = useRef(false);
   const dismiss = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previewId = useId();
+  const stageHintId = useId();
   const look = featuredLooks[activeIndex];
   const inspected = look.products.find((product) => product.id === inspectedId);
+  const previewProductImage = inspected?.packshot ?? inspected?.thumbnail;
+  const previewGeometry =
+    inspected && !previewProductImage
+      ? garmentPreviewGeometry(inspected.id)
+      : null;
+  const garmentClipId = inspected
+    ? `${previewId.replaceAll(":", "")}-${inspected.id}`
+    : "";
 
   const paintOrbit = useCallback((angle: number) => {
     models.current.forEach((model, index) => {
@@ -70,6 +128,8 @@ export function ShopTheLook() {
     const index = featuredLooks.findIndex((entry) => entry.id === saved);
     if (index >= 0) {
       rotation.current = -index * STEP;
+      targetRotation.current = rotation.current;
+      activeIndexRef.current = index;
       setActiveIndex(index);
       paintOrbit(rotation.current);
     }
@@ -85,7 +145,7 @@ export function ShopTheLook() {
 
   function inspect(id: string) {
     keepPreview();
-    if (!busy.current) setInspectedId(id);
+    if (!drag.current?.moved) setInspectedId(id);
   }
 
   function dismissPreview() {
@@ -93,41 +153,145 @@ export function ShopTheLook() {
     dismiss.current = setTimeout(() => setInspectedId(null), 320);
   }
 
-  function selectLook(index: number, forcedDirection?: number) {
-    if (busy.current) return;
-    const next = (index + featuredLooks.length) % featuredLooks.length;
-    if (next === activeIndex) return;
-    let distance = forcedDirection ?? next - activeIndex;
-    if (distance > featuredLooks.length / 2) distance -= featuredLooks.length;
-    if (distance < -featuredLooks.length / 2) distance += featuredLooks.length;
-    const from = rotation.current;
-    const target = from - distance * STEP;
-    keepPreview();
-    setInspectedId(null);
-    setActiveIndex(next);
-    sessionStorage.setItem("styleai-runway-look", featuredLooks[next].id);
+  function animateTo(target: number, initialVelocity?: number) {
+    targetRotation.current = target;
+    if (initialVelocity !== undefined)
+      angularVelocity.current = initialVelocity;
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (frame.current !== null) cancelAnimationFrame(frame.current);
+      frame.current = null;
       rotation.current = target;
+      angularVelocity.current = 0;
+      setMoving(false);
       paintOrbit(target);
       return;
     }
-    busy.current = true;
+
     setMoving(true);
-    const start = performance.now();
+    if (frame.current !== null) return;
+    lastFrame.current = performance.now();
+
     function animate(now: number) {
-      const progress = Math.min((now - start) / 820, 1);
-      const ease =
-        progress < 0.5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2;
-      rotation.current = from + (target - from) * ease;
+      const elapsed = Math.min((now - lastFrame.current) / 1000, 1 / 30);
+      lastFrame.current = now;
+
+      // Critically damped spring: response ≈ 0.42s, no decorative bounce.
+      const omega = (2 * Math.PI) / 0.42;
+      const displacement = rotation.current - targetRotation.current;
+      const acceleration =
+        -(omega * omega) * displacement - 2 * omega * angularVelocity.current;
+      angularVelocity.current += acceleration * elapsed;
+      rotation.current += angularVelocity.current * elapsed;
       paintOrbit(rotation.current);
-      if (progress < 1) frame.current = requestAnimationFrame(animate);
-      else {
+
+      const settled =
+        Math.abs(rotation.current - targetRotation.current) < 0.0005 &&
+        Math.abs(angularVelocity.current) < 0.002;
+      if (settled) {
+        rotation.current = targetRotation.current;
+        angularVelocity.current = 0;
         frame.current = null;
-        busy.current = false;
+        paintOrbit(rotation.current);
         setMoving(false);
+      } else {
+        frame.current = requestAnimationFrame(animate);
       }
     }
+
     frame.current = requestAnimationFrame(animate);
+  }
+
+  function selectLook(index: number, forcedDirection?: number) {
+    const next = (index + featuredLooks.length) % featuredLooks.length;
+    const current = activeIndexRef.current;
+    if (next === current && forcedDirection === undefined) return;
+    let distance = forcedDirection ?? next - current;
+    if (distance > featuredLooks.length / 2) distance -= featuredLooks.length;
+    if (distance < -featuredLooks.length / 2) distance += featuredLooks.length;
+    const target = targetRotation.current - distance * STEP;
+    keepPreview();
+    setInspectedId(null);
+    activeIndexRef.current = next;
+    setActiveIndex(next);
+    sessionStorage.setItem("styleai-runway-look", featuredLooks[next].id);
+    animateTo(target);
+  }
+
+  function beginDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    if (
+      event.button !== 0 ||
+      (event.target as Element).closest(
+        ".runway-arrow, .runway-garment, .runway-preview-card",
+      )
+    )
+      return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    drag.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startRotation: rotation.current,
+      lastX: event.clientX,
+      lastTime: performance.now(),
+      velocity: 0,
+      moved: false,
+    };
+  }
+
+  function moveDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    const gesture = drag.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    const distance = event.clientX - gesture.startX;
+    if (!gesture.moved && Math.abs(distance) < 10) return;
+    if (!gesture.moved) {
+      gesture.moved = true;
+      suppressClick.current = true;
+      keepPreview();
+      setInspectedId(null);
+      setDragging(true);
+      setMoving(true);
+      if (frame.current !== null) cancelAnimationFrame(frame.current);
+      frame.current = null;
+    }
+
+    const now = performance.now();
+    const elapsed = Math.max(now - gesture.lastTime, 1);
+    const instantVelocity = ((event.clientX - gesture.lastX) / elapsed) * 1000;
+    gesture.velocity = gesture.velocity * 0.65 + instantVelocity * 0.35;
+    gesture.lastX = event.clientX;
+    gesture.lastTime = now;
+
+    const width = Math.max(event.currentTarget.clientWidth, 1);
+    rotation.current = gesture.startRotation + (distance / width) * STEP * 1.65;
+    targetRotation.current = rotation.current;
+    angularVelocity.current = (gesture.velocity / width) * STEP * 1.65;
+    paintOrbit(rotation.current);
+  }
+
+  function endDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    const gesture = drag.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+    drag.current = null;
+    setDragging(false);
+    if (!gesture.moved) return;
+
+    const width = Math.max(event.currentTarget.clientWidth, 1);
+    const projectedPixels = ((gesture.velocity / 1000) * 0.99) / (1 - 0.99);
+    const projectedRotation =
+      rotation.current + (projectedPixels / width) * STEP * 1.65;
+    const rawIndex = Math.round(-projectedRotation / STEP);
+    const next =
+      ((rawIndex % featuredLooks.length) + featuredLooks.length) %
+      featuredLooks.length;
+    const target = -rawIndex * STEP;
+    activeIndexRef.current = next;
+    setActiveIndex(next);
+    setInspectedId(null);
+    sessionStorage.setItem("styleai-runway-look", featuredLooks[next].id);
+    animateTo(target, angularVelocity.current);
+    window.setTimeout(() => {
+      suppressClick.current = false;
+    }, 0);
   }
 
   return (
@@ -193,15 +357,20 @@ export function ShopTheLook() {
               "Fresh silhouettes. Different moods. Step into the look that feels like you.",
             )}
           </p>
-
         </div>
 
         <div
           className="runway-stage"
           role="group"
           aria-label={tr("Circular fashion runway")}
+          aria-describedby={stageHintId}
           aria-busy={moving}
           data-moving={moving}
+          data-dragging={dragging}
+          onPointerDown={beginDrag}
+          onPointerMove={moveDrag}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
           onKeyDown={(event) => {
             if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
               event.preventDefault();
@@ -228,7 +397,9 @@ export function ShopTheLook() {
               >
                 <div className="runway-photo">
                   <Image
-                    src={entry.cutout ?? entry.image.replace(".png", "-cutout.png")}
+                    src={
+                      entry.cutout ?? entry.image.replace(".png", "-cutout.png")
+                    }
                     alt={tr(entry.alt)}
                     fill
                     priority={index === 0}
@@ -251,7 +422,7 @@ export function ShopTheLook() {
                           aria-describedby={
                             inspectedId === product.id ? previewId : undefined
                           }
-                          tabIndex={moving ? -1 : 0}
+                          tabIndex={0}
                           onPointerEnter={(event) => {
                             if (event.pointerType !== "touch")
                               inspect(product.id);
@@ -260,11 +431,25 @@ export function ShopTheLook() {
                           onFocus={() => inspect(product.id)}
                           onBlur={dismissPreview}
                         >
-                          {(garmentAreas[product.id] || []).map(
-                            (points, part) => (
+                          <g className="runway-garment-hit" aria-hidden="true">
+                            {(garmentAreas[product.id] || []).map(
+                              (points, part) => (
+                                <polygon key={part} points={points} />
+                              ),
+                            )}
+                          </g>
+                          <g
+                            className="runway-garment-outline"
+                            aria-hidden="true"
+                          >
+                            {(
+                              garmentOutlineAreas[product.id] ||
+                              garmentAreas[product.id] ||
+                              []
+                            ).map((points, part) => (
                               <polygon key={part} points={points} />
-                            ),
-                          )}
+                            ))}
+                          </g>
                         </TransitionLink>
                       ))}
                     </svg>
@@ -272,8 +457,14 @@ export function ShopTheLook() {
                     <button
                       type="button"
                       className="runway-preview"
-                      disabled={moving}
-                      onClick={() => selectLook(index)}
+                      onClick={(event) => {
+                        if (suppressClick.current) {
+                          event.preventDefault();
+                          suppressClick.current = false;
+                          return;
+                        }
+                        selectLook(index);
+                      }}
                       aria-label={tr("View {0}", { "0": tr(entry.title) })}
                     />
                   )}
@@ -284,8 +475,7 @@ export function ShopTheLook() {
           <button
             className="runway-arrow runway-arrow-previous"
             type="button"
-            disabled={moving}
-            onClick={() => selectLook(activeIndex - 1, -1)}
+            onClick={() => selectLook(activeIndexRef.current - 1, -1)}
             aria-label={tr("Previous style")}
           >
             <ChevronLeft size={22} />
@@ -293,8 +483,7 @@ export function ShopTheLook() {
           <button
             className="runway-arrow runway-arrow-next"
             type="button"
-            disabled={moving}
-            onClick={() => selectLook(activeIndex + 1, 1)}
+            onClick={() => selectLook(activeIndexRef.current + 1, 1)}
             aria-label={tr("Next style")}
           >
             <ChevronRight size={22} />
@@ -322,15 +511,43 @@ export function ShopTheLook() {
             >
               <p className="eyebrow">{tr("SELECTED PIECE")}</p>
               <div className="runway-preview-image">
-                <Image
-                  src={look.image}
-                  alt={tr(inspected.name)}
-                  fill
-                  sizes="240px"
-                  style={{
-                    objectPosition: `${inspected.hotspot.x}% ${Math.max(0, Math.min(100, inspected.hotspot.y * 1.7 - 35))}%`,
-                  }}
-                />
+                {previewProductImage && (
+                  <Image
+                    className="runway-preview-packshot"
+                    src={previewProductImage}
+                    alt={tr(inspected.name)}
+                    fill
+                    sizes="(max-width: 767px) 88vw, 32vw"
+                  />
+                )}
+                {previewGeometry && (
+                  <svg
+                    viewBox={previewGeometry.viewBox}
+                    preserveAspectRatio="xMidYMid meet"
+                    role="img"
+                    aria-label={tr(inspected.name)}
+                  >
+                    <defs>
+                      <clipPath
+                        id={garmentClipId}
+                        clipPathUnits="userSpaceOnUse"
+                      >
+                        {previewGeometry.polygons.map((points, index) => (
+                          <polygon key={index} points={points} />
+                        ))}
+                      </clipPath>
+                    </defs>
+                    <image
+                      href={look.image}
+                      x="0"
+                      y="0"
+                      width="100"
+                      height="150"
+                      preserveAspectRatio="none"
+                      clipPath={`url(#${garmentClipId})`}
+                    />
+                  </svg>
+                )}
               </div>
               <h2>{tr(inspected.name)}</h2>
               <div className="runway-preview-price">
@@ -390,7 +607,6 @@ export function ShopTheLook() {
             <button
               key={entry.id}
               type="button"
-              disabled={moving}
               onClick={() => selectLook(index)}
               aria-pressed={index === activeIndex}
               aria-label={tr("View {0}", { "0": tr(entry.title) })}

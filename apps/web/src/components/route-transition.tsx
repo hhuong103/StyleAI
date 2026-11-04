@@ -39,17 +39,21 @@ export function RouteTransition({ children }: { children: React.ReactNode }) {
 
   const navigate = useCallback(
     (href: string) => {
-      if (pending.current) return;
-      if (
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        href === pathname
-      ) {
+      if (timer.current) clearTimeout(timer.current);
+      if (fallback.current) clearTimeout(fallback.current);
+      if (href === pathname) {
+        pending.current = false;
+        setPhase("idle");
+        return;
+      }
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         router.push(href);
         return;
       }
+      // Retarget an in-flight transition instead of locking navigation.
       pending.current = true;
       setPhase("exiting");
-      timer.current = setTimeout(() => router.push(href), 220);
+      timer.current = setTimeout(() => router.push(href), 180);
       fallback.current = setTimeout(() => {
         pending.current = false;
         setPhase("idle");

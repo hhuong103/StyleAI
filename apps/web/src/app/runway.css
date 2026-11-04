@@ -22,7 +22,14 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  min-height: 26px;
+  min-height: 42px;
+  padding: 5px 7px 5px 12px;
+  border: 1px solid #ffffffa8;
+  border-radius: 14px;
+  background: #ffffff9e;
+  box-shadow: 0 8px 28px #34412c0a;
+  backdrop-filter: blur(18px) saturate(165%);
+  -webkit-backdrop-filter: blur(18px) saturate(165%);
 }
 .runway-topline > span {
   display: inline-flex;
@@ -31,6 +38,24 @@
   font-size: 8px;
   font-weight: 600;
   letter-spacing: 0.18em;
+}
+.runway-topline .shop-look-language {
+  min-height: 32px;
+  padding: 2px;
+  border-radius: 10px;
+  background: #eef1e9b8;
+}
+.runway-topline .shop-look-language button {
+  min-width: 36px;
+  min-height: 28px;
+  border-radius: 8px;
+  transition:
+    transform 100ms ease-out,
+    background 160ms ease,
+    color 160ms ease;
+}
+.runway-topline .shop-look-language button:active {
+  transform: scale(0.94);
 }
 .runway-content {
   display: grid;
@@ -56,6 +81,7 @@
   line-height: 1.08;
   letter-spacing: -0.05em;
   margin: 0 0 22px;
+  font-optical-sizing: auto;
 }
 .runway-heading h1 em {
   color: #475344;
@@ -91,6 +117,14 @@
   height: var(--runway-stage-height);
   container-type: size;
   isolation: isolate;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.runway-stage[data-dragging="true"] {
+  cursor: grabbing;
 }
 .runway-orbit-floor {
   position: absolute;
@@ -158,33 +192,38 @@
   pointer-events: none;
   border-radius: inherit;
 }
-.runway-garment polygon {
+.runway-garment-hit polygon,
+.runway-garment-outline polygon {
   fill: transparent;
   stroke: transparent;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
+}
+.runway-garment-hit polygon {
   pointer-events: all;
   cursor: pointer;
+}
+.runway-garment-outline polygon {
+  pointer-events: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   transition:
     fill 160ms ease,
     stroke 160ms ease;
 }
-.runway-garment:hover polygon,
-.runway-garment:focus-visible polygon,
-.runway-garment.is-inspected polygon {
+.runway-garment:hover .runway-garment-outline polygon,
+.runway-garment:focus-visible .runway-garment-outline polygon,
+.runway-garment.is-inspected .runway-garment-outline polygon {
   fill: #ffffff16;
   stroke: #ffffffa6;
 }
 .runway-garment:focus {
   outline: none;
 }
-.runway-garment:focus-visible polygon {
+.runway-garment:focus-visible .runway-garment-outline polygon {
   stroke: #dcff8e;
   stroke-width: 2;
   fill: #dcff8e25;
-}
-.runway-stage[data-moving="true"] .runway-garment-map {
-  visibility: hidden;
 }
 .runway-arrow {
   position: absolute;
@@ -196,10 +235,13 @@
   place-items: center;
   border: 1px solid #c8d0bd;
   border-radius: 50%;
-  background: #f8faf2ee;
+  background: #f8faf2c9;
   color: #27361e;
   box-shadow: 0 5px 18px #38452712;
+  backdrop-filter: blur(14px) saturate(155%);
+  -webkit-backdrop-filter: blur(14px) saturate(155%);
   transition:
+    transform 100ms ease-out,
     background 180ms ease,
     box-shadow 180ms ease;
 }
@@ -212,6 +254,16 @@
 .runway-arrow:hover:not(:disabled) {
   background: #d9fc80;
   box-shadow: 0 5px 18px #38452724;
+}
+.runway-arrow:active {
+  transform: scale(0.92);
+  transition-duration: 80ms;
+}
+.runway-arrow:focus-visible,
+.runway-dots button:focus-visible,
+.shop-look-language button:focus-visible {
+  outline: 2px solid #526b3e;
+  outline-offset: 3px;
 }
 .runway-arrow:disabled {
   cursor: default;
@@ -274,10 +326,12 @@
 }
 .runway-preview-card {
   padding: 18px;
-  background: #fafcf7eb;
+  background: #fafcf7d9;
   border: 1px solid #dfe5d6;
   border-radius: 14px;
   box-shadow: 0 12px 34px #24351b0b;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
   animation: runway-copy-reveal 200ms ease both;
 }
 .runway-preview-card > .eyebrow {
@@ -288,14 +342,24 @@
 .runway-preview-image {
   position: relative;
   width: 100%;
-  height: clamp(75px, 12svh, 120px);
+  height: clamp(105px, 15svh, 150px);
   overflow: hidden;
   border-radius: 8px;
-  background: #eee;
+  background: radial-gradient(circle at 50% 48%, #f9faf7, #eef0eb);
   margin-bottom: 14px;
 }
-.runway-preview-image > img {
-  object-fit: cover;
+.runway-preview-image > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  overflow: visible;
+  filter: drop-shadow(0 7px 8px #27321e18);
+}
+.runway-preview-image > .runway-preview-packshot {
+  object-fit: contain;
+  padding: 10px 18px;
+  filter: drop-shadow(0 9px 11px #27321e1c);
 }
 .runway-preview-card h2 {
   font-size: 19px;
@@ -353,6 +417,12 @@
   font-size: 10px;
   padding-top: 12px;
   border-top: 1px solid #dce4d3;
+  transition:
+    color 140ms ease,
+    transform 100ms ease-out;
+}
+.runway-preview-detail:active {
+  transform: scale(0.98);
 }
 .runway-bottom {
   display: flex;
@@ -405,6 +475,8 @@
   height: 36px;
   display: grid;
   place-items: center;
+  border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
 }
 .runway-dots button:after {
   content: "";
@@ -415,6 +487,10 @@
   transition:
     width 200ms ease,
     background 200ms ease;
+}
+.runway-dots button:active:after {
+  transform: scale(0.78);
+  transition-duration: 80ms;
 }
 .runway-dots button[aria-pressed="true"]:after {
   width: 19px;
@@ -1122,6 +1198,36 @@
     display: inline;
   }
 }
+@media (prefers-reduced-transparency: reduce) {
+  .runway-topline,
+  .runway-preview-card,
+  .runway-arrow,
+  .runway-gallery-tag,
+  .runway-zoom {
+    background: #fafbf8;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (prefers-contrast: more) {
+  .runway {
+    border-color: #4a5144;
+  }
+  .runway-topline,
+  .runway-preview-card,
+  .runway-arrow,
+  .runway-preview-sizes b {
+    border-color: #3f4939;
+  }
+  .runway-heading > p:not(.eyebrow),
+  .runway-current p,
+  .runway-preview-card > p:not(.eyebrow) {
+    color: #30372d;
+  }
+  .runway-dots button:after {
+    background: #56634d;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .runway-garment polygon,
   .runway-arrow,
@@ -1139,5 +1245,8 @@
   }
   .runway-transition {
     display: none;
+  }
+  .runway-model {
+    will-change: auto;
   }
 }
