@@ -19,7 +19,7 @@ The built-in ImageGen tool generated four additional contact sheets, saved besid
 
 Prompt set: for each matching original reference image, preserve the same fictional adult model and exact garments, colors and shoes. Generate two equal portrait panels: left, a three-quarter walking pose; right, a three-quarter back view looking over the shoulder. Show the entire head and shoes with safe margins, matching studio background and soft editorial light. No text, logos, watermarks or added accessories. The gallery displays each panel separately; these are new poses, not crops of the original front view.
 
-Shopee destinations are per-item searches for similar styles, unless `purchaseUrl` is supplied in `src/lib/runway.ts`. Reference prices and sizes do not represent verified merchant stock.
+Every garment id resolves through the product-level Shopee mapping in `src/lib/runway.ts`; broad search URLs and duplicate per-product URL fields are intentionally unsupported. Reference prices and sizes do not represent live merchant stock.
 
 ## Transparent runway cutouts
 

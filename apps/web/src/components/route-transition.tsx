@@ -11,10 +11,12 @@ import {
   useState,
   type ComponentProps,
 } from "react";
+import { useI18n } from "@/components/locale-provider";
 
 const NavigationTransition = createContext<(href: string) => void>(() => {});
 
 export function RouteTransition({ children }: { children: React.ReactNode }) {
+  const { tr } = useI18n();
   const pathname = usePathname();
   const router = useRouter();
   const [phase, setPhase] = useState("idle");
@@ -26,7 +28,7 @@ export function RouteTransition({ children }: { children: React.ReactNode }) {
     pending.current = false;
     if (fallback.current) clearTimeout(fallback.current);
     setPhase("entering");
-    const entry = setTimeout(() => setPhase("idle"), 600);
+    const entry = setTimeout(() => setPhase("idle"), 900);
     return () => clearTimeout(entry);
   }, [pathname]);
   useEffect(
@@ -53,7 +55,7 @@ export function RouteTransition({ children }: { children: React.ReactNode }) {
       // Retarget an in-flight transition instead of locking navigation.
       pending.current = true;
       setPhase("exiting");
-      timer.current = setTimeout(() => router.push(href), 180);
+      timer.current = setTimeout(() => router.push(href), 320);
       fallback.current = setTimeout(() => {
         pending.current = false;
         setPhase("idle");
@@ -73,7 +75,7 @@ export function RouteTransition({ children }: { children: React.ReactNode }) {
         className={`runway-transition runway-transition-${phase}`}
         aria-hidden="true"
       >
-        <span>STYLE IN MOTION</span>
+        <span>{tr("STYLE IN MOTION")}</span>
       </div>
     </NavigationTransition.Provider>
   );

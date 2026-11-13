@@ -122,6 +122,7 @@ def parse_catalog(raw, filename):
             gender=row.get("gender") or "UNISEX",
             base_price_vnd=int(row["base_price_vnd"]),
             description=row.get("description", ""),
+            product_url=row.get("product_url") or None,
             price_source=row.get("price_source") or "DEMO",
             styles=[c for c in row.get("styles", "").split(";") if c],
             occasions=[c for c in row.get("occasions", "").split(";") if c],

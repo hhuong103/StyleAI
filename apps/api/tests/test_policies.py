@@ -5,21 +5,66 @@ from uuid import uuid4
 import pytest
 from PIL import Image
 from sqlalchemy import select
-from test_api import plan_and_generate
+from test_api import mark_test_catalog_real, mark_test_product_real, plan_and_generate
 
 from app.db.models import Category, Color, Product, User, Variant
 from app.modules.recommendations.engine import rank_products
-from app.modules.stylist.taxonomy import RULES
+from app.modules.stylist.taxonomy import OCCASIONS, RULES, STYLES
 
 
 @pytest.mark.parametrize("occasion,style,categories", RULES)
-def test_all_seed_rules_return_budget_safe_looks(client, signed_in, occasion, style, categories):
-    rec = plan_and_generate(client, occasion=occasion, style=style, gender=None)
+def test_all_seed_rules_return_budget_safe_looks(
+    client, signed_in, db, occasion, style, categories
+):
+    mark_test_catalog_real(db)
+    rec = plan_and_generate(client, db, occasion=occasion, style=style, gender=None)
     assert rec["status"] == "COMPLETE"
     for look in rec["looks"]:
         assert len(look["items"]) == len(categories)
         assert look["total_price_vnd"] <= 1500000
         assert len({i["product_id"] for i in look["items"]}) == len(look["items"])
+
+
+@pytest.mark.parametrize(
+    ("occasion", "style"),
+    [("DAILY", "FORMAL"), ("PARTY", "CASUAL"), ("TRAVEL", "MINIMAL")],
+)
+def test_unlisted_style_uses_occasion_fallback(client, signed_in, occasion, style):
+    response = client.post(
+        "/api/v1/stylist/plan",
+        json={
+            "text": "",
+            "context": {
+                "occasion": occasion,
+                "style": style,
+                "preferred_colors": [],
+                "budget_max_vnd": 1_500_000,
+            },
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    plan = response.json()["data"]
+    assert plan["normalized_context"]["style"] == style
+    assert plan["rule_version"] == f"fallback_{occasion.lower()}@1"
+
+
+def test_every_style_and_occasion_has_a_plan(client, signed_in):
+    for occasion in OCCASIONS:
+        for style in STYLES:
+            response = client.post(
+                "/api/v1/stylist/plan",
+                json={
+                    "text": "",
+                    "context": {
+                        "occasion": occasion,
+                        "style": style,
+                        "preferred_colors": [],
+                        "budget_max_vnd": 1_500_000,
+                    },
+                },
+            )
+            assert response.status_code == 200, f"{occasion}/{style}: {response.text}"
 
 
 def test_missing_tags_score_without_false_explanation(db):
@@ -44,7 +89,7 @@ def test_missing_tags_score_without_false_explanation(db):
 
 
 def test_replacement_cannot_exceed_total_budget(client, signed_in, db):
-    rec = plan_and_generate(client)
+    rec = plan_and_generate(client, db)
     look = rec["looks"][0]
     product = db.scalar(select(Product).where(Product.category_code == "SHIRT"))
     variant = Variant(
@@ -63,8 +108,8 @@ def test_replacement_cannot_exceed_total_budget(client, signed_in, db):
     assert response.json()["error"]["code"] == "BUDGET_EXCEEDED"
 
 
-def test_idempotency_key_rejects_different_payload(client, signed_in):
-    rec = plan_and_generate(client)
+def test_idempotency_key_rejects_different_payload(client, signed_in, db):
+    rec = plan_and_generate(client, db)
     headers = {"Idempotency-Key": str(uuid4())}
     look_id = rec["looks"][0]["look_id"]
     assert (
@@ -92,14 +137,17 @@ def test_explicit_form_takes_precedence_over_text(client, signed_in):
     assert response.status_code == 200
     data = response.json()["data"]
     assert data["normalized_context"]["occasion"] == "CAFE"
+    assert data["normalized_context"]["style"] == "CASUAL"
     assert data["normalized_context"]["budget_max_vnd"] == 1500000
     assert data["field_sources"]["occasion"] == "form"
-    assert data["warnings"]
+    assert {warning["field"] for warning in data["warnings"]} == {"occasion", "style"}
 
 
 def test_catalog_product_crud_and_import_upsert(client, signed_in, db):
     db.get(User, signed_in["id"]).role = "ADMIN"
     db.commit()
+    existing_product = db.scalar(select(Product).order_by(Product.product_code))
+    mark_test_product_real(existing_product, materialize_image=True)
     existing = client.get("/api/v1/products?page_size=1").json()["data"][0]
     body = {
         "product_code": "ADMIN_CREATE",
@@ -131,6 +179,41 @@ def test_catalog_product_crud_and_import_upsert(client, signed_in, db):
     db.get(User, signed_in["id"]).role = "USER"
     db.commit()
     assert client.get(f"/api/v1/products/{product['id']}").status_code == 404
+
+
+def test_real_product_requires_original_upload_and_exact_shopee_listing(client, signed_in, db):
+    db.get(User, signed_in["id"]).role = "ADMIN"
+    db.commit()
+    demo = db.scalar(select(Product))
+    body = {
+        "product_code": "REAL_PRODUCT_TEST",
+        "name": "Real product",
+        "category_code": "SHIRT",
+        "color_code": "WHITE",
+        "base_price_vnd": 250000,
+        "price_source": "REAL",
+        "product_url": "https://shopee.vn/example-product-i.123456789.12345678901",
+        "image_key": demo.images[0].storage_key,
+        "variants": [{"sku": "REAL_PRODUCT_TEST_M", "size_code": "M", "available": True}],
+    }
+
+    response = client.post("/api/v1/products", json=body)
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "REAL_PRODUCT_IMAGE_REQUIRED"
+
+    image = Image.new("RGB", (30, 40), "white")
+    raw = io.BytesIO()
+    image.save(raw, "PNG")
+    uploaded = client.post(
+        "/api/v1/admin/uploads/images",
+        files={"file": ("real-product.png", raw.getvalue(), "image/png")},
+    )
+    body["image_key"] = uploaded.json()["data"]["storage_key"]
+    body["product_url"] = "https://shopee.vn/search?keyword=shirt"
+
+    response = client.post("/api/v1/products", json=body)
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "INVALID_PRODUCT_URL"
 
 
 def test_taxonomy_cycle_rule_publish_and_image_validation(client, signed_in, db):

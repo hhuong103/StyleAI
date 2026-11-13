@@ -25,7 +25,6 @@ import {
   featuredLooks,
   garmentAreas,
   garmentOutlineAreas,
-  garmentPreviewAreas,
   runwayProductUrl,
 } from "@/lib/runway";
 
@@ -46,34 +45,6 @@ function orbitStyle(index: number, rotation: number): CSSProperties {
     "--orbit-contrast": 1 + focus * 0.04,
     zIndex: Math.round(depth * 100) + 1,
   } as CSSProperties;
-}
-
-function garmentPreviewGeometry(productId: string) {
-  const source =
-    garmentPreviewAreas[productId] ?? garmentAreas[productId] ?? [];
-  const polygons = source.map((shape) =>
-    shape
-      .trim()
-      .split(/\s+/)
-      .map((pair) => {
-        const [x, y] = pair.split(",").map(Number);
-        return { x, y: y * 1.5 };
-      }),
-  );
-  const points = polygons.flat();
-  if (!points.length) return null;
-
-  const minX = Math.max(0, Math.min(...points.map((point) => point.x)) - 4);
-  const maxX = Math.min(100, Math.max(...points.map((point) => point.x)) + 4);
-  const minY = Math.max(0, Math.min(...points.map((point) => point.y)) - 6);
-  const maxY = Math.min(150, Math.max(...points.map((point) => point.y)) + 6);
-
-  return {
-    viewBox: `${minX} ${minY} ${maxX - minX} ${maxY - minY}`,
-    polygons: polygons.map((polygon) =>
-      polygon.map((point) => `${point.x},${point.y}`).join(" "),
-    ),
-  };
 }
 
 export function ShopTheLook() {
@@ -104,14 +75,7 @@ export function ShopTheLook() {
   const stageHintId = useId();
   const look = featuredLooks[activeIndex];
   const inspected = look.products.find((product) => product.id === inspectedId);
-  const previewProductImage = inspected?.packshot ?? inspected?.thumbnail;
-  const previewGeometry =
-    inspected && !previewProductImage
-      ? garmentPreviewGeometry(inspected.id)
-      : null;
-  const garmentClipId = inspected
-    ? `${previewId.replaceAll(":", "")}-${inspected.id}`
-    : "";
+  const previewProductImage = inspected?.packshot;
 
   const paintOrbit = useCallback((angle: number) => {
     models.current.forEach((model, index) => {
@@ -517,43 +481,12 @@ export function ShopTheLook() {
                     src={previewProductImage}
                     alt={tr(inspected.name)}
                     fill
+                    unoptimized
                     sizes="(max-width: 767px) 88vw, 32vw"
                   />
                 )}
-                {previewGeometry && (
-                  <svg
-                    viewBox={previewGeometry.viewBox}
-                    preserveAspectRatio="xMidYMid meet"
-                    role="img"
-                    aria-label={tr(inspected.name)}
-                  >
-                    <defs>
-                      <clipPath
-                        id={garmentClipId}
-                        clipPathUnits="userSpaceOnUse"
-                      >
-                        {previewGeometry.polygons.map((points, index) => (
-                          <polygon key={index} points={points} />
-                        ))}
-                      </clipPath>
-                    </defs>
-                    <image
-                      href={look.image}
-                      x="0"
-                      y="0"
-                      width="100"
-                      height="150"
-                      preserveAspectRatio="none"
-                      clipPath={`url(#${garmentClipId})`}
-                    />
-                  </svg>
-                )}
               </div>
               <h2>{tr(inspected.name)}</h2>
-              <div className="runway-preview-price">
-                <strong>{money(inspected.price)}</strong>
-                <span>{tr("Guide price")}</span>
-              </div>
               <p>{tr(inspected.description)}</p>
               <div className="runway-preview-sizes">
                 <span>{tr("Available sizes")}</span>
@@ -578,7 +511,7 @@ export function ShopTheLook() {
               <h2>{tr("Every piece has a story.")}</h2>
               <p>
                 {tr(
-                  "Move your cursor over the clothing or shoes to see the piece, sizes and price here.",
+                  "Move your cursor over the clothing or shoes to see the piece and available sizes here.",
                 )}
               </p>
               <span>{tr("Click the garment to see every detail.")}</span>

@@ -13,6 +13,7 @@ from app.db.models import (
     Style,
     Variant,
 )
+from app.modules.catalog.repository import is_shopee_product_url
 from app.modules.profiles.router import validate_codes
 
 
@@ -27,6 +28,19 @@ def safe_media_path(key):
 def validate_product(db, body):
     if not body.image_key.startswith(("demo/", "uploads/")):
         raise AppError(422, "INVALID_IMAGE", "Image key phải thuộc thư mục ảnh public đã kiểm tra.")
+    if body.price_source == "REAL":
+        if not body.image_key.startswith("uploads/"):
+            raise AppError(
+                422,
+                "REAL_PRODUCT_IMAGE_REQUIRED",
+                "Sản phẩm thật phải dùng ảnh sản phẩm đã tải lên, không dùng ảnh demo.",
+            )
+        if not is_shopee_product_url(body.product_url):
+            raise AppError(
+                422,
+                "INVALID_PRODUCT_URL",
+                "Sản phẩm thật cần liên kết Shopee chính xác dạng https://shopee.vn/...-i.shop_id.item_id.",
+            )
     category = db.get(Category, body.category_code)
     if (
         not category
@@ -58,15 +72,22 @@ def write_product(db, body, product=None):
         "base_price_vnd",
         "description",
         "active",
+        "product_url",
         "price_source",
     ]:
         setattr(product, key, getattr(body, key))
+    if body.price_source == "REAL":
+        product.source = "manual"
     db.flush()
     product.styles = [ProductStyle(style_code=s) for s in set(body.styles)]
     product.occasions = [ProductOccasion(occasion_code=o) for o in set(body.occasions)]
     if product.images:
-        product.images[0].storage_key = body.image_key
-        product.images[0].alt_text = body.name
+        image = product.images[0]
+        image.storage_key = body.image_key
+        image.alt_text = body.name
+        image.source_url = None
+        image.attribution = None
+        product.images = [image]
     else:
         product.images = [ProductImage(storage_key=body.image_key, alt_text=body.name)]
     if hasattr(body, "variants"):

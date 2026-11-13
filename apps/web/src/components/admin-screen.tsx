@@ -1,7 +1,7 @@
 "use client";
 import { useI18n } from "@/components/locale-provider";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowRight, Plus, Upload } from "lucide-react";
+import { ArrowRight, PackageCheck, PackageX, Plus, Upload } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -20,7 +20,7 @@ export function AdminShell({ children }: {
           {[
             ["/admin", tr("T\u1ED5ng quan")],
             ["/admin/products", tr("S\u1EA3n ph\u1EA9m")],
-            ["/admin/rules", "Outfit Rules"],
+            ["/admin/rules", tr("Outfit Rules")],
             ["/admin/taxonomy", tr("Taxonomy")],
         ].map(([href, text]) => (<Link href={href} key={href}>
               {text}
@@ -57,11 +57,11 @@ function Dashboard() {
       {query.data ? (<div className="stats-grid">
           {Object.entries(query.data).map(([key, value]) => (<article key={key}>
               <p>{names[key]}</p>
-              <strong>{value.toLocaleString("vi-VN")}</strong>
+              <strong>{value.toLocaleString(localeTag)}</strong>
             </article>))}
         </div>) : (<Skeletons />)}
       <div className="notice">
-        <p>{tr("Catalog seed d\u00F9ng metadata DEMO, \u1EA3nh ch\u1EE5p tham kh\u1EA3o v\u00E0 h\u00ECnh minh h\u1ECDa. Import d\u1EEF li\u1EC7u th\u1EADt c\u1EA7n ki\u1EC3m tra quy\u1EC1n s\u1EED d\u1EE5ng, \u1EA3nh v\u00E0 gi\u00E1.")}</p>
+        <p>{tr("Catalog seed dùng metadata DEMO, ảnh chụp tham khảo và hình minh họa. Hãy kiểm tra quyền sử dụng trước khi nhập dữ liệu thật.")}</p>
         <Link className="text-button" href="/admin/products">{tr("Qu\u1EA3n l\u00FD catalog") + " "}<ArrowRight size={16}/>
         </Link>
       </div>
@@ -120,6 +120,7 @@ function ProductEditor({ product, taxonomy, onClose, }: {
             description: form.get("description"),
             active: form.get("active") === "on",
             price_source: form.get("price_source"),
+            product_url: form.get("product_url") || null,
             image_key: imageKey,
             styles: form.getAll("styles"),
             occasions: form.getAll("occasions"),
@@ -142,56 +143,56 @@ function ProductEditor({ product, taxonomy, onClose, }: {
           <label>{tr("T\u00EAn")}<input name="name" required defaultValue={product?.name}/>
           </label>
         </div>
+        <label>{tr("Th\u01B0\u01A1ng hi\u1EC7u")}<input name="brand" defaultValue={product?.brand || ""}/>
+        </label>
         <div className="field-row">
-          <label>{tr("Th\u01B0\u01A1ng hi\u1EC7u")}<input name="brand" defaultValue={product?.brand || ""}/>
+          <label>{tr("Gi\u00E1 b\u00E1n (VND)")}<input name="base_price_vnd" type="number" min="0" max="100000000" required defaultValue={product?.base_price_vnd ?? 0}/>
           </label>
-          <label>{tr("Gi\u00E1 c\u01A1 b\u1EA3n (VND)")}<input name="base_price_vnd" type="number" required min={0} defaultValue={product?.base_price_vnd || 0}/>
+          <label>{tr("Ngu\u1ED3n s\u1EA3n ph\u1EA9m")}<select name="price_source" defaultValue={product?.price_source ?? "DEMO"}>
+              <option value="DEMO">{tr("D\u1EEF li\u1EC7u demo")}</option>
+              <option value="REAL">{tr("H\u00E0ng th\u1EADt \u0111\u00E3 x\u00E1c minh")}</option>
+            </select>
           </label>
         </div>
+        <label>{tr("Li\u00EAn k\u1EBFt \u0111\u00FAng s\u1EA3n ph\u1EA9m Shopee")}<input name="product_url" type="url" placeholder="https://shopee.vn/...-i.shop_id.item_id" defaultValue={product?.product_url || ""}/>
+        </label>
         <div className="field-row">
           <label>{tr("Category")}<select name="category_code" defaultValue={product?.category}>
               {taxonomy.categories.map((c) => (<option key={c.code} value={c.code}>
-                  {c.label}
+                  {label(c.code, c.label)}
                 </option>))}
             </select>
           </label>
           <label>{tr("M\u00E0u")}<select name="color_code" defaultValue={product?.color}>
               {taxonomy.colors.map((c) => (<option key={c.code} value={c.code}>
-                  {c.label}
+                  {label(c.code, c.label)}
                 </option>))}
             </select>
           </label>
         </div>
-        <div className="field-row">
-          <label>{tr("Gender")}<select name="gender" defaultValue={product?.gender || "UNISEX"}>
+        <label>{tr("Gender")}<select name="gender" defaultValue={product?.gender || "UNISEX"}>
               <option>{tr("UNISEX")}</option>
               <option>{tr("MALE")}</option>
               <option>{tr("FEMALE")}</option>
             </select>
           </label>
-          <label>{tr("Ngu\u1ED3n gi\u00E1")}<select name="price_source" defaultValue={product?.price_source || "DEMO"}>
-              <option>DEMO</option>
-              <option>REAL</option>
-            </select>
-          </label>
-        </div>
         <div className="field-row">
           <label>{tr("Styles (Ctrl/Cmd \u0111\u1EC3 ch\u1ECDn nhi\u1EC1u)")}<select multiple name="styles" defaultValue={product?.styles || []}>
               {taxonomy.styles.map((c) => (<option key={c.code} value={c.code}>
-                  {c.label}
+                  {label(c.code, c.label)}
                 </option>))}
             </select>
           </label>
           <label>{tr("Occasions")}<select multiple name="occasions" defaultValue={product?.occasions || []}>
               {taxonomy.occasions.map((c) => (<option key={c.code} value={c.code}>
-                  {c.label}
+                  {label(c.code, c.label)}
                 </option>))}
             </select>
           </label>
         </div>
         <label>{tr("M\u00F4 t\u1EA3")}<textarea name="description" defaultValue={product?.description}/>
         </label>
-        <label>{tr("\u1EA2nh JPEG/PNG/WebP, t\u1ED1i \u0111a 5 MB")}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => {
+        <label>{tr("\u1EA2nh s\u1EA3n ph\u1EA9m g\u1ED1c JPEG/PNG/WebP, t\u1ED1i \u0111a 5 MB (kh\u00F4ng d\u00F9ng \u1EA3nh AI/demo)")}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => {
             const file = e.target.files?.[0];
             if (file)
                 upload(file);
@@ -267,7 +268,7 @@ function ImportCatalog() {
             setPending(false);
         }
     }
-    return (<section className="import-box">
+    return (<section id="catalog-import" className="import-box">
       <div>
         <Upload size={20}/>
         <h3>{tr("Import catalog")}</h3>
@@ -300,6 +301,7 @@ function Products() {
     const { tr, label, money, productName, localeTag } = useI18n();
     const user = useUser();
     const client = useQueryClient();
+    const toast = useToast();
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [edit, setEdit] = useState<Product | "new">();
@@ -319,6 +321,22 @@ function Products() {
             setDeleting(undefined);
         },
     });
+    const stock = useMutation({
+        mutationFn: ({ product, available }: {
+            product: Product;
+            available: boolean;
+        }) => api<Product>(`/products/${product.id}/stock`, {
+            method: "PATCH",
+            body: json({ available }),
+        }),
+        onSuccess: (_response, variables) => {
+            client.invalidateQueries({ queryKey: [user.data?.id, "admin-products"] });
+            client.invalidateQueries({ queryKey: [user.data?.id, "products"] });
+            toast(variables.available
+                ? tr("Đã chuyển sản phẩm sang còn hàng.")
+                : tr("Đã chuyển sản phẩm sang hết hàng."));
+        },
+    });
     return (<>
       <PageIntro eyebrow={tr("STUDIO / CATALOG")} title={tr("B\u1ED9 s\u01B0u t\u1EADp trong tay b\u1EA1n.")} action={<button className="button" onClick={() => setEdit("new")}>
             <Plus size={17}/>{tr("Th\u00EAm s\u1EA3n ph\u1EA9m")}</button>}/>
@@ -328,13 +346,12 @@ function Products() {
             setSearch(e.target.value);
         }}/>
       </label>
-      <ErrorBox error={products.error || remove.error}/>
+      <ErrorBox error={products.error || remove.error || stock.error}/>
       <div className="table-wrap">
         <table>
           <thead>
             <tr>
               <th>{tr("S\u1EA3n ph\u1EA9m")}</th>
-              <th>{tr("Gi\u00E1")}</th>
               <th>{tr("Tr\u1EA1ng th\u00E1i")}</th>
               <th>{tr("Thao t\u00E1c")}</th>
             </tr>
@@ -345,20 +362,31 @@ function Products() {
                   <div className="table-product">
                     <img src={p.image?.url || "/editorial.svg"} alt=""/>
                     <div>
-                      <strong>{p.name}</strong>
+                      <strong>{productName(p)}</strong>
                       <small>{p.product_code}</small>
                     </div>
                   </div>
                 </td>
                 <td>
-                  {money(p.price_vnd)}
-                  <small>{p.price_source}</small>
-                </td>
-                <td>
-                  {p.active
-                ? p.available
-                    ? tr("C\u00F2n h\u00E0ng") : tr("H\u1EBFt h\u00E0ng")
-                : tr("\u0110\u00E3 t\u1EAFt")}
+                  {p.active ? (<button
+                    type="button"
+                    className="stock-toggle"
+                    data-stock={p.available ? "in" : "out"}
+                    role="switch"
+                    aria-checked={p.available}
+                    aria-busy={stock.isPending && stock.variables?.product.id === p.id}
+                    aria-label={p.available
+                        ? tr("Chuyển {name} sang hết hàng", { name: productName(p) })
+                        : tr("Chuyển {name} sang còn hàng", { name: productName(p) })}
+                    title={tr("Áp dụng cho tất cả biến thể đang hoạt động")}
+                    disabled={stock.isPending && stock.variables?.product.id === p.id}
+                    onClick={() => stock.mutate({ product: p, available: !p.available })}
+                  >
+                    {p.available ? <PackageCheck size={16}/> : <PackageX size={16}/>}
+                    <span>{stock.isPending && stock.variables?.product.id === p.id
+                        ? tr("Đang cập nhật…")
+                        : p.available ? tr("C\u00F2n h\u00E0ng") : tr("H\u1EBFt h\u00E0ng")}</span>
+                  </button>) : (<span className="stock-inactive">{tr("\u0110\u00E3 t\u1EAFt")}</span>)}
                 </td>
                 <td>
                   <div className="table-actions">
@@ -379,7 +407,7 @@ function Products() {
       {edit && tax.data && (<ProductEditor product={edit === "new" ? undefined : edit} taxonomy={tax.data} onClose={() => setEdit(undefined)}/>)}{" "}
       {deleting && (<Modal title={tr("Ng\u1EEBng ho\u1EA1t \u0111\u1ED9ng s\u1EA3n ph\u1EA9m?")} onClose={() => setDeleting(undefined)}>
           <p>
-            {deleting.name}{" " + tr("s\u1EBD kh\u00F4ng xu\u1EA5t hi\u1EC7n trong g\u1EE3i \u00FD m\u1EDBi. L\u1ECBch s\u1EED \u0111\u00E3 l\u01B0u v\u1EABn gi\u1EEF nguy\u00EAn.")}</p>
+            {productName(deleting)}{" " + tr("s\u1EBD kh\u00F4ng xu\u1EA5t hi\u1EC7n trong g\u1EE3i \u00FD m\u1EDBi. L\u1ECBch s\u1EED \u0111\u00E3 l\u01B0u v\u1EABn gi\u1EEF nguy\u00EAn.")}</p>
           <button className="button" disabled={remove.isPending} onClick={() => remove.mutate(deleting.id)}>{tr("X\u00E1c nh\u1EADn t\u1EAFt")}</button>
         </Modal>)}
     </>);
@@ -426,9 +454,6 @@ function Variants({ id }: {
                 update.mutate({
                     variant: v.id,
                     body: {
-                        price_override_vnd: form.get("price")
-                            ? Number(form.get("price"))
-                            : null,
                         available: form.get("available") === "on",
                         active: form.get("active") === "on",
                     },
@@ -438,8 +463,6 @@ function Variants({ id }: {
             <strong>{v.size_code}</strong>
             <small>{v.sku}</small>
           </div>
-          <label>{tr("Gi\u00E1 override")}<input type="number" min={0} name="price" placeholder={String(product.data?.base_price_vnd)} defaultValue={v.price_override_vnd ?? ""}/>
-          </label>
           <label className="checkbox-label">
             <input type="checkbox" name="available" defaultChecked={v.available}/>{tr("C\u00F2n h\u00E0ng")}</label>
           <label className="checkbox-label">
@@ -519,7 +542,7 @@ function TaxonomyManager() {
           <tbody>
             {query.data?.[kind].map((row) => (<tr key={row.code}>
                 <td>{row.code}</td>
-                <td>{row.label}</td>
+                <td>{label(row.code, row.label)}</td>
                 <td>{row.active ? tr("C\u00F3") : tr("Kh\u00F4ng")}</td>
                 <td>
                   <button className="text-button" onClick={() => {
@@ -643,7 +666,7 @@ function RuleManager() {
                   <small>{label(r.style_code || "ANY")}</small>
                 </td>
                 <td>{r.slots.map((s) => s.role).join(" + ")}</td>
-                <td>{r.active ? "Published" : "Draft"}</td>
+                <td>{r.active ? tr("Published") : tr("Draft")}</td>
                 <td>
                   <div className="table-actions">
                     <button className="text-button" onClick={() => {
@@ -682,14 +705,14 @@ function RuleManager() {
             </label>
             <label>{tr("Occasion")}<select name="occasion" defaultValue={source?.occasion_code}>
                 {tax.data?.occasions.map((o) => (<option value={o.code} key={o.code}>
-                    {o.label}
+                    {label(o.code, o.label)}
                   </option>))}
               </select>
             </label>
             <label>{tr("Style")}<select name="style" defaultValue={source?.style_code || ""}>
                 <option value="">{tr("Fallback c\u00F9ng occasion")}</option>
                 {tax.data?.styles.map((s) => (<option value={s.code} key={s.code}>
-                    {s.label}
+                    {label(s.code, s.label)}
                   </option>))}
               </select>
             </label>

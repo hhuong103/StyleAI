@@ -28,7 +28,7 @@ export function RunwayProductDetail({
   look: FeaturedLook;
   product: LookProduct;
 }) {
-  const { tr, money } = useI18n();
+  const { tr } = useI18n();
   const [view, setView] = useState(0);
   const [size, setSize] = useState<string | null>(null);
   const zoom = useRef<HTMLDialogElement>(null);
@@ -142,10 +142,6 @@ export function RunwayProductDetail({
             {tr(look.title)} / {tr("SELECTED PIECE")}
           </p>
           <h1 tabIndex={-1}>{tr(product.name)}</h1>
-          <div className="runway-price">
-            <strong>{money(product.price)}</strong>
-            <span>{tr("Guide price")}</span>
-          </div>
           <p className="runway-product-description">
             {tr(product.description)}
           </p>
@@ -173,23 +169,20 @@ export function RunwayProductDetail({
               "Sizes are style references. Check the seller's measurements before ordering.",
             )}
           </p>
+
           <a
             className="runway-shopee"
-            href={shopeeUrl(product, size)}
+            href={shopeeUrl(product)}
             target="_blank"
             rel="noopener noreferrer"
           >
             <ShoppingBag size={19} />
-            {tr(
-              product.purchaseUrl
-                ? "Buy on Shopee"
-                : "Find this style on Shopee",
-            )}
+            {tr("View product on Shopee")}
             <ArrowUpRight size={19} />
           </a>
           <p className="runway-seller-note">
             {tr(
-              "Editorial outfit inspiration. Images are illustrative and prices are estimates. The Shopee link searches for similar items; confirm the product, size and final price with the seller.",
+              "This opens the product-level Shopee listing matched to the garment shown. Confirm the selected colour, measurements and availability with the seller.",
             )}
           </p>
           <details className="runway-product-details" open>
@@ -216,7 +209,6 @@ export function RunwayProductDetail({
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <div>
                   <h3>{tr(entry.name)}</h3>
-                  <p>{money(entry.price)}</p>
                 </div>
                 {entry.id === product.id ? (
                   <Check size={17} />

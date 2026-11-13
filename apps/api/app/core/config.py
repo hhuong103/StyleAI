@@ -10,6 +10,8 @@ class Settings:
     app_origin: str = os.getenv("APP_ORIGIN", "http://localhost:3000")
     secret: str = os.getenv("JWT_SECRET", "local-development-only-change-before-deploy-000000")
     google_client_id: str = os.getenv("GOOGLE_CLIENT_ID", "").strip()
+    gemini_api_key: str = os.getenv("GEMINI_API_KEY", "").strip()
+    gemini_image_model: str = os.getenv("GEMINI_IMAGE_MODEL", "gemini-3.1-flash-image").strip()
     media_root: Path = Path(os.getenv("MEDIA_ROOT", "./media"))
     access_ttl: int = int(os.getenv("ACCESS_TOKEN_TTL", "900"))
     refresh_ttl: int = int(os.getenv("REFRESH_TOKEN_TTL", "604800"))

@@ -73,15 +73,24 @@ async def security_and_logging(request: Request, call_next):
                 "/api/v1/auth/google",
                 "/api/v1/auth/refresh",
                 "/api/v1/recommendations",
+                "/api/v1/stylist/virtual-try-on",
             }:
                 key = ((request.client.host if request.client else "unknown"), request.url.path)
+                window = 3600 if request.url.path.endswith("/virtual-try-on") else 60
+                limit = 5 if request.url.path.endswith("/virtual-try-on") else 30
                 with hit_lock:
                     bucket = hits[key]
-                    while bucket and bucket[0] < started - 60:
+                    while bucket and bucket[0] < started - window:
                         bucket.popleft()
-                    if len(bucket) >= 30:
+                    if len(bucket) >= limit:
                         raise AppError(
-                            429, "RATE_LIMITED", "Quá nhiều yêu cầu. Hãy thử lại sau một phút."
+                            429,
+                            "RATE_LIMITED",
+                            (
+                                "Quá nhiều yêu cầu tạo ảnh. Hãy thử lại sau."
+                                if request.url.path.endswith("/virtual-try-on")
+                                else "Quá nhiều yêu cầu. Hãy thử lại sau một phút."
+                            ),
                         )
                     bucket.append(started)
         response = await call_next(request)
@@ -149,7 +158,7 @@ def ready(request: Request):
     try:
         with engine.connect() as connection:
             version = connection.scalar(text("SELECT version_num FROM alembic_version"))
-        if version != "0002":
+        if version != "0003":
             raise ValueError("Schema mismatch")
     except Exception:
         return error_response(request, 503, "NOT_READY", "Database/migration chưa sẵn sàng.")

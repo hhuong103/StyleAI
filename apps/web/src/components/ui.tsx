@@ -6,11 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { api, clearSession } from "@/lib/api";
-import { useToast, useUser } from "./providers";
+import { useToast, useUser, useWaitlist } from "./providers";
 export function Navigation() {
   const { tr, locale, setLocale } = useI18n();
   const [open, setOpen] = useState(false);
   const user = useUser();
+  const waitlist = useWaitlist();
   const pathname = usePathname();
   const router = useRouter();
   const client = useQueryClient();
@@ -42,14 +43,15 @@ export function Navigation() {
           {text}
           {href === "/stylist" && <Sparkles size={14} />}
         </Link>))}
+        {waitlist.items.length > 0 && <Link href="/stylist#waitlist" onClick={() => setOpen(false)}>{tr("Waitlist")} ({waitlist.items.length})</Link>}
         {user.data && (<>
           <Link href="/my-looks" onClick={() => setOpen(false)}>{tr("Look c\u1EE7a t\u00F4i")}</Link>
           <Link href="/history" onClick={() => setOpen(false)}>{tr("L\u1ECBch s\u1EED")}</Link>
           <button className="mobile-logout text-button" onClick={logout}>{tr("\u0110\u0103ng xu\u1EA5t")}</button>
         </>)}
-        <div className="language-switch" role="group" aria-label="Language">
-          <button type="button" aria-pressed={locale === "en"} onClick={() => setLocale("en")} aria-label="Switch language to English">EN</button>
-          <button type="button" aria-pressed={locale === "vi"} onClick={() => setLocale("vi")} aria-label="Switch language to Vietnamese">VI</button>
+        <div className="language-switch" role="group" aria-label={tr("Language")}>
+          <button type="button" aria-pressed={locale === "en"} onClick={() => setLocale("en")} aria-label={tr("Switch language to English")}>EN</button>
+          <button type="button" aria-pressed={locale === "vi"} onClick={() => setLocale("vi")} aria-label={tr("Switch language to Vietnamese")}>VI</button>
         </div>
       </nav>
       <div className="header-tools">

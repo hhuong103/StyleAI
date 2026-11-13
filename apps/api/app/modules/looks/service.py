@@ -2,7 +2,12 @@ from sqlalchemy import select
 
 from app.core.errors import AppError
 from app.db.models import Color, Product, Recommendation, RecommendationLook, StylistPlan, Variant
-from app.modules.catalog.repository import ProductRepository, price_of
+from app.modules.catalog.repository import (
+    RETIRED_CATALOG_SOURCES,
+    ProductRepository,
+    is_public_product_snapshot,
+    price_of,
+)
 from app.modules.recommendations.engine import look_score, rank_products, score_candidate, total
 from app.modules.recommendations.service import look_data, owned, persist_look
 
@@ -43,8 +48,14 @@ def revalidate(db, items):
             or not variant
             or variant.product_id != product.id
             or not product.active
+            or product.price_source != "REAL"
+            or product.source == "synthetic-v1"
+            or product.source in RETIRED_CATALOG_SOURCES
+            or not product.product_url
+            or not any(image.storage_key.startswith("uploads/") for image in product.images)
             or not variant.active
             or not variant.available
+            or not is_public_product_snapshot(item)
         ):
             raise AppError(
                 409,

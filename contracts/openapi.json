@@ -737,6 +737,58 @@
         }
       }
     },
+    "/api/v1/products/{product_id}/stock": {
+      "patch": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Update Stock",
+        "operationId": "update_stock_api_v1_products__product_id__stock_patch",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductStockUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ProductOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/products/{product_id}/variants": {
       "post": {
         "tags": [
@@ -862,6 +914,47 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PlanInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stylist/virtual-try-on": {
+      "post": {
+        "tags": [
+          "Stylist"
+        ],
+        "summary": "Virtual Try On",
+        "operationId": "virtual_try_on_api_v1_stylist_virtual_try_on_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualTryOnInput"
               }
             }
           },
@@ -2855,6 +2948,18 @@
             "title": "Active",
             "default": true
           },
+          "product_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Url"
+          },
           "price_source": {
             "type": "string",
             "enum": [
@@ -2971,6 +3076,18 @@
             "title": "Active",
             "default": true
           },
+          "product_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Url"
+          },
           "price_source": {
             "type": "string",
             "enum": [
@@ -3068,6 +3185,17 @@
             "type": "boolean",
             "title": "Active"
           },
+          "product_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Url"
+          },
           "available": {
             "type": "boolean",
             "title": "Available"
@@ -3133,6 +3261,7 @@
           "base_price_vnd",
           "description",
           "active",
+          "product_url",
           "available",
           "price_source",
           "image",
@@ -3142,6 +3271,20 @@
           "variants"
         ],
         "title": "ProductOutput"
+      },
+      "ProductStockUpdate": {
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "available"
+        ],
+        "title": "ProductStockUpdate"
       },
       "ProfileUpdate": {
         "properties": {
@@ -3271,6 +3414,14 @@
             "minimum": 1.0,
             "title": "Top K",
             "default": 5
+          },
+          "selected_products": {
+            "items": {
+              "$ref": "#/components/schemas/SelectedProduct"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "title": "Selected Products"
           }
         },
         "additionalProperties": false,
@@ -3490,6 +3641,27 @@
           "look_id"
         ],
         "title": "SaveOutfit"
+      },
+      "SelectedProduct": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Product Id"
+          },
+          "variant_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Variant Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "product_id",
+          "variant_id"
+        ],
+        "title": "SelectedProduct"
       },
       "Slot": {
         "properties": {
@@ -3867,6 +4039,115 @@
         "additionalProperties": false,
         "type": "object",
         "title": "VariantUpdate"
+      },
+      "VirtualTryOnInput": {
+        "properties": {
+          "selected_products": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 1,
+            "title": "Selected Products"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "UNISEX"
+            ],
+            "title": "Gender"
+          },
+          "age": {
+            "type": "integer",
+            "maximum": 80.0,
+            "minimum": 18.0,
+            "title": "Age"
+          },
+          "height_cm": {
+            "type": "integer",
+            "maximum": 220.0,
+            "minimum": 130.0,
+            "title": "Height Cm"
+          },
+          "weight_kg": {
+            "type": "integer",
+            "maximum": 200.0,
+            "minimum": 35.0,
+            "title": "Weight Kg"
+          },
+          "bust_cm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 180.0,
+                "minimum": 50.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bust Cm"
+          },
+          "waist_cm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 180.0,
+                "minimum": 45.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waist Cm"
+          },
+          "hips_cm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 200.0,
+                "minimum": 50.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hips Cm"
+          },
+          "background": {
+            "type": "string",
+            "enum": [
+              "SCHOOL",
+              "CAFE",
+              "PARTY",
+              "TRAVEL",
+              "OFFICE",
+              "STUDIO"
+            ],
+            "title": "Background"
+          },
+          "consent_external_processing": {
+            "type": "boolean",
+            "const": true,
+            "title": "Consent External Processing"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "selected_products",
+          "gender",
+          "age",
+          "height_cm",
+          "weight_kg",
+          "background",
+          "consent_external_processing"
+        ],
+        "title": "VirtualTryOnInput"
       }
     }
   }

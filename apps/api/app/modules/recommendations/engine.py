@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from app.modules.catalog.repository import price_of, product_data
 
-ALGORITHM_VERSION = "weighted-v1+composer-v1"
+ALGORITHM_VERSION = "weighted-v1+composer-v1+waitlist-v1"
 
 
 def score_candidate(product, variant, slot, context, families):
@@ -64,6 +64,7 @@ def score_candidate(product, variant, slot, context, families):
         "gender": product.gender,
         "price_vnd": price,
         "price_source": product.price_source,
+        "product_url": product.product_url,
         "size_code": variant.size_code,
         "image": data["image"],
         "score": float(score.quantize(Decimal(".000001"))),

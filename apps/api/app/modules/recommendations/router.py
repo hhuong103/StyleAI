@@ -1,17 +1,24 @@
 from fastapi import APIRouter, Depends, Query, Request
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.errors import result
+from app.core.errors import AppError, result
 from app.core.idempotency import execute_once
 from app.core.outputs import RecommendationOutput
 from app.core.schemas import Envelope, RecommendationInput
 from app.db.models import Recommendation, User
 from app.db.session import get_db
 from app.modules.auth.security import current_user
+from app.modules.catalog.repository import is_public_product_snapshot
 from app.modules.recommendations.service import generate, owned
 
 router = APIRouter(prefix="/recommendations", tags=["Recommendations"])
+
+
+def is_public_recommendation(snapshot):
+    items = [item for slot in snapshot.get("slot_results", []) for item in slot.get("items", [])]
+    items.extend(item for look in snapshot.get("looks", []) for item in look.get("items", []))
+    return all(is_public_product_snapshot(item) for item in items)
 
 
 @router.post("", status_code=201, response_model=Envelope[RecommendationOutput])
@@ -38,12 +45,10 @@ def history(
     db: Session = Depends(get_db, scope="function"),
 ):
     query = select(Recommendation).where(Recommendation.user_id == user.id)
-    count = db.scalar(select(func.count()).select_from(query.subquery()))
-    rows = db.scalars(
-        query.order_by(Recommendation.created_at.desc(), Recommendation.id)
-        .offset((page - 1) * page_size)
-        .limit(page_size)
-    )
+    rows = db.scalars(query.order_by(Recommendation.created_at.desc(), Recommendation.id))
+    visible = [row for row in rows if is_public_recommendation(row.result_snapshot)]
+    count = len(visible)
+    rows = visible[(page - 1) * page_size : page * page_size]
     data = [
         {
             "id": r.id,
@@ -64,4 +69,7 @@ def detail(
     user: User = Depends(current_user),
     db: Session = Depends(get_db, scope="function"),
 ):
-    return result(request, owned(db, Recommendation, recommendation_id, user.id).result_snapshot)
+    snapshot = owned(db, Recommendation, recommendation_id, user.id).result_snapshot
+    if not is_public_recommendation(snapshot):
+        raise AppError(404, "NOT_FOUND", "Không tìm thấy gợi ý.")
+    return result(request, snapshot)

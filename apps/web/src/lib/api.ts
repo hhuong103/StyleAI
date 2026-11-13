@@ -77,7 +77,11 @@ export async function api<T>(
       signal:
         options.signal ??
         AbortSignal.timeout(
-          path.includes("/catalog-imports") ? 120_000 : 20_000,
+          path.includes("/virtual-try-on")
+            ? 300_000
+            : path.includes("/catalog-imports")
+              ? 120_000
+              : 20_000,
         ),
     });
   } catch {

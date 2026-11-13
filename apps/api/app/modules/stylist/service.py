@@ -19,7 +19,7 @@ OCCASION_WORDS = {
     "DAILY": ["hang ngay", "daily"],
 }
 STYLE_WORDS = {
-    "MINIMAL": ["toi gian", "minimal"],
+    "MINIMAL": ["toi gian", "minimal", "minimalist"],
     "SMART_CASUAL": ["thanh lich", "smart casual"],
     "FORMAL": ["trang trong", "formal"],
     "STREETWEAR": ["duong pho", "streetwear"],

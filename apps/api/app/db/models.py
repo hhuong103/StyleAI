@@ -141,6 +141,7 @@ class Product(Identity, Base):
     description: Mapped[str] = mapped_column(Text, default="")
     active: Mapped[bool] = mapped_column(Boolean, default=True)
     source: Mapped[str] = mapped_column(String(100), default="manual")
+    product_url: Mapped[str | None] = mapped_column(Text)
     price_source: Mapped[str] = mapped_column(String(10), default="DEMO")
     variants: Mapped[list["Variant"]] = relationship(lazy="selectin", cascade="all, delete-orphan")
     images: Mapped[list["ProductImage"]] = relationship(

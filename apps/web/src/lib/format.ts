@@ -50,7 +50,7 @@ export const labels: Record<string, string> = {
   SHOES: "Giày",
   BEST_MATCH: "Phù hợp nhất",
   ALTERNATIVE: "Một góc nhìn khác",
-  BUDGET_CHOICE: "Ưu tiên ngân sách",
+  BUDGET_CHOICE: "Lựa chọn bổ sung",
   BLACK: "Đen",
   WHITE: "Trắng",
   BEIGE: "Be",
@@ -68,7 +68,7 @@ export const labels: Record<string, string> = {
   COLOR_MATCH: "Màu sắc ưu tiên",
   COLOR_FAMILY_MATCH: "Cùng nhóm màu",
   OCCASION_MATCH: "Hợp hoàn cảnh",
-  WITHIN_BUDGET: "Trong ngân sách",
+  WITHIN_BUDGET: "Phù hợp yêu cầu",
 };
 export const label = (code: string) =>
   labels[code] || code.replaceAll("_", " ");

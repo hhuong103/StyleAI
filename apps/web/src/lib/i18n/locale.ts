@@ -39,16 +39,7 @@ export function createFormatter(locale: Locale) {
       currency: "VND",
       maximumFractionDigits: 0,
     }).format(value);
-  const productName = (product: { name: string; product_code?: string }) => {
-    const parts = product.product_code?.match(/^DEMO_(.+)_([A-Z]+)_(\d+)$/);
-    if (locale === "vi" || !parts) return product.name;
-    const [, category, color, edition] = parts;
-    const original = `${labels[category]} ${labels[color]?.toLowerCase()} — Edit ${edition}`;
-    // Only translate untouched synthetic names. Preserve merchant and user content.
-    return product.name === original
-      ? `${label(category)} · ${label(color)} — Edit ${edition}`
-      : product.name;
-  };
+  const productName = (product: { name: string }) => product.name;
   return {
     tr,
     label,

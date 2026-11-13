@@ -20,8 +20,8 @@ export function Collage({ look, interactive = false, selected, onSelect, }: {
     const { tr, label, money, productName, localeTag } = useI18n();
     return (<div className={`collage collage-${look.items.length}`}>
       {look.items.map((item, index) => (<div key={item.slot_key} className={`collage-piece ${selected === item.slot_key ? "highlighted" : ""}`}>
-          <img src={item.image?.url || "/editorial.svg"} alt={item.image?.alt_text || item.name} loading="lazy"/>
-          {interactive && (<button className={`hotspot ${selected === item.slot_key ? "selected" : ""}`} aria-label={tr("Ch\u1ECDn {0}: {1}", { "0": label(item.role), "1": item.name })} aria-pressed={selected === item.slot_key} onClick={() => onSelect?.(item.slot_key)}>
+          {item.image && <img src={item.image.url} alt={productName(item)} loading="lazy" />}
+          {interactive && (<button className={`hotspot ${selected === item.slot_key ? "selected" : ""}`} aria-label={tr("Ch\u1ECDn {0}: {1}", { "0": label(item.role), "1": productName(item) })} aria-pressed={selected === item.slot_key} onClick={() => onSelect?.(item.slot_key)}>
               <span>{String(index + 1).padStart(2, "0")}</span>
             </button>)}
         </div>))}
@@ -48,8 +48,7 @@ export function LookCard({ look, index = 0, href, children, }: {
           </span>
           <ArrowRight size={18}/>
         </div>
-        <h3>{look.name}</h3>
-        <p className="look-price">{money(look.total_price_vnd)}</p>
+        <h3>{tr(look.name)}</h3>
       </Link>
       {children}
     </article>);
@@ -73,11 +72,14 @@ function Recommendations({ id }: {
         queryFn: () => api<Recommendation>(`/recommendations/${id}`).then((r) => r.data),
     });
     const rec = query.data;
+    const missingSlots = rec?.diagnostics.missing_slots ?? [];
+    const catalogMissing = missingSlots.length > 0;
+    const isAdmin = user.data?.role === "ADMIN";
     return (<div className="container page">
       <Link className="text-button back-link" href="/stylist">
         <ArrowLeft size={16}/>{tr("Ch\u1EC9nh y\u00EAu c\u1EA7u")}</Link>
       <PageIntro eyebrow={tr("THOUGHTFULLY SELECTED FOR YOU")} title={tr("M\u1ED9t y\u00EAu c\u1EA7u. Nh\u1EEFng g\u00F3c nh\u00ECn m\u1EDBi.")} description={rec
-            ? tr("{0} \u00B7 {1} \u00B7 Ng\u00E2n s\u00E1ch {2}", { "0": label(rec.context.occasion), "1": label(rec.context.style), "2": money(rec.budget_max_vnd) }) : undefined}/>
+            ? tr("{0} · {1}", { "0": label(rec.context.occasion), "1": label(rec.context.style) }) : undefined}/>
       <ErrorBox error={query.error} retry={() => query.refetch()}/>
       {query.isPending && <Skeletons />}
       {rec &&
@@ -86,19 +88,47 @@ function Recommendations({ id }: {
               {rec.looks.map((look, index) => (<LookCard key={look.look_id} look={look} index={index} href={`/recommendations/${id}/looks/${look.look_id}`}/>))}
             </div>
             {rec.looks.length < 3 && (<p className="notice">{tr("Catalog hi\u1EC7n c\u00F3") + " "}{rec.looks.length}{" " + tr("b\u1ED9 kh\u00E1c nhau \u0111\u00E1p \u1EE9ng y\u00EAu c\u1EA7u. Ch\u00FAng t\u00F4i gi\u1EEF \u0111\u00FAng r\u00E0ng bu\u1ED9c c\u1EE7a b\u1EA1n.")}</p>)}
-            <p className="fine-print">{tr("M\u1EE9c ph\u00F9 h\u1EE3p l\u00E0 \u0111i\u1EC3m heuristic t\u1EEB metadata. S\u1EA3n ph\u1EA9m v\u00E0 gi\u00E1 trong catalog DEMO l\u00E0 m\u00F4 ph\u1ECFng.")}</p>
+            <p className="fine-print">{tr("Mức phù hợp được tính từ kiểu dáng, màu sắc và hoàn cảnh đã chọn.")}</p>
           </>) : (<>
-            <Empty title={tr("Ch\u01B0a gh\u00E9p \u0111\u01B0\u1EE3c m\u1ED9t Look ho\u00E0n ch\u1EC9nh")} description={rec.diagnostics.missing_slots.length
-                    ? tr("Catalog c\u00F2n thi\u1EBFu: {0}.", { "0": rec.diagnostics.missing_slots.map((s) => label(s.toUpperCase())).join(", ") }) : tr("Ng\u00E2n s\u00E1ch kh\u1EA3 thi t\u1ED1i thi\u1EC3u hi\u1EC7n t\u1EA1i: {0}.", { "0": money(rec.diagnostics.minimum_feasible_budget_vnd || 0) })}/>
+            <Empty
+              title={tr(
+                "Ch\u01B0a gh\u00E9p \u0111\u01B0\u1EE3c m\u1ED9t Look ho\u00E0n ch\u1EC9nh",
+              )}
+              description={
+                catalogMissing
+                  ? tr(
+                      "Chưa tìm thấy sản phẩm thật phù hợp cho: {0}. Chỉ sản phẩm có link Shopee cụ thể và ảnh đã tải lên mới được dùng để phối.",
+                      {
+                        "0": missingSlots
+                          .map((slot) => label(slot.toUpperCase()))
+                          .join(", "),
+                      },
+                    )
+                  : tr("Hãy thử thay đổi phong cách, hoàn cảnh hoặc màu sắc.")
+              }
+              href={
+                catalogMissing
+                  ? isAdmin
+                    ? "/admin/products#catalog-import"
+                    : "/shop"
+                  : undefined
+              }
+              cta={
+                catalogMissing
+                  ? isAdmin
+                    ? "Import catalog"
+                    : "Browse current collection"
+                  : undefined
+              }
+            />
             {rec.slot_results.some((s) => s.items.length > 0) && (<section className="partial-results">
                 <h2>{tr("Nh\u1EEFng m\u00F3n \u0111\u00E3 t\u00ECm th\u1EA5y")}</h2>
                 {rec.slot_results.map((s) => (<div key={s.slot_key}>
                     <h3>{label(s.role)}</h3>
                     <div className="mini-grid">
                       {s.items.slice(0, 3).map((i) => (<div key={i.product_id}>
-                          <img src={i.image?.url || "/editorial.svg"} alt={i.name}/>
-                          <span>{i.name}</span>
-                          <strong>{money(i.price_vnd)}</strong>
+                          {i.image && <img src={i.image.url} alt={productName(i)} />}
+                          <span>{productName(i)}</span>
                         </div>))}
                     </div>
                   </div>))}
@@ -151,13 +181,12 @@ function WhyLook({ look }: {
       <p className="eyebrow">{tr("WHY THIS LOOK?")}</p>
       <h3>{tr("M\u1ECDi l\u1EF1a ch\u1ECDn \u0111\u1EC1u c\u00F3 l\u00FD do.")}</h3>
       <div className="why-grid">
-        {look.reasons.map((r) => (<div key={r.code}>
+        {look.reasons.filter((r) => r.code !== "LOOK_WITHIN_BUDGET").map((r) => (<div key={r.code}>
             <Check size={16}/>
             <p>
               {r.code === "OCCASION_TEMPLATE_MATCH"
                 ? tr("C\u1EA5u tr\u00FAc ph\u00F9 h\u1EE3p {0}.", { "0": label(String(r.facts.occasion)).toLowerCase() }) : r.code === "STYLE_COVERAGE"
-                ? tr("{0}/{1} m\u00F3n mang phong c\u00E1ch {2}.", { "0": String(r.facts.matched_items), "1": String(r.facts.total_items), "2": label(String(r.facts.style)).toLowerCase() }) : r.code === "LOOK_WITHIN_BUDGET"
-                ? tr("T\u1ED5ng {0}, c\u00F2n {1} trong ng\u00E2n s\u00E1ch.", { "0": money(Number(r.facts.total_price_vnd)), "1": money(Number(r.facts.remaining_vnd)) }) : tr("B\u1EA3ng m\u00E0u: {0}.", { "0": ((r.facts.colors as string[]) || []).map((c) => label(c)).join(", ") })}
+                ? tr("{0}/{1} m\u00F3n mang phong c\u00E1ch {2}.", { "0": String(r.facts.matched_items), "1": String(r.facts.total_items), "2": label(String(r.facts.style)).toLowerCase() }) : tr("B\u1EA3ng m\u00E0u: {0}.", { "0": ((r.facts.colors as string[]) || []).map((c) => label(c)).join(", ") })}
             </p>
           </div>))}
       </div>
@@ -209,7 +238,7 @@ function InteractiveLook({ id, lookId }: {
             setReplacing(undefined);
             setDrawer(undefined);
             router.replace(`/recommendations/${id}/looks/${r.data.look_id}`);
-            toast(tr("\u0110\u00E3 thay m\u00F3n v\u00E0 t\u00EDnh l\u1EA1i ng\u00E2n s\u00E1ch."));
+            toast(tr("Đã thay món và cập nhật Look."));
         },
     });
     const save = useMutation({
@@ -237,7 +266,7 @@ function InteractiveLook({ id, lookId }: {
               <p className="eyebrow">
                 {label(look.label)}{" " + tr("/ EDIT") + " "}{look.revision}
               </p>
-              <h1>{look.name}</h1>
+              <h1>{tr(look.name)}</h1>
               <span className="match-score">{percent(look.score)}{" " + tr("ph\u00F9 h\u1EE3p")}</span>
               <div className="look-items">
                 {look.items.map((item, index) => (<article className={`look-item ${selected === item.slot_key ? "selected" : ""}`} key={item.slot_key} onMouseEnter={() => setSelected(item.slot_key)}>
@@ -246,10 +275,9 @@ function InteractiveLook({ id, lookId }: {
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span>
-                        <strong>{item.name}</strong>
+                        <strong>{productName(item)}</strong>
                         <span>
-                          {money(item.price_vnd)}{" "}
-                          <small>· {percent(item.score)}</small>
+                          <small>{percent(item.score)}{" " + tr("phù hợp")}</small>
                         </span>
                         <small>
                           {item.size_code === "ONE_SIZE"
@@ -267,20 +295,12 @@ function InteractiveLook({ id, lookId }: {
                     </div>
                   </article>))}
               </div>
-              <div className="look-total">
-                <span>{tr("T\u1ED5ng c\u1EA3 Look")}</span>
-                <strong>{money(look.total_price_vnd)}</strong>
-              </div>
-              <p className="within-budget">
-                <Check size={15}/>{tr("Trong ng\u00E2n s\u00E1ch") + " "}{money(look.budget_max_vnd)}
-              </p>
               <ErrorBox error={save.error}/>
               <button className="button full save-sticky" disabled={save.isPending || replacement.isPending} onClick={() => save.mutate()}>
                 <Heart size={18}/>
                 {save.isPending ? tr("\u0110ang l\u01B0u\u2026") : tr("L\u01B0u Look n\u00E0y")}
                 <ArrowRight size={17}/>
               </button>
-              <p className="fine-print">{tr("Gi\u00E1 m\u00F4 ph\u1ECFng. Kh\u00F4ng gi\u1EEF ch\u1ED7 ho\u1EB7c thanh to\u00E1n.")}</p>
               <FeedbackPanel targetType="LOOK" targetId={lookId}/>
             </section>
           </div>
@@ -289,23 +309,14 @@ function InteractiveLook({ id, lookId }: {
       {drawer && (<ProductDrawer productId={drawer.product_id} selectedVariant={drawer.variant_id} onClose={() => setDrawer(undefined)} error={replacement.error} onVariant={(variant) => replacement.mutate({ slot: drawer.slot_key, variant })}/>)}
       {drawer && replacement.error && <ErrorBox error={replacement.error}/>}
       {replacing && (<Modal title={`Thay ${label(replacing.role).toLowerCase()}`} onClose={() => !replacement.isPending && setReplacing(undefined)}>
-          <p>{tr("Gi\u1EEF c\u00E1c m\u00F3n kh\u00E1c. Ch\u1EC9 hi\u1EC3n th\u1ECB l\u1EF1a ch\u1ECDn c\u00F2n trong ng\u00E2n s\u00E1ch.")}</p>
+          <p>{tr("Giữ các món khác và chọn một phương án thay thế phù hợp.")}</p>
           <ErrorBox error={alternatives.error || replacement.error} retry={() => alternatives.refetch()}/>
           {alternatives.isPending ? (<Skeletons count={2}/>) : alternatives.data?.length ? (<div className="alternatives">
               {alternatives.data.map((item) => (<article key={item.variant_id}>
-                  <img src={item.image?.url || "/editorial.svg"} alt={item.name}/>
+                  {item.image && <img src={item.image.url} alt={productName(item)} />}
                   <div>
-                    <h3>{item.name}</h3>
-                    <p>
-                      {money(item.price_vnd)} · {percent(item.score)}{" " + tr("ph\u00F9 h\u1EE3p")}</p>
-                    <p>{tr("T\u1ED5ng m\u1EDBi")}{" "}
-                      <strong>{money(item.new_total_price_vnd)}</strong>
-                    </p>
-                    <small>
-                      {item.delta_price_vnd >= 0 ? "+" : ""}
-                      {money(item.delta_price_vnd)}{" " + tr("\u00B7 M\u1EE9c ph\u00F9 h\u1EE3p")}{" "}
-                      {percent(item.new_look_score)}
-                    </small>
+                    <h3>{productName(item)}</h3>
+                    <p>{percent(item.new_look_score)}{" " + tr("ph\u00F9 h\u1EE3p")}</p>
                     <button className="button small" disabled={replacement.isPending} onClick={() => replacement.mutate({
                         slot: replacing.slot_key,
                         variant: item.variant_id,
@@ -313,7 +324,7 @@ function InteractiveLook({ id, lookId }: {
                     </button>
                   </div>
                 </article>))}
-            </div>) : (<p className="notice">{tr("Ch\u01B0a c\u00F3 l\u1EF1a ch\u1ECDn kh\u00E1c cho slot n\u00E0y trong ng\u00E2n s\u00E1ch hi\u1EC7n t\u1EA1i.")}</p>)}
+            </div>) : (<p className="notice">{tr("Chưa có lựa chọn thay thế phù hợp cho vị trí này.")}</p>)}
         </Modal>)}
     </div>);
 }
@@ -442,32 +453,27 @@ function SavedLookDetail({ id }: {
             <Collage look={row} interactive selected={selected} onSelect={setSelected}/>
             <section className="look-panel">
               <p className="eyebrow">{tr("SAVED IN YOUR LOOKBOOK")}</p>
-              <h1>{row.name}</h1>
+              <h1>{tr(row.name)}</h1>
               <p>
                 {label(row.occasion)} · {label(row.style)}
               </p>
               <span className="match-score">
                 {percent(row.score)}{" " + tr("ph\u00F9 h\u1EE3p l\u00FAc l\u01B0u")}</span>
-              <p className="notice">{tr("\u1EA2nh v\u00E0 gi\u00E1 t\u1EA1i th\u1EDDi \u0111i\u1EC3m l\u01B0u:")}{" "}
-                {new Date(row.created_at).toLocaleDateString("vi-VN")}.
+              <p className="notice">{tr("Thông tin tại thời điểm lưu:")}{" "}
+                {new Date(row.created_at).toLocaleDateString(localeTag)}.
               </p>
-              {row.current_status?.some((s) => !s.available || s.price_changed) && (<p className="error-box">{tr("M\u1ED9t s\u1ED1 m\u00F3n \u0111\u00E3 \u0111\u1ED5i gi\u00E1 ho\u1EB7c h\u1EBFt h\u00E0ng. Look n\u00E0y gi\u1EEF th\u00F4ng tin l\u00FAc b\u1EA1n l\u01B0u.")}</p>)}
+              {row.current_status?.some((s) => !s.available) && (<p className="error-box">{tr("Một số món hiện đã hết hàng. Look này vẫn giữ thông tin lúc bạn lưu.")}</p>)}
               <div className="look-items">
                 {row.items.map((i) => (<button className={`saved-item ${selected === i.slot_key ? "selected" : ""}`} key={i.slot_key} onClick={() => {
                     setSelected(i.slot_key);
                     setDrawer(i);
                 }}>
-                    <img src={i.image?.url || "/editorial.svg"} alt={i.name}/>
+                    {i.image && <img src={i.image.url} alt={productName(i)} />}
                     <span>
-                      <strong>{i.name}</strong>
-                      <span>{money(i.price_vnd)}</span>
+                      <strong>{productName(i)}</strong>
                     </span>
                     <ArrowRight size={16}/>
                   </button>))}
-              </div>
-              <div className="look-total">
-                <span>{tr("T\u1ED5ng l\u00FAc l\u01B0u")}</span>
-                <strong>{money(row.total_price_vnd)}</strong>
               </div>
               <FeedbackPanel targetType="OUTFIT" targetId={id}/>
             </section>
@@ -505,13 +511,12 @@ function History() {
             {query.data.data.map((row) => (<Link key={row.id} href={`/recommendations/${row.id}`}>
                 <div>
                   <p className="eyebrow">
-                    {new Date(row.created_at).toLocaleString("vi-VN")}
+                    {new Date(row.created_at).toLocaleString(localeTag)}
                   </p>
                   <h3>
                     {label(row.context.occasion)} · {label(row.context.style)}
                   </h3>
-                  <p>
-                    {money(row.context.budget_max_vnd)} · {row.looks.length}{" "}{tr("Looks")}</p>
+                  <p>{row.looks.length}{" "}{tr("Looks")}</p>
                 </div>
                 <ArrowRight size={22}/>
               </Link>))}

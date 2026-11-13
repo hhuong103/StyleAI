@@ -3,11 +3,19 @@ import { useI18n } from "@/components/locale-provider";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ArrowRight, Search, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Search,
+  ShoppingBag,
+  X,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import type { Product, Taxonomy } from "@/lib/types";
-import { useUser } from "./providers";
+import { useToast, useUser, useWaitlist } from "./providers";
 import { Empty, ErrorBox, PageIntro, Skeletons } from "./ui";
 export function ProductCard({ product }: {
     product: Product;
@@ -15,20 +23,20 @@ export function ProductCard({ product }: {
     const { tr, label, money, productName, localeTag } = useI18n();
     return (<Link className="product-card" href={`/shop/${product.id}`}>
       <div className="product-image">
-        <img src={product.image?.url || "/editorial.svg"} alt={product.image?.alt_text || product.name} loading="lazy"/>
+        {product.image && (
+          <img src={product.image.url} alt={productName(product)} loading="lazy" />
+        )}
         {!product.available && <span className="stock-badge">{tr("H\u1EBFt h\u00E0ng")}</span>}
         <span className="product-quick">
           <ArrowRight size={20}/>
         </span>
       </div>
       <div className="product-meta">
-        <h3>{product.name}</h3>
-        <span>{money(product.price_vnd)}</span>
+        <h3>{productName(product)}</h3>
       </div>
       <p>
         {product.brand} <span>·</span>{" "}
-        {product.price_source === "DEMO"
-            ? tr("Gi\u00E1 m\u00F4 ph\u1ECFng") : label(product.styles[0] || "")}
+        {label(product.styles[0] || "")}
       </p>
     </Link>);
 }
@@ -62,7 +70,7 @@ function Catalog() {
     }
     const page = Number(params.get("page") || 1), total = products.data?.meta.total || 0;
     return (<div className="container page">
-      <PageIntro eyebrow={tr("THE CONSIDERED COLLECTION")} title={tr("Ch\u1ECDn \u00EDt h\u01A1n. H\u1EE3p h\u01A1n.")} description={tr("Nh\u1EEFng m\u00F3n \u0111\u1ED3 \u0111\u1EC3 b\u1EA1n x\u00E2y d\u1EF1ng phong c\u00E1ch ri\u00EAng. Catalog v\u00E0 gi\u00E1 DEMO \u0111\u01B0\u1EE3c \u0111\u00E1nh d\u1EA5u r\u00F5.")}/>
+      <PageIntro eyebrow={tr("THE CONSIDERED COLLECTION")} title={tr("Ch\u1ECDn \u00EDt h\u01A1n. H\u1EE3p h\u01A1n.")} description={tr("Chỉ hiển thị sản phẩm thật đã xác nhận với Shopee, kèm ảnh gốc và liên kết sản phẩm cụ thể.")}/>
       <div className="shop-layout">
         <aside className="filters">
           <form className="search-field" onSubmit={(e) => {
@@ -84,7 +92,7 @@ function Catalog() {
               <select value={params.get(key) || ""} onChange={(e) => filter(key, e.target.value)}>
                 <option value="">{tr("T\u1EA5t c\u1EA3")}</option>
                 {taxonomy.data?.[group].map((t) => (<option key={t.code} value={t.code}>
-                    {t.label}
+                    {label(t.code, t.label)}
                   </option>))}
               </select>
             </label>))}
@@ -95,10 +103,6 @@ function Catalog() {
               <option value="UNISEX">{tr("Unisex")}</option>
             </select>
           </label>
-          <label>{tr("Gi\u00E1 t\u1EEB (VND)")}<input type="number" min="0" value={params.get("min_price_vnd") || ""} onChange={(e) => filter("min_price_vnd", e.target.value)}/>
-          </label>
-          <label>{tr("Gi\u00E1 \u0111\u1EBFn (VND)")}<input type="number" min="0" value={params.get("max_price_vnd") || ""} onChange={(e) => filter("max_price_vnd", e.target.value)}/>
-          </label>
           <label className="checkbox-label">
             <input type="checkbox" checked={params.get("available") === "true"} onChange={(e) => filter("available", e.target.checked ? "true" : "")}/>{tr("Ch\u1EC9 s\u1EA3n ph\u1EA9m c\u00F2n h\u00E0ng")}</label>
           <button className="text-button" onClick={() => router.replace("/shop")}>{tr("X\u00F3a b\u1ED9 l\u1ECDc") + " "}<X size={15}/>
@@ -106,18 +110,16 @@ function Catalog() {
         </aside>
         <section>
           <div className="catalog-toolbar">
-            <span>{total.toLocaleString("vi-VN")}{" " + tr("s\u1EA3n ph\u1EA9m")}</span>
+            <span>{total.toLocaleString(localeTag)}{" " + tr("s\u1EA3n ph\u1EA9m")}</span>
             <select aria-label={tr("S\u1EAFp x\u1EBFp")} value={params.get("sort") || "newest"} onChange={(e) => filter("sort", e.target.value)}>
               <option value="newest">{tr("M\u1EDBi nh\u1EA5t")}</option>
-              <option value="price_asc">{tr("Gi\u00E1 t\u0103ng d\u1EA7n")}</option>
-              <option value="price_desc">{tr("Gi\u00E1 gi\u1EA3m d\u1EA7n")}</option>
               <option value="name_asc">{tr("T\u00EAn A\u2013Z")}</option>
             </select>
           </div>
           <ErrorBox error={products.error} retry={() => products.refetch()}/>
           {products.isPending ? (<Skeletons />) : products.data?.data.length ? (<div className="product-grid">
               {products.data.data.map((p) => (<ProductCard key={p.id} product={p}/>))}
-            </div>) : (!products.error && (<Empty title={tr("Ch\u01B0a t\u00ECm \u0111\u01B0\u1EE3c m\u00F3n ph\u00F9 h\u1EE3p")} description={tr("Th\u1EED thay \u0111\u1ED5i ho\u1EB7c x\u00F3a m\u1ED9t v\u00E0i b\u1ED9 l\u1ECDc.")} href="/shop" cta={tr("Xem t\u1EA5t c\u1EA3")}/>))}
+            </div>) : (!products.error && (<Empty title={tr("Ch\u01B0a c\u00F3 s\u1EA3n ph\u1EA9m th\u1EADt ph\u00F9 h\u1EE3p trong catalog. B\u1ED9 \u0111\u1ED3 demo v\u00E0 \u1EA3nh minh h\u1ECDa kh\u00F4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.")} description={tr("Ch\u1EC9 hi\u1EC3n th\u1ECB s\u1EA3n ph\u1EA9m th\u1EADt \u0111\u00E3 x\u00E1c nh\u1EADn v\u1EDBi Shopee, k\u00E8m \u1EA3nh g\u1ED1c v\u00E0 li\u00EAn k\u1EBFt s\u1EA3n ph\u1EA9m c\u1EE5 th\u1EC3.")} href="/shop" cta={tr("Xem t\u1EA5t c\u1EA3")}/>))}
           <div className="pagination">
             <button className="button outline small" disabled={page <= 1} onClick={() => filter("page", String(page - 1))}>
               <ArrowLeft size={16}/>{tr("Tr\u01B0\u1EDBc")}</button>
@@ -170,33 +172,60 @@ export function ProductContent({ product, selectedVariant, onVariant, }: {
     onVariant?: (id: string) => void;
 }) {
     const { tr, label, money, productName, localeTag } = useI18n();
+    const waitlist = useWaitlist();
+    const toast = useToast();
     const [variant, setVariant] = useState(selectedVariant || product.variants.find((v) => v.available)?.id || "");
     const selected = product.variants.find((v) => v.id === variant);
+    const waitlistItem = waitlist.items.find((item) => item.product_id === product.id);
+    const alreadyAdded = waitlistItem?.variant_id === variant;
+    function addToWaitlist() {
+        waitlist.add({ product_id: product.id, variant_id: variant });
+        toast(tr("Added {0} to your Waitlist.", { "0": productName(product) }));
+    }
     return (<div className="product-detail">
-      <img className="detail-image" src={product.image?.url || "/editorial.svg"} alt={product.image?.alt_text || product.name}/>
+      {product.image && (
+        <img className="detail-image" src={product.image.url} alt={productName(product)} />
+      )}
       <div>
         <p className="eyebrow">{product.brand}</p>
-        <h2>{product.name}</h2>
-        <p className="detail-price">
-          {money(selected?.price_vnd ?? product.price_vnd)}
-        </p>
-        {product.price_source === "DEMO" && (<p className="demo-note">{tr("S\u1EA3n ph\u1EA9m v\u00E0 gi\u00E1 m\u00F4 ph\u1ECFng. H\u00ECnh \u1EA3nh d\u00F9ng \u0111\u1EC3 tham kh\u1EA3o. Kh\u00F4ng c\u00F3 thanh to\u00E1n.")}</p>)}
-        <p>{product.description}</p>
+        <h2>{productName(product)}</h2>
+        <p>{tr(product.description)}</p>
+        {product.product_url && (
+          <>
+            <a
+              className="shopee-buy-link"
+              href={product.product_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ShoppingBag size={18} />
+              {tr("Xem đúng sản phẩm trên Shopee")}
+              <ArrowUpRight size={17} />
+            </a>
+            <p className="shopee-search-note">
+              {tr("Trang Shopee của người bán hiển thị giá, phân loại và tình trạng hàng mới nhất.")}
+            </p>
+          </>
+        )}
         <div className="tag-list">
           {product.styles.map((s) => (<span key={s}>{label(s)}</span>))}
         </div>
         <label>{tr("Bi\u1EBFn th\u1EC3 / size")}<select value={variant} onChange={(e) => setVariant(e.target.value)}>
             {product.variants.map((v) => (<option key={v.id} value={v.id} disabled={!v.available}>
                 {v.size_code === "ONE_SIZE"
-                ? tr("Th\u00F4ng tin size ch\u01B0a c\u00F3") : v.size_code}{" "}
-                — {money(v.price_vnd)}
+                ? tr("Th\u00F4ng tin size ch\u01B0a c\u00F3") : v.size_code}
                 {!v.available ? tr(" \u00B7 H\u1EBFt h\u00E0ng") : ""}
               </option>))}
           </select>
         </label>
         {onVariant ? (<button className="button full" disabled={!selected?.available || variant === selectedVariant} onClick={() => onVariant(variant)}>{tr("Ch\u1ECDn bi\u1EBFn th\u1EC3 n\u00E0y") + " "}<ArrowRight size={16}/>
-          </button>) : (<Link className="button" href="/stylist">{tr("Ph\u1ED1i Look v\u1EDBi AI Stylist") + " "}<ArrowRight size={16}/>
-          </Link>)}
+          </button>) : (<>
+            <button type="button" className="button full" disabled={!selected?.available || !waitlist.ready || alreadyAdded} onClick={addToWaitlist}>
+              {alreadyAdded ? <Check size={16}/> : <ArrowRight size={16}/>}
+              {alreadyAdded ? tr("Added to Waitlist") : waitlistItem ? tr("Update Waitlist Item") : tr("Add to Waitlist")}
+            </button>
+            {waitlist.items.length > 0 && <Link className="text-button waitlist-review" href="/stylist#waitlist">{tr("Review Waitlist")} ({waitlist.items.length})</Link>}
+          </>)}
       </div>
     </div>);
 }

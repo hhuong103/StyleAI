@@ -342,23 +342,15 @@
 .runway-preview-image {
   position: relative;
   width: 100%;
-  height: clamp(105px, 15svh, 150px);
+  height: clamp(150px, 20svh, 210px);
   overflow: hidden;
   border-radius: 8px;
   background: radial-gradient(circle at 50% 48%, #f9faf7, #eef0eb);
   margin-bottom: 14px;
 }
-.runway-preview-image > svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 8px;
-  overflow: visible;
-  filter: drop-shadow(0 7px 8px #27321e18);
-}
 .runway-preview-image > .runway-preview-packshot {
   object-fit: contain;
-  padding: 10px 18px;
+  padding: 7px 14px;
   filter: drop-shadow(0 9px 11px #27321e1c);
 }
 .runway-preview-card h2 {
@@ -876,8 +868,8 @@
 /* A brief diagonal wipe joins the runway to a product page. */
 .fashion-route {
   transition:
-    opacity 220ms ease,
-    transform 220ms ease;
+    opacity 320ms ease,
+    transform 320ms ease;
 }
 .fashion-route-exiting {
   opacity: 0.2;
@@ -899,10 +891,10 @@
   letter-spacing: 0.35em;
 }
 .runway-transition-exiting {
-  animation: runway-wipe-in 280ms ease both;
+  animation: runway-wipe-in 420ms ease both;
 }
 .runway-transition-entering {
-  animation: runway-wipe-out 500ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+  animation: runway-wipe-out 800ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
 }
 @keyframes runway-copy-reveal {
   from {
@@ -992,7 +984,7 @@
     padding: 12px;
   }
   .runway-preview-image {
-    height: 60px;
+    height: clamp(140px, 18vw, 190px);
   }
   .runway-preview-card > p:not(.eyebrow) {
     display: none;

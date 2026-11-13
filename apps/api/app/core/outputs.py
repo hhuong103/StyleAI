@@ -44,6 +44,7 @@ class ProductOutput(Output):
     base_price_vnd: int
     description: str
     active: bool
+    product_url: str | None
     available: bool
     price_source: Literal["DEMO", "REAL"]
     image: ImageOutput | None

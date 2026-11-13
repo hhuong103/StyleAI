@@ -73,6 +73,46 @@ RULES = [
     ("DAILY", "CASUAL", ["T_SHIRT", "JEANS/SHORTS", "SNEAKERS"]),
     ("DAILY", "VINTAGE", ["SHIRT", "DENIM_JACKET", "JEANS", "LOAFERS"]),
 ]
+OCCASION_FALLBACK_RULES = [
+    (
+        "INTERVIEW",
+        ["SHIRT/BLOUSE", "BLAZER/CARDIGAN", "TROUSERS/SKIRT", "LOAFERS/FLATS/DRESS_SHOES"],
+    ),
+    (
+        "OFFICE",
+        ["SHIRT/BLOUSE/POLO", "TROUSERS/WIDE_LEG_PANTS/SKIRT", "LOAFERS/FLATS/DRESS_SHOES"],
+    ),
+    (
+        "CAFE",
+        [
+            "T_SHIRT/SHIRT/BLOUSE/POLO",
+            "JEANS/WIDE_LEG_PANTS/SHORTS/SKIRT",
+            "SNEAKERS/LOAFERS/FLATS/SANDALS",
+        ],
+    ),
+    ("DATE", ["SHIRT/BLOUSE", "TROUSERS/WIDE_LEG_PANTS/SKIRT", "LOAFERS/FLATS/SANDALS"]),
+    (
+        "PARTY",
+        ["BLOUSE/SHIRT", "BLAZER/CARDIGAN", "TROUSERS/SKIRT", "LOAFERS/FLATS/DRESS_SHOES"],
+    ),
+    (
+        "TRAVEL",
+        [
+            "T_SHIRT/POLO",
+            "LIGHT_JACKET/CARDIGAN/DENIM_JACKET",
+            "JEANS/JOGGERS/SHORTS",
+            "SNEAKERS/SANDALS",
+        ],
+    ),
+    (
+        "DAILY",
+        [
+            "T_SHIRT/SHIRT/BLOUSE/POLO",
+            "JEANS/WIDE_LEG_PANTS/SHORTS",
+            "SNEAKERS/LOAFERS/SANDALS",
+        ],
+    ),
+]
 
 
 def rule_slots(categories):

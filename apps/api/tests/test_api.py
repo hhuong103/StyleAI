@@ -3,10 +3,29 @@ from uuid import uuid4
 from conftest import authenticate
 from sqlalchemy import func, select
 
+from app.core.config import settings
 from app.db.models import AuthSession, Feedback, Outfit, Product, User, Variant
 
 
-def plan_and_generate(client, **context):
+def mark_test_product_real(product, materialize_image=False):
+    product.price_source = "REAL"
+    product.source = "test-fixture"
+    product.product_url = "https://shopee.vn/test-listing-i.123456789.12345678901"
+    for image in product.images:
+        image.storage_key = f"uploads/test/{product.id}.webp"
+    if materialize_image:
+        path = settings.media_root / f"uploads/test/{product.id}.webp"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"test product image")
+
+
+def mark_test_catalog_real(db):
+    for product in db.scalars(select(Product)):
+        mark_test_product_real(product)
+
+
+def plan_and_generate(client, db, **context):
+    mark_test_catalog_real(db)
     response = client.post(
         "/api/v1/stylist/plan",
         json={
@@ -44,7 +63,7 @@ def test_auth_csrf_role_and_password_not_echoed(client):
 
 
 def test_whole_journey_persistence_replacement_feedback(client, signed_in, db):
-    rec = plan_and_generate(client)
+    rec = plan_and_generate(client, db)
     assert rec["status"] == "COMPLETE" and len(rec["looks"]) == 3
     assert (
         len({tuple(sorted(i["product_id"] for i in look["items"])) for look in rec["looks"]}) == 3
@@ -105,8 +124,154 @@ def test_whole_journey_persistence_replacement_feedback(client, signed_in, db):
     assert client.delete(f"/api/v1/outfits/{outfit['id']}").status_code == 204
 
 
-def test_cross_user_cannot_access_look_or_outfit(client, signed_in):
-    rec = plan_and_generate(client)
+def test_demo_products_are_not_publicly_browsable_or_recommendable(client, signed_in, db):
+    product = db.scalar(select(Product).where(Product.price_source == "DEMO"))
+
+    assert client.get("/api/v1/products").json()["meta"]["total"] == 0
+    assert client.get(f"/api/v1/products/{product.id}").status_code == 404
+
+    response = client.post(
+        "/api/v1/stylist/plan",
+        json={
+            "text": "",
+            "context": {
+                "occasion": "DAILY",
+                "style": "CASUAL",
+                "budget_max_vnd": 1_500_000,
+            },
+        },
+    )
+    plan = response.json()["data"]
+    response = client.post(
+        "/api/v1/recommendations",
+        json={
+            "plan_id": plan["plan_id"],
+            "selected_products": [{"product_id": product.id, "variant_id": product.variants[0].id}],
+        },
+    )
+    assert response.status_code == 404
+
+
+def test_recommendation_includes_selected_waitlist_products(client, signed_in, db):
+    plan_response = client.post(
+        "/api/v1/stylist/plan",
+        json={
+            "text": "",
+            "context": {
+                "occasion": "INTERVIEW",
+                "style": "MINIMAL",
+                "gender": "FEMALE",
+                "preferred_colors": [],
+                "budget_max_vnd": 1500000,
+            },
+        },
+    )
+    assert plan_response.status_code == 200, plan_response.text
+    plan = plan_response.json()["data"]
+    mark_test_catalog_real(db)
+    product = db.scalar(select(Product).where(Product.product_code == "DEMO_T_SHIRT_WHITE_01"))
+    variant = product.variants[0]
+
+    response = client.post(
+        "/api/v1/recommendations",
+        json={
+            "plan_id": plan["plan_id"],
+            "selected_products": [{"product_id": product.id, "variant_id": variant.id}],
+        },
+    )
+
+    assert response.status_code == 201, response.text
+    recommendation = response.json()["data"]
+    assert recommendation["status"] == "COMPLETE"
+    assert all(
+        any(
+            item["product_id"] == product.id and item["variant_id"] == variant.id
+            for item in look["items"]
+        )
+        for look in recommendation["looks"]
+    )
+
+
+def test_virtual_try_on_validates_profile_before_provider_call(client, signed_in):
+    response = client.post(
+        "/api/v1/stylist/virtual-try-on",
+        json={
+            "selected_products": [str(uuid4())],
+            "gender": "FEMALE",
+            "age": 17,
+            "height_cm": 165,
+            "weight_kg": 52,
+            "bust_cm": None,
+            "waist_cm": None,
+            "hips_cm": None,
+            "background": "CAFE",
+            "consent_external_processing": True,
+        },
+    )
+    assert response.status_code == 422
+
+
+def test_virtual_try_on_reports_missing_provider_configuration(client, signed_in):
+    response = client.post(
+        "/api/v1/stylist/virtual-try-on",
+        json={
+            "selected_products": [str(uuid4())],
+            "gender": "FEMALE",
+            "age": 24,
+            "height_cm": 165,
+            "weight_kg": 52,
+            "bust_cm": None,
+            "waist_cm": None,
+            "hips_cm": None,
+            "background": "CAFE",
+            "consent_external_processing": True,
+        },
+    )
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "GEMINI_IMAGE_NOT_CONFIGURED"
+
+
+def test_waitlist_product_adds_its_role_to_the_recommended_look(client, signed_in, db):
+    plan_response = client.post(
+        "/api/v1/stylist/plan",
+        json={
+            "text": "",
+            "context": {
+                "occasion": "DAILY",
+                "style": "CASUAL",
+                "gender": "UNISEX",
+                "preferred_colors": [],
+                "budget_max_vnd": 1500000,
+            },
+        },
+    )
+    assert plan_response.status_code == 200, plan_response.text
+    plan = plan_response.json()["data"]
+    mark_test_catalog_real(db)
+    product = db.scalar(select(Product).where(Product.product_code == "DEMO_BLAZER_BEIGE_01"))
+    variant = product.variants[0]
+
+    response = client.post(
+        "/api/v1/recommendations",
+        json={
+            "plan_id": plan["plan_id"],
+            "selected_products": [{"product_id": product.id, "variant_id": variant.id}],
+        },
+    )
+
+    assert response.status_code == 201, response.text
+    recommendation = response.json()["data"]
+    assert all(
+        any(
+            item["product_id"] == product.id and item["slot_key"] == "outerwear"
+            for item in look["items"]
+        )
+        for look in recommendation["looks"]
+    )
+
+
+def test_cross_user_cannot_access_look_or_outfit(client, signed_in, db):
+    rec = plan_and_generate(client, db)
     look = rec["looks"][0]
     outfit = client.post("/api/v1/outfits", json={"look_id": look["look_id"]}).json()["data"]
     authenticate(client, "other@example.com")
@@ -123,7 +288,7 @@ def test_cross_user_cannot_access_look_or_outfit(client, signed_in):
 
 
 def test_changed_price_stock_and_incompatible_slot(client, signed_in, db):
-    rec = plan_and_generate(client)
+    rec = plan_and_generate(client, db)
     look = rec["looks"][0]
     selected = look["items"][0]
     product = db.get(Product, selected["product_id"])
@@ -146,8 +311,8 @@ def test_changed_price_stock_and_incompatible_slot(client, signed_in, db):
     assert response.status_code == 409
 
 
-def test_no_results_is_not_server_error(client, signed_in):
-    rec = plan_and_generate(client, budget_max_vnd=100000)
+def test_no_results_is_not_server_error(client, signed_in, db):
+    rec = plan_and_generate(client, db, budget_max_vnd=100000)
     assert rec["status"] in ["NO_RESULTS", "PARTIAL"] and not rec["looks"]
     assert rec["diagnostics"]["minimum_feasible_budget_vnd"] > 100000
     assert rec["diagnostics"]["constraints"][0]["code"] == "BUDGET_TOO_LOW"
@@ -166,6 +331,7 @@ def test_default_and_ambiguous_budget_require_confirmation(client, signed_in):
 
 def test_catalog_filters_use_available_variant_price(client, signed_in, db):
     product = db.scalar(select(Product).where(Product.category_code == "SHIRT"))
+    mark_test_product_real(product)
     product.base_price_vnd = 999000
     first = product.variants[0]
     first.price_override_vnd, first.available = 100000, False
@@ -183,7 +349,9 @@ def test_catalog_filters_use_available_variant_price(client, signed_in, db):
     assert response.json()["data"][0]["price_vnd"] == 500000
 
 
-def test_catalog_is_browseable_without_sign_in(client):
+def test_catalog_is_browseable_without_sign_in(client, db):
+    product = db.scalar(select(Product).where(Product.category_code == "SHIRT"))
+    mark_test_product_real(product)
     taxonomy = client.get("/api/v1/taxonomy")
     assert taxonomy.status_code == 200
 
@@ -195,6 +363,18 @@ def test_catalog_is_browseable_without_sign_in(client):
     assert detail.status_code == 200
 
     assert client.get("/api/v1/products?include_inactive=true").status_code == 403
+
+
+def test_retired_shopee_seed_products_are_hidden_from_collection(client, db):
+    product = db.scalar(select(Product).where(Product.category_code == "SNEAKERS"))
+    mark_test_product_real(product)
+    product.source = "shopee-verified-2026-11-06"
+    db.flush()
+
+    response = client.get("/api/v1/products?page_size=100")
+
+    assert response.status_code == 200
+    assert product.id not in {item["id"] for item in response.json()["data"]}
 
 
 def test_refresh_rotation_reuse_and_logout_revoke(client, signed_in, db):
@@ -213,12 +393,32 @@ def test_refresh_rotation_reuse_and_logout_revoke(client, signed_in, db):
 
 
 def test_admin_summary_product_and_import(client, signed_in, db):
+    mark_test_product_real(
+        db.scalar(select(Product).order_by(Product.product_code)), materialize_image=True
+    )
     user = db.get(User, signed_in["id"])
     user.role = "ADMIN"
     db.flush()
     summary = client.get("/api/v1/admin/summary")
     assert summary.status_code == 200 and summary.json()["data"]["products"] >= 1000
     product = client.get("/api/v1/products?page_size=1").json()["data"][0]
+    stock = client.patch(
+        f"/api/v1/products/{product['id']}/stock",
+        json={"available": False},
+    )
+    assert stock.status_code == 200, stock.text
+    assert stock.json()["data"]["available"] is False
+    assert all(
+        not variant["available"]
+        for variant in stock.json()["data"]["variants"]
+        if variant["active"]
+    )
+    stock = client.patch(
+        f"/api/v1/products/{product['id']}/stock",
+        json={"available": True},
+    )
+    assert stock.status_code == 200, stock.text
+    assert stock.json()["data"]["available"] is True
     body = {
         "product_code": "IMPORT_TEST",
         "name": "Imported shirt",

@@ -21,6 +21,10 @@ def test_money_parser(text, expected):
 def test_parser_detects_context_and_ambiguity():
     assert parse_text("Tôi đi phỏng vấn, tối giản")["occasion"] == "INTERVIEW"
     assert parse_text("Tôi đi phỏng vấn, tối giản")["style"] == "MINIMAL"
+    assert parse_text("I need a minimalist outfit for an interview") == {
+        "occasion": "INTERVIEW",
+        "style": "MINIMAL",
+    }
     assert parse_text("dưới 1.500")["ambiguous_budget"] is True
 
 

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | STYLE",
   },
   description:
-    "Personal outfit recommendations for your style, occasion, and budget.",
+    "Personal outfit recommendations for your style and occasion.",
 };
 export default async function RootLayout({
   children,

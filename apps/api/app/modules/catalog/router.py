@@ -6,7 +6,14 @@ from sqlalchemy.orm import Session
 
 from app.core.errors import AppError, result
 from app.core.outputs import ProductOutput
-from app.core.schemas import Envelope, ProductCreate, ProductInput, VariantCreate, VariantUpdate
+from app.core.schemas import (
+    Envelope,
+    ProductCreate,
+    ProductInput,
+    ProductStockUpdate,
+    VariantCreate,
+    VariantUpdate,
+)
 from app.db.models import AdminAudit, Category, Color, Occasion, Style, User, Variant
 from app.db.session import get_db
 from app.modules.auth.security import admin_user, optional_user
@@ -99,7 +106,11 @@ def detail(
     return result(
         request,
         product_data(
-            ProductRepository(db).get(product_id, user is not None and user.role == "ADMIN")
+            ProductRepository(db).get(
+                product_id,
+                include_inactive=user is not None and user.role == "ADMIN",
+                include_demo=user is not None and user.role == "ADMIN",
+            )
         ),
     )
 
@@ -124,7 +135,7 @@ def update(
     user: User = Depends(admin_user),
     db: Session = Depends(get_db, scope="function"),
 ):
-    product = ProductRepository(db).get(product_id, True, True)
+    product = ProductRepository(db).get(product_id, True, True, include_demo=True)
     write_product(db, body, product)
     audit(
         db,
@@ -138,6 +149,40 @@ def update(
     return result(request, product_data(product))
 
 
+@router.patch("/products/{product_id}/stock", response_model=Envelope[ProductOutput])
+def update_stock(
+    product_id: str,
+    body: ProductStockUpdate,
+    request: Request,
+    user: User = Depends(admin_user),
+    db: Session = Depends(get_db, scope="function"),
+):
+    product = ProductRepository(db).get(product_id, True, True, include_demo=True)
+    if not product.active:
+        raise AppError(409, "PRODUCT_INACTIVE", "Hãy kích hoạt sản phẩm trước khi cập nhật kho.")
+    variants = [variant for variant in product.variants if variant.active]
+    if not variants:
+        raise AppError(409, "NO_ACTIVE_VARIANTS", "Sản phẩm chưa có biến thể đang hoạt động.")
+    previous = any(variant.available for variant in variants)
+    for variant in variants:
+        variant.available = body.available
+    db.flush()
+    audit(
+        db,
+        request,
+        user,
+        "UPDATE_STOCK",
+        "PRODUCT",
+        product.id,
+        {
+            "available": body.available,
+            "previous_available": previous,
+            "variants_updated": len(variants),
+        },
+    )
+    return result(request, product_data(product))
+
+
 @router.delete("/products/{product_id}", status_code=204)
 def delete(
     product_id: str,
@@ -145,7 +190,7 @@ def delete(
     user: User = Depends(admin_user),
     db: Session = Depends(get_db, scope="function"),
 ):
-    product = ProductRepository(db).get(product_id, True, True)
+    product = ProductRepository(db).get(product_id, True, True, include_demo=True)
     product.active = False
     audit(db, request, user, "DEACTIVATE", "PRODUCT", product.id)
     return Response(status_code=204)
@@ -159,7 +204,7 @@ def create_variant(
     user: User = Depends(admin_user),
     db: Session = Depends(get_db, scope="function"),
 ):
-    product = ProductRepository(db).get(product_id, True, True)
+    product = ProductRepository(db).get(product_id, True, True, include_demo=True)
     if any(v.size_code == body.size_code for v in product.variants) or db.scalar(
         select(Variant).where(Variant.sku == body.sku)
     ):
@@ -179,7 +224,7 @@ def update_variant(
     user: User = Depends(admin_user),
     db: Session = Depends(get_db, scope="function"),
 ):
-    product = ProductRepository(db).get(product_id, True, True)
+    product = ProductRepository(db).get(product_id, True, True, include_demo=True)
     variant = db.scalar(
         select(Variant)
         .where(Variant.id == variant_id, Variant.product_id == product_id)

@@ -246,6 +246,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/products/{product_id}/stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Stock */
+        patch: operations["update_stock_api_v1_products__product_id__stock_patch"];
+        trace?: never;
+    };
     "/api/v1/products/{product_id}/variants": {
         parameters: {
             query?: never;
@@ -291,6 +308,23 @@ export interface paths {
         put?: never;
         /** Plan */
         post: operations["plan_api_v1_stylist_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/stylist/virtual-try-on": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Virtual Try On */
+        post: operations["virtual_try_on_api_v1_stylist_virtual_try_on_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -923,6 +957,8 @@ export interface components {
              * @default true
              */
             active: boolean;
+            /** Product Url */
+            product_url?: string | null;
             /**
              * Price Source
              * @default DEMO
@@ -968,6 +1004,8 @@ export interface components {
              * @default true
              */
             active: boolean;
+            /** Product Url */
+            product_url?: string | null;
             /**
              * Price Source
              * @default DEMO
@@ -1005,6 +1043,8 @@ export interface components {
             description: string;
             /** Active */
             active: boolean;
+            /** Product Url */
+            product_url: string | null;
             /** Available */
             available: boolean;
             /**
@@ -1023,6 +1063,11 @@ export interface components {
             variants: components["schemas"]["VariantOutput"][];
         } & {
             [key: string]: unknown;
+        };
+        /** ProductStockUpdate */
+        ProductStockUpdate: {
+            /** Available */
+            available: boolean;
         };
         /** ProfileUpdate */
         ProfileUpdate: {
@@ -1070,6 +1115,8 @@ export interface components {
              * @default 5
              */
             top_k: number;
+            /** Selected Products */
+            selected_products?: components["schemas"]["SelectedProduct"][];
         };
         /** RecommendationOutput */
         RecommendationOutput: {
@@ -1153,6 +1200,19 @@ export interface components {
             look_id: string;
             /** Name */
             name?: string | null;
+        };
+        /** SelectedProduct */
+        SelectedProduct: {
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /**
+             * Variant Id
+             * Format: uuid
+             */
+            variant_id: string;
         };
         /** Slot */
         Slot: {
@@ -1285,6 +1345,38 @@ export interface components {
             available?: boolean | null;
             /** Active */
             active?: boolean | null;
+        };
+        /** VirtualTryOnInput */
+        VirtualTryOnInput: {
+            /** Selected Products */
+            selected_products: string[];
+            /**
+             * Gender
+             * @enum {string}
+             */
+            gender: "MALE" | "FEMALE" | "UNISEX";
+            /** Age */
+            age: number;
+            /** Height Cm */
+            height_cm: number;
+            /** Weight Kg */
+            weight_kg: number;
+            /** Bust Cm */
+            bust_cm?: number | null;
+            /** Waist Cm */
+            waist_cm?: number | null;
+            /** Hips Cm */
+            hips_cm?: number | null;
+            /**
+             * Background
+             * @enum {string}
+             */
+            background: "SCHOOL" | "CAFE" | "PARTY" | "TRAVEL" | "OFFICE" | "STUDIO";
+            /**
+             * Consent External Processing
+             * @constant
+             */
+            consent_external_processing: true;
         };
     };
     responses: never;
@@ -1776,6 +1868,41 @@ export interface operations {
             };
         };
     };
+    update_stock_api_v1_products__product_id__stock_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductStockUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_ProductOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_variant_api_v1_products__product_id__variants_post: {
         parameters: {
             query?: never;
@@ -1857,6 +1984,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["PlanInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    virtual_try_on_api_v1_stylist_virtual_try_on_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VirtualTryOnInput"];
             };
         };
         responses: {

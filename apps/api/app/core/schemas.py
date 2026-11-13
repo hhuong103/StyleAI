@@ -67,6 +67,10 @@ class VariantUpdate(Input):
     active: bool | None = None
 
 
+class ProductStockUpdate(Input):
+    available: bool
+
+
 class ProductInput(Input):
     product_code: str = Field(min_length=1, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
     name: str = Field(min_length=1, max_length=160)
@@ -77,6 +81,7 @@ class ProductInput(Input):
     base_price_vnd: int = Field(ge=0, le=100_000_000)
     description: str = Field(default="", max_length=5000)
     active: bool = True
+    product_url: str | None = Field(default=None, max_length=1000)
     price_source: Literal["REAL", "DEMO"] = "DEMO"
     styles: list[str] = Field(default_factory=list, max_length=8)
     occasions: list[str] = Field(default_factory=list, max_length=7)
@@ -102,9 +107,28 @@ class PlanInput(Input):
     context: Context = Field(default_factory=Context)
 
 
+class VirtualTryOnInput(Input):
+    selected_products: list[UUID] = Field(min_length=1, max_length=4)
+    gender: Gender
+    age: int = Field(ge=18, le=80)
+    height_cm: int = Field(ge=130, le=220)
+    weight_kg: int = Field(ge=35, le=200)
+    bust_cm: int | None = Field(default=None, ge=50, le=180)
+    waist_cm: int | None = Field(default=None, ge=45, le=180)
+    hips_cm: int | None = Field(default=None, ge=50, le=200)
+    background: Literal["SCHOOL", "CAFE", "PARTY", "TRAVEL", "OFFICE", "STUDIO"]
+    consent_external_processing: Literal[True]
+
+
+class SelectedProduct(Input):
+    product_id: UUID
+    variant_id: UUID
+
+
 class RecommendationInput(Input):
     plan_id: UUID
     top_k: int = Field(default=5, ge=1, le=20)
+    selected_products: list[SelectedProduct] = Field(default_factory=list, max_length=4)
 
 
 class ReplacementInput(Input):

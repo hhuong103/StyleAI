@@ -2,7 +2,7 @@ import copy
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Query, Request, Response
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.errors import AppError, result
@@ -11,7 +11,7 @@ from app.core.schemas import Envelope, OutfitUpdate, SaveOutfit
 from app.db.models import Outfit, OutfitItem, Product, User, Variant
 from app.db.session import get_db
 from app.modules.auth.security import current_user
-from app.modules.catalog.repository import price_of
+from app.modules.catalog.repository import is_public_product_snapshot, price_of
 from app.modules.looks.service import owned_look, revalidate
 
 router = APIRouter(prefix="/outfits", tags=["Saved Looks"])
@@ -29,6 +29,8 @@ def owned_outfit(db, outfit_id, user_id, allow_deleted=False, lock=False):
 
 def outfit_data(db, row, hints=False):
     items = [i.product_snapshot for i in row.items]
+    if any(not is_public_product_snapshot(item) for item in items):
+        raise AppError(404, "NOT_FOUND", "Không tìm thấy Look đã lưu.")
     output = {
         "id": row.id,
         "look_id": row.id,
@@ -132,12 +134,14 @@ def listing(
     ]:
         if value is not None:
             query = query.where(column == value)
-    count = db.scalar(select(func.count()).select_from(query.subquery()))
-    rows = db.scalars(
-        query.order_by(Outfit.created_at.desc(), Outfit.id)
-        .offset((page - 1) * page_size)
-        .limit(page_size)
-    )
+    rows = db.scalars(query.order_by(Outfit.created_at.desc(), Outfit.id))
+    visible = [
+        row
+        for row in rows
+        if all(is_public_product_snapshot(item.product_snapshot) for item in row.items)
+    ]
+    count = len(visible)
+    rows = visible[(page - 1) * page_size : page * page_size]
     return result(
         request, [outfit_data(db, r) for r in rows], page=page, page_size=page_size, total=count
     )

@@ -1,7 +1,12 @@
+import re
+from urllib.parse import urlsplit
+
 from sqlalchemy import func, or_, select
 
 from app.core.errors import AppError
-from app.db.models import Category, Product, ProductOccasion, ProductStyle, Variant
+from app.db.models import Category, Product, ProductImage, ProductOccasion, ProductStyle, Variant
+
+RETIRED_CATALOG_SOURCES = ("shopee-verified-2026-11-06",)
 
 
 def price_of(product, variant):
@@ -29,6 +34,7 @@ def product_data(product):
         "base_price_vnd": product.base_price_vnd,
         "description": product.description,
         "active": product.active,
+        "product_url": product.product_url,
         "available": bool(product.active and available),
         "price_source": product.price_source,
         "image": images[0] if images else None,
@@ -50,14 +56,41 @@ def product_data(product):
     }
 
 
+def is_shopee_product_url(value):
+    if not isinstance(value, str):
+        return False
+    try:
+        parsed_url = urlsplit(value)
+    except ValueError:
+        return False
+    return (
+        parsed_url.scheme == "https"
+        and parsed_url.netloc in {"shopee.vn", "www.shopee.vn"}
+        and re.search(r"-i\.\d+\.\d+$", parsed_url.path) is not None
+        and not parsed_url.query
+        and not parsed_url.fragment
+    )
+
+
+def is_public_product_snapshot(item):
+    image = item.get("image") or {}
+    return (
+        item.get("price_source") == "REAL"
+        and is_shopee_product_url(item.get("product_url"))
+        and image.get("url", "").startswith("/media/uploads/")
+    )
+
+
 class ProductRepository:
     def __init__(self, db):
         self.db = db
 
-    def get(self, product_id, include_inactive=False, lock=False):
+    def get(self, product_id, include_inactive=False, lock=False, include_demo=False):
         query = select(Product).where(Product.id == product_id)
         if not include_inactive:
             query = query.where(Product.active.is_(True))
+        if not include_demo:
+            query = query.where(*self._real_product_conditions())
         if lock:
             query = query.with_for_update()
         product = self.db.scalar(query.execution_options(populate_existing=True))
@@ -65,12 +98,24 @@ class ProductRepository:
             raise AppError(404, "NOT_FOUND", "Không tìm thấy sản phẩm.")
         return product
 
+    @staticmethod
+    def _real_product_conditions():
+        return (
+            Product.price_source == "REAL",
+            Product.source != "synthetic-v1",
+            Product.source.notin_(RETIRED_CATALOG_SOURCES),
+            Product.product_url.is_not(None),
+            Product.images.any(ProductImage.storage_key.like("uploads/%")),
+            ~Product.images.any(~ProductImage.storage_key.like("uploads/%")),
+        )
+
     def candidates(self, slot, context):
         query = (
             select(Product)
             .join(Category, Product.category_code == Category.code)
             .where(
                 Product.active.is_(True),
+                *self._real_product_conditions(),
                 Category.active.is_(True),
                 Product.category_code.in_(slot["categories"]),
                 Product.images.any(),
@@ -119,7 +164,10 @@ class ProductRepository:
         price = func.coalesce(stock_price, active_price, Product.base_price_vnd)
         query = select(Product)
         if not include_inactive:
-            query = query.where(Product.active.is_(True))
+            query = query.where(
+                Product.active.is_(True),
+                *self._real_product_conditions(),
+            )
         if q:
             pattern = "%" + q.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
             query = query.where(

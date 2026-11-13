@@ -7,6 +7,7 @@ from sqlalchemy import select
 
 from app.core.errors import AppError
 from app.db.models import (
+    Category,
     Color,
     LookItem,
     Recommendation,
@@ -15,13 +16,14 @@ from app.db.models import (
     StylistPlan,
 )
 from app.modules.auth.security import utc
-from app.modules.catalog.repository import ProductRepository, price_of
+from app.modules.catalog.repository import ProductRepository, is_public_product_snapshot, price_of
 from app.modules.recommendations.engine import (
     ALGORITHM_VERSION,
     compose,
     explain,
     look_score,
     rank_products,
+    score_candidate,
     total,
 )
 
@@ -34,6 +36,16 @@ def owned(db, cls, row_id, user_id):
 
 
 def look_data(look):
+    items = sorted(
+        [item.snapshot for item in look.items],
+        key=lambda i: (
+            ["top", "outerwear", "bottom", "shoes"].index(i["slot_key"])
+            if i["slot_key"] in ["top", "outerwear", "bottom", "shoes"]
+            else 99
+        ),
+    )
+    if any(not is_public_product_snapshot(item) for item in items):
+        raise AppError(404, "NOT_FOUND", "Không tìm thấy Look.")
     return {
         "look_id": look.id,
         "recommendation_id": look.recommendation_id,
@@ -47,14 +59,7 @@ def look_data(look):
         "budget_status": "WITHIN_BUDGET",
         "reasons": look.reasons,
         "visual": look.visual,
-        "items": sorted(
-            [item.snapshot for item in look.items],
-            key=lambda i: (
-                ["top", "outerwear", "bottom", "shoes"].index(i["slot_key"])
-                if i["slot_key"] in ["top", "outerwear", "bottom", "shoes"]
-                else 99
-            ),
-        ),
+        "items": items,
     }
 
 
@@ -116,14 +121,74 @@ def generate(db, user, body):
         raise AppError(409, "PLAN_EXPIRED", "Vui lòng tạo lại yêu cầu stylist.")
     if plan.template["needs_confirmation"]:
         raise AppError(422, "CONFIRM_CONTEXT", "Vui lòng xác nhận ngân sách trước khi tạo Look.")
-    context, slots = plan.normalized_context, plan.template["slots"]
-    families = {c.code: c.family for c in db.scalars(select(Color))}
+    context = plan.normalized_context
+    slots = [dict(slot, categories=list(slot["categories"])) for slot in plan.template["slots"]]
+    pinned = {}
+    selected_roles = set()
     repo = ProductRepository(db)
+    for selection in body.selected_products:
+        product = repo.get(str(selection.product_id))
+        category = db.get(Category, product.category_code)
+        if not category or not category.active or not category.item_role:
+            raise AppError(
+                422, "INVALID_WAITLIST_PRODUCT", "Danh sách chờ có sản phẩm không còn hợp lệ."
+            )
+        role = category.item_role
+        if role in selected_roles:
+            raise AppError(
+                422,
+                "DUPLICATE_WAITLIST_ROLE",
+                "Chỉ chọn một sản phẩm cho mỗi loại trang phục để AI phối Look.",
+            )
+        selected_roles.add(role)
+        variant = next(
+            (v for v in product.variants if str(v.id) == str(selection.variant_id)), None
+        )
+        if not variant or not variant.active or not variant.available:
+            raise AppError(
+                422,
+                "WAITLIST_VARIANT_UNAVAILABLE",
+                "Một sản phẩm trong danh sách chờ không còn phiên bản khả dụng.",
+            )
+        slot = next((item for item in slots if item["role"] == role), None)
+        if slot is None:
+            slot = {
+                "slot_key": role.lower(),
+                "role": role,
+                "categories": [product.category_code],
+                "required": True,
+            }
+            slots.append(slot)
+        elif product.category_code not in slot["categories"]:
+            slot["categories"].append(product.category_code)
+        pinned[slot["slot_key"]] = (product, variant)
+
+    slots.sort(
+        key=lambda slot: (
+            ["top", "outerwear", "bottom", "shoes"].index(slot["slot_key"])
+            if slot["slot_key"] in ["top", "outerwear", "bottom", "shoes"]
+            else 99
+        )
+    )
+    families = {c.code: c.family for c in db.scalars(select(Color))}
     products_by_slot = {s["slot_key"]: repo.candidates(s, context) for s in slots}
+    for slot_key, (product, _) in pinned.items():
+        if all(candidate.id != product.id for candidate in products_by_slot[slot_key]):
+            raise AppError(
+                422,
+                "WAITLIST_PRODUCT_INELIGIBLE",
+                "Một sản phẩm đã chọn không phù hợp giới tính hoặc không còn ảnh để phối.",
+            )
     ranked = {
         s["slot_key"]: rank_products(products_by_slot[s["slot_key"]], s, context, families)
         for s in slots
     }
+    for slot in slots:
+        if slot["slot_key"] in pinned:
+            product, variant = pinned[slot["slot_key"]]
+            ranked[slot["slot_key"]] = [
+                score_candidate(product, variant, slot, context, families) | {"rank": 1}
+            ]
     choices, diagnostics, status = compose(slots, ranked, context["budget_max_vnd"])
     minima = []
     for slot in slots:

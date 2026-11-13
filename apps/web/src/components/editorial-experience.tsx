@@ -62,7 +62,7 @@ export function EditorialHero() {
       <div className="hero-photo-footer">
         <div className="hero-photo-controls">
           <div className="hero-photo-tabs" aria-label={tr("Ch\u1ECDn b\u1ED9 \u1EA3nh")}>
-            {editorialLooks.map((entry, index) => (<button key={entry.name} aria-label={tr("Xem {0}", { "0": entry.name })} aria-pressed={active === index} onClick={() => setActive(index)}>
+            {editorialLooks.map((entry, index) => (<button key={entry.name} aria-label={tr("Xem {0}", { "0": tr(entry.name) })} aria-pressed={active === index} onClick={() => setActive(index)}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
               </button>))}
           </div>
@@ -73,8 +73,8 @@ export function EditorialHero() {
         <Link className="floating-tag" href={`/stylist?occasion=${look.occasion}`}>
           <span className="accent-dot"/>
           <div aria-live="polite">
-            <strong>{look.name}</strong>
-            <span>{look.subtitle}</span>
+            <strong>{tr(look.name)}</strong>
+            <span>{tr(look.subtitle)}</span>
           </div>
           <ArrowUpRight size={23}/>
         </Link>

@@ -13,6 +13,8 @@ def test_bundled_photo_is_publicly_served_as_webp(client):
 
 def test_demo_photo_upgrade_preserves_identity_and_is_idempotent(db):
     product = db.scalar(select(Product).where(Product.product_code == "DEMO_SHIRT_WHITE_01"))
+    assert product.name == "Áo sơ mi trắng 01"
+    product.name = "Áo sơ mi trắng — Edit 01"
     original_id, variant_id, price = product.id, product.variants[0].id, product.base_price_vnd
     product.images[0].storage_key = "demo/shirt-white.svg"
     product.images[0].attribution = "Original code-generated illustration; demo only"
@@ -22,17 +24,21 @@ def test_demo_photo_upgrade_preserves_identity_and_is_idempotent(db):
     first = seed(db)
     assert first["created"] == 0
     assert first["updated_images"] == 1
+    assert product.name == "Áo sơ mi trắng 01"
     assert product.images[0].storage_key == "demo/photos/shirt-white.webp"
     assert product.images[0].source_url.startswith("https://images.unsplash.com/")
     assert product.description == PHOTO_DESCRIPTION
     assert (product.id, product.variants[0].id, product.base_price_vnd) == (
-        original_id, variant_id, price
+        original_id,
+        variant_id,
+        price,
     )
     assert seed(db)["updated_images"] == 0
 
 
 def test_demo_seed_preserves_uploaded_images_and_non_demo_records(db):
     custom = db.scalar(select(Product).where(Product.product_code == "DEMO_SHIRT_WHITE_01"))
+    custom.name = "My own shirt name"
     custom.images[0].storage_key = "uploads/my-shirt.webp"
     custom.images[0].attribution = "My own photography"
     custom.description = "My description"
@@ -44,6 +50,7 @@ def test_demo_seed_preserves_uploaded_images_and_non_demo_records(db):
 
     report = seed(db)
     assert report["updated_images"] == 0
+    assert custom.name == "My own shirt name"
     assert custom.images[0].storage_key == "uploads/my-shirt.webp"
     assert custom.description == "My description"
     assert imported.images[0].storage_key == "demo/shirt-white.svg"

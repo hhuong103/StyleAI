@@ -44,6 +44,15 @@ Nếu cổng 3000 đã được ứng dụng khác dùng, đặt `WEB_PORT` thà
 
 Chỉ Client ID được dùng ở trình duyệt; không cần lưu Client secret. Nếu Google OAuth app đang ở chế độ Testing, thêm tài khoản đăng nhập vào danh sách Test users. Google chỉ cấp email đã xác minh; tài khoản hiện có cùng email đã xác minh sẽ được liên kết.
 
+Để bật **AI virtual try-on bằng Gemini**, tạo API key mới trong Google AI Studio và đặt key chỉ trong file `.env` cục bộ:
+
+```dotenv
+GEMINI_API_KEY=your-new-key
+GEMINI_IMAGE_MODEL=gemini-3.1-flash-image
+```
+
+Nếu try-on báo `API key not valid`, hãy tạo key mới trong Google AI Studio, thay giá trị cũ trong `.env` cục bộ rồi chạy `docker compose up -d --force-recreate api` để container nhận key mới. Trong PowerShell, xóa biến key cũ của phiên hiện tại trước khi chạy Compose bằng `Remove-Item Env:GEMINI_API_KEY -ErrorAction SilentlyContinue`; biến môi trường có thể ghi đè giá trị trong `.env`. Nếu báo `PERMISSION_DENIED`, bật Generative Language API cho project và kiểm tra API restrictions của key. Không gửi key qua chat, đặt key trong mã nguồn, biến `NEXT_PUBLIC_*`, ảnh chụp màn hình hoặc commit Git.
+
 Nếu PowerShell báo `Python was not found` khi chạy `python3`, dùng lệnh setup PowerShell ở trên. Các lệnh `python` sau `docker compose exec api` chạy trong container đã có Python.
 
 ## Đã triển khai
@@ -60,7 +69,9 @@ Nếu PowerShell báo `Python was not found` khi chạy `python3`, dùng lệnh 
 
 Catalog seed gồm **1.320 sản phẩm synthetic** và giá **DEMO**. Có **7 ảnh chụp tham khảo** cho **45 mẫu DEMO** khớp nhóm trang phục/màu sắc; các mẫu còn lại sử dụng SVG minh họa tự tạo. Seed tái chạy không thêm trùng, giữ nguyên ID, giá, biến thể và ảnh đã được quản trị viên thay thế. Đây là dữ liệu để chạy thử toàn luồng, chưa phải catalog hàng hóa đang bán hoặc dataset đánh giá chất lượng thời trang thực tế.
 
-Trang chủ và trang đăng nhập dùng ảnh chụp thời trang từ [Unsplash](https://unsplash.com/license), đóng gói WebP trong dự án để không phụ thuộc mạng bên ngoài khi chạy. Nguồn ảnh được lưu tại `apps/web/public/images/editorial/credits.json` và `apps/api/assets/demo-photos/manifest.json`. Trang chủ có chọn bộ ảnh, chuyển cảnh, hiệu ứng xuất hiện khi cuộn và chữ chạy có nút tạm dừng; hỗ trợ bàn phím, màn hình di động và `prefers-reduced-motion`.
+Sản phẩm seed/demo chỉ dành cho quản trị và kiểm thử; API catalog công khai, Stylist và trang chủ chỉ hiển thị sản phẩm `REAL` có ảnh đã tải lên và URL listing Shopee cụ thể. Không dùng ảnh AI/ảnh demo làm ảnh sản phẩm. Cần nạp nguồn Shopee được phép sử dụng qua [runbook import](docs/runbooks/catalog-import.md); khi chưa có sản phẩm thật phù hợp, giao diện hiển thị trạng thái trống thay vì dựng outfit minh họa.
+
+Trang đăng nhập dùng ảnh chụp thời trang từ [Unsplash](https://unsplash.com/license), đóng gói WebP trong dự án để không phụ thuộc mạng bên ngoài khi chạy. Nguồn ảnh được lưu tại `apps/web/public/images/editorial/credits.json` và `apps/api/assets/demo-photos/manifest.json`.
 
 Sau khi cập nhật mã nguồn, chạy `docker compose up --build -d` rồi `docker compose exec api python -m app.seed demo` để cập nhật ảnh DEMO hiện có. Các Look đã lưu giữ nguyên ảnh snapshot lịch sử; Look tạo mới lấy ảnh catalog hiện tại.
 

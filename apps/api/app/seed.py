@@ -28,14 +28,30 @@ from app.db.models import (
 )
 from app.db.session import SessionLocal
 from app.modules.auth.security import hasher
-from app.modules.stylist.taxonomy import CATEGORIES, COLORS, OCCASIONS, RULES, STYLES, rule_slots
+from app.modules.stylist.taxonomy import (
+    CATEGORIES,
+    COLORS,
+    OCCASION_FALLBACK_RULES,
+    OCCASIONS,
+    RULES,
+    STYLES,
+    rule_slots,
+)
 
-ILLUSTRATION_DESCRIPTION = (
+LEGACY_ILLUSTRATION_DESCRIPTION = (
     "Sản phẩm và giá mô phỏng để thử nghiệm hệ thống. "
     "Ảnh minh họa tự tạo, không phải hàng hóa đang bán."
 )
-PHOTO_DESCRIPTION = (
+LEGACY_PHOTO_DESCRIPTION = (
     "Sản phẩm và giá mô phỏng để thử nghiệm hệ thống. "
+    "Ảnh chụp tham khảo từ Unsplash, phù hợp nhóm trang phục và màu sắc; "
+    "không phải ảnh của hàng hóa đang bán."
+)
+ILLUSTRATION_DESCRIPTION = (
+    "Sản phẩm mẫu dùng để thử nghiệm hệ thống. Ảnh minh họa tự tạo, không phải hàng hóa đang bán."
+)
+PHOTO_DESCRIPTION = (
+    "Sản phẩm mẫu dùng để thử nghiệm hệ thống. "
     "Ảnh chụp tham khảo từ Unsplash, phù hợp nhóm trang phục và màu sắc; "
     "không phải ảnh của hàng hóa đang bán."
 )
@@ -72,7 +88,10 @@ def apply_demo_photo(product, photo):
     image.alt_text = photo["alt"]
     image.source_url = photo["source_url"]
     image.attribution = photo["attribution"]
-    if product.description == ILLUSTRATION_DESCRIPTION:
+    if product.description in {
+        ILLUSTRATION_DESCRIPTION,
+        LEGACY_ILLUSTRATION_DESCRIPTION,
+    }:
         product.description = PHOTO_DESCRIPTION
     return True
 
@@ -124,6 +143,18 @@ def seed(db, editions=5):
                     active=True,
                 )
             )
+    for occasion, categories in OCCASION_FALLBACK_RULES:
+        key = f"fallback_{occasion.lower()}"
+        if not db.scalar(select(OutfitRule).where(OutfitRule.rule_key == key)):
+            db.add(
+                OutfitRule(
+                    rule_key=key,
+                    occasion_code=occasion,
+                    style_code=None,
+                    slots=rule_slots(categories),
+                    active=True,
+                )
+            )
     db.flush()
     keys = set(db.scalars(select(Product.product_code)))
     photos = install_demo_photos()
@@ -134,6 +165,16 @@ def seed(db, editions=5):
         .options(selectinload(Product.images))
     )
     for product in existing_demo:
+        edition = product.product_code.rsplit("_", 1)[-1]
+        category_label = CATEGORIES[product.category_code][0]
+        color_label = COLORS[product.color_code][0]
+        legacy_name = f"{category_label} {color_label.lower()} — Edit {edition}"
+        if product.name == legacy_name:
+            product.name = f"{category_label} {color_label.lower()} {edition}"
+        if product.description == LEGACY_ILLUSTRATION_DESCRIPTION:
+            product.description = ILLUSTRATION_DESCRIPTION
+        elif product.description == LEGACY_PHOTO_DESCRIPTION:
+            product.description = PHOTO_DESCRIPTION
         photo = photos.get((product.category_code, product.color_code))
         if photo and apply_demo_photo(product, photo):
             updated_images += 1
@@ -155,7 +196,7 @@ def seed(db, editions=5):
                     continue
                 product = Product(
                     product_code=code,
-                    name=f"{label} {color_label.lower()} — Edit {edition + 1:02}",
+                    name=f"{label} {color_label.lower()} {edition + 1:02}",
                     brand="STYLEAI Studio",
                     category_code=category,
                     color_code=color,
@@ -194,11 +235,11 @@ def seed(db, editions=5):
         "source": "synthetic-v1",
         "created": created,
         "products": total,
-        "image_files": len(CATEGORIES) * len(COLORS) + len({p['key'] for p in photos.values()}),
-        "photo_files": len({p['key'] for p in photos.values()}),
+        "image_files": len(CATEGORIES) * len(COLORS) + len({p["key"] for p in photos.values()}),
+        "photo_files": len({p["key"] for p in photos.values()}),
         "updated_images": updated_images,
         "license": "Synthetic metadata/original illustrations; selected reference photos under Unsplash License. Not a real product dataset.",
-        "rules": len(RULES),
+        "rules": len(RULES) + len(OCCASION_FALLBACK_RULES),
     }
 
 
