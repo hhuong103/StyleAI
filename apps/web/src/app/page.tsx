@@ -1,5 +1,9 @@
-import { redirect } from "next/navigation";
+import { ShopTheLook } from "@/components/shop-the-look";
 
 export default function Home() {
-  redirect("/shop");
+  return (
+    <div className="runway-page">
+      <ShopTheLook />
+    </div>
+  );
 }

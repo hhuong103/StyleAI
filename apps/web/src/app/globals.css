@@ -799,6 +799,20 @@ label {
 .google-login {
   margin-top: 14px;
 }
+.google-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: #77766f;
+  font-size: 11px;
+}
+.google-login-divider::before,
+.google-login-divider::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--line);
+}
 .google-signin-button {
   gap: 12px;
 }
@@ -831,6 +845,20 @@ label {
   margin-top: 6px;
   color: #222;
   text-decoration: underline;
+}
+.google-login-help {
+  text-align: left;
+}
+.google-login-help summary {
+  cursor: pointer;
+  text-align: center;
+}
+.google-login-help p {
+  margin-top: 8px;
+}
+.google-login-help code {
+  display: block;
+  overflow-wrap: anywhere;
 }
 .field-error {
   color: #9b3826;
@@ -951,6 +979,17 @@ label {
 .product-meta > span {
   font-size: 11px;
   white-space: nowrap;
+}
+.catalog-status {
+  color: #716b60;
+  border: 1px solid #d8d2c8;
+  padding: 3px 6px;
+}
+.catalog-demo-note {
+  padding: 12px;
+  background: #f3f0e9;
+  color: #716b60;
+  font-size: 12px;
 }
 .product-card > p {
   font-size: 10px;

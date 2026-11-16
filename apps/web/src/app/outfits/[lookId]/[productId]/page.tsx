@@ -1,5 +1,16 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { RunwayProductDetail } from "@/components/runway-product-detail";
+import { findRunwayProduct } from "@/lib/runway";
 
-export default function OutfitProductPage() {
-  redirect("/shop");
+export default async function OutfitProductPage({
+  params,
+}: {
+  params: Promise<{ lookId: string; productId: string }>;
+}) {
+  const { lookId, productId } = await params;
+  const match = findRunwayProduct(lookId, productId);
+
+  if (!match) notFound();
+
+  return <RunwayProductDetail {...match} />;
 }

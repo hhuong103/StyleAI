@@ -164,10 +164,7 @@ class ProductRepository:
         price = func.coalesce(stock_price, active_price, Product.base_price_vnd)
         query = select(Product)
         if not include_inactive:
-            query = query.where(
-                Product.active.is_(True),
-                *self._real_product_conditions(),
-            )
+            query = query.where(Product.active.is_(True))
         if q:
             pattern = "%" + q.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
             query = query.where(

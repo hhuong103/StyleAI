@@ -51,6 +51,7 @@ export function AuthScreen({ register = false }: { register?: boolean }) {
   const client = useQueryClient();
   const googleButton = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<unknown>();
+  const [appOrigin, setAppOrigin] = useState("");
   const [googleClientId, setGoogleClientId] = useState<string | null>(null);
   const [googleConfigState, setGoogleConfigState] = useState<
     "loading" | "ready" | "unconfigured" | "error"
@@ -84,6 +85,10 @@ export function AuthScreen({ register = false }: { register?: boolean }) {
     resolver: zodResolver(schema),
     defaultValues: { email: "", password: "", display_name: "" },
   });
+
+  useEffect(() => {
+    setAppOrigin(window.location.origin);
+  }, []);
 
   const finishSignIn = useCallback(async () => {
     await client.invalidateQueries({ queryKey: ["session"] });
@@ -316,6 +321,9 @@ export function AuthScreen({ register = false }: { register?: boolean }) {
           />
         )}
         <div className="google-login">
+          <div className="google-login-divider">
+            <span>{tr("Hoặc tiếp tục với")}</span>
+          </div>
           {googleConfigState === "loading" && (
             <p className="google-login-note" role="status">
               {tr("Đang kiểm tra cấu hình đăng nhập Google…")}
@@ -379,6 +387,26 @@ export function AuthScreen({ register = false }: { register?: boolean }) {
           {googleConfigState === "ready" &&
             googleScriptReady &&
             !googleScriptFailed && <div ref={googleButton} />}
+          {googleConfigState === "ready" &&
+            googleScriptReady &&
+            !googleScriptFailed && (
+              <details className="google-login-note google-config-help google-login-help">
+                <summary>{tr("Google không đăng nhập được?")}</summary>
+                <p>
+                  {tr(
+                    "Thêm origin này vào Authorized JavaScript origins của OAuth Web client.",
+                  )}
+                </p>
+                <code>{appOrigin || "..."}</code>
+                <a
+                  href="https://console.cloud.google.com/auth/clients"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {tr("Mở Google Cloud Console")}
+                </a>
+              </details>
+            )}
           {googlePending && (
             <p className="google-login-note" role="status">
               {tr("Đang đăng nhập với Google…")}

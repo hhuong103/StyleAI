@@ -21,6 +21,9 @@ export function ProductCard({ product }: {
     product: Product;
 }) {
     const { tr, label, money, productName, localeTag } = useI18n();
+    const hasVerifiedListing = product.price_source === "REAL"
+      && Boolean(product.product_url)
+      && Boolean(product.image?.url.startsWith("/media/uploads/"));
     return (<Link className="product-card" href={`/shop/${product.id}`}>
       <div className="product-image">
         {product.image && (
@@ -33,6 +36,11 @@ export function ProductCard({ product }: {
       </div>
       <div className="product-meta">
         <h3>{productName(product)}</h3>
+        {!hasVerifiedListing && (
+          <span className="catalog-status">
+            {product.price_source === "DEMO" ? tr("Dữ liệu demo") : tr("Chưa xác minh")}
+          </span>
+        )}
       </div>
       <p>
         {product.brand} <span>·</span>{" "}
@@ -70,7 +78,7 @@ function Catalog() {
     }
     const page = Number(params.get("page") || 1), total = products.data?.meta.total || 0;
     return (<div className="container page">
-      <PageIntro eyebrow={tr("THE CONSIDERED COLLECTION")} title={tr("Ch\u1ECDn \u00EDt h\u01A1n. H\u1EE3p h\u01A1n.")} description={tr("Chỉ hiển thị sản phẩm thật đã xác nhận với Shopee, kèm ảnh gốc và liên kết sản phẩm cụ thể.")}/>
+      <PageIntro eyebrow={tr("THE CONSIDERED COLLECTION")} title={tr("Ch\u1ECDn \u00EDt h\u01A1n. H\u1EE3p h\u01A1n.")} description={tr("Khám phá danh mục STYLEAI. Sản phẩm demo và chưa xác minh được đánh dấu rõ ràng.")}/>
       <div className="shop-layout">
         <aside className="filters">
           <form className="search-field" onSubmit={(e) => {
@@ -119,7 +127,7 @@ function Catalog() {
           <ErrorBox error={products.error} retry={() => products.refetch()}/>
           {products.isPending ? (<Skeletons />) : products.data?.data.length ? (<div className="product-grid">
               {products.data.data.map((p) => (<ProductCard key={p.id} product={p}/>))}
-            </div>) : (!products.error && (<Empty title={tr("Ch\u01B0a c\u00F3 s\u1EA3n ph\u1EA9m th\u1EADt ph\u00F9 h\u1EE3p trong catalog. B\u1ED9 \u0111\u1ED3 demo v\u00E0 \u1EA3nh minh h\u1ECDa kh\u00F4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB.")} description={tr("Ch\u1EC9 hi\u1EC3n th\u1ECB s\u1EA3n ph\u1EA9m th\u1EADt \u0111\u00E3 x\u00E1c nh\u1EADn v\u1EDBi Shopee, k\u00E8m \u1EA3nh g\u1ED1c v\u00E0 li\u00EAn k\u1EBFt s\u1EA3n ph\u1EA9m c\u1EE5 th\u1EC3.")} href="/shop" cta={tr("Xem t\u1EA5t c\u1EA3")}/>))}
+            </div>) : (!products.error && (<Empty title={tr("Không có sản phẩm phù hợp.")} description={tr("Hãy đổi hoặc xóa bộ lọc để xem thêm sản phẩm.")} href="/shop" cta={tr("Xem t\u1EA5t c\u1EA3")}/>))}
           <div className="pagination">
             <button className="button outline small" disabled={page <= 1} onClick={() => filter("page", String(page - 1))}>
               <ArrowLeft size={16}/>{tr("Tr\u01B0\u1EDBc")}</button>
@@ -174,6 +182,9 @@ export function ProductContent({ product, selectedVariant, onVariant, }: {
     const { tr, label, money, productName, localeTag } = useI18n();
     const waitlist = useWaitlist();
     const toast = useToast();
+    const hasVerifiedListing = product.price_source === "REAL"
+      && Boolean(product.product_url)
+      && Boolean(product.image?.url.startsWith("/media/uploads/"));
     const [variant, setVariant] = useState(selectedVariant || product.variants.find((v) => v.available)?.id || "");
     const selected = product.variants.find((v) => v.id === variant);
     const waitlistItem = waitlist.items.find((item) => item.product_id === product.id);
@@ -190,6 +201,11 @@ export function ProductContent({ product, selectedVariant, onVariant, }: {
         <p className="eyebrow">{product.brand}</p>
         <h2>{productName(product)}</h2>
         <p>{tr(product.description)}</p>
+        {!hasVerifiedListing && (
+          <p className="catalog-demo-note">
+            {tr("Sản phẩm tham khảo; giá và tình trạng hàng chưa được xác minh.")}
+          </p>
+        )}
         {product.product_url && (
           <>
             <a

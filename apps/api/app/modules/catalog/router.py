@@ -109,7 +109,7 @@ def detail(
             ProductRepository(db).get(
                 product_id,
                 include_inactive=user is not None and user.role == "ADMIN",
-                include_demo=user is not None and user.role == "ADMIN",
+                include_demo=True,
             )
         ),
     )

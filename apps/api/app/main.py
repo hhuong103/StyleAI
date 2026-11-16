@@ -6,7 +6,11 @@ import threading
 import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
+from functools import cache
+from pathlib import Path
 
+from alembic.config import Config
+from alembic.script import ScriptDirectory
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
@@ -43,6 +47,13 @@ async def lifespan(_):
 app = FastAPI(title="STYLEAI API", version="1.0.0", lifespan=lifespan)
 hits = defaultdict(deque)
 hit_lock = threading.Lock()
+
+
+@cache
+def migration_head():
+    config_path = Path(__file__).resolve().parents[1] / "alembic.ini"
+    config = Config(str(config_path))
+    return ScriptDirectory.from_config(config).get_current_head()
 
 
 @app.middleware("http")
@@ -158,7 +169,7 @@ def ready(request: Request):
     try:
         with engine.connect() as connection:
             version = connection.scalar(text("SELECT version_num FROM alembic_version"))
-        if version != "0003":
+        if version != migration_head():
             raise ValueError("Schema mismatch")
     except Exception:
         return error_response(request, 503, "NOT_READY", "Database/migration chưa sẵn sàng.")

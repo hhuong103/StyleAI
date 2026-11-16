@@ -60,19 +60,36 @@ def catalog_db():
     engine.dispose()
 
 
-def test_catalog_and_recommendations_only_include_real_products(catalog_db):
+def test_catalog_lists_all_products_but_recommendations_only_use_verified_products(catalog_db):
     repository = ProductRepository(catalog_db)
 
     products, total = repository.listing(page=1, page_size=20)
     candidates = repository.candidates({"categories": ["SHIRT"]}, {})
 
-    assert total == 1
-    assert [product["product_code"] for product in products] == ["REAL_SHIRT"]
+    assert total == 3
+    assert {product["product_code"] for product in products} == {
+        "DEMO_SHIRT",
+        "REAL_SHIRT",
+        "REAL_WITH_DEMO_IMAGE",
+    }
     assert [product.product_code for product in candidates] == ["REAL_SHIRT"]
     demo = catalog_db.scalar(select(Product).where(Product.product_code == "DEMO_SHIRT"))
     with pytest.raises(AppError) as error:
         repository.get(demo.id)
     assert error.value.code == "NOT_FOUND"
+
+
+def test_catalog_detail_is_available_for_demo_products(catalog_db):
+    from types import SimpleNamespace
+
+    from app.modules.catalog.router import detail
+
+    demo = catalog_db.scalar(select(Product).where(Product.product_code == "DEMO_SHIRT"))
+    request = SimpleNamespace(state=SimpleNamespace(request_id="test"))
+
+    response = detail(demo.id, request, None, catalog_db)
+
+    assert response["data"]["product_code"] == "DEMO_SHIRT"
 
 
 @pytest.mark.parametrize(

@@ -5,6 +5,7 @@ from sqlalchemy import func, select
 
 from app.core.config import settings
 from app.db.models import AuthSession, Feedback, Outfit, Product, User, Variant
+from app.modules.catalog.repository import ProductRepository
 
 
 def mark_test_product_real(product, materialize_image=False):
@@ -124,11 +125,13 @@ def test_whole_journey_persistence_replacement_feedback(client, signed_in, db):
     assert client.delete(f"/api/v1/outfits/{outfit['id']}").status_code == 204
 
 
-def test_demo_products_are_not_publicly_browsable_or_recommendable(client, signed_in, db):
+def test_demo_products_are_browsable_but_not_recommendable(client, signed_in, db):
     product = db.scalar(select(Product).where(Product.price_source == "DEMO"))
 
-    assert client.get("/api/v1/products").json()["meta"]["total"] == 0
-    assert client.get(f"/api/v1/products/{product.id}").status_code == 404
+    listing = client.get(f"/api/v1/products?q={product.product_code}")
+    assert listing.json()["meta"]["total"] == 1
+    assert listing.json()["data"][0]["id"] == product.id
+    assert client.get(f"/api/v1/products/{product.id}").status_code == 200
 
     response = client.post(
         "/api/v1/stylist/plan",
@@ -365,16 +368,19 @@ def test_catalog_is_browseable_without_sign_in(client, db):
     assert client.get("/api/v1/products?include_inactive=true").status_code == 403
 
 
-def test_retired_shopee_seed_products_are_hidden_from_collection(client, db):
+def test_retired_shopee_seed_products_are_browsable_but_not_recommendable(client, db):
     product = db.scalar(select(Product).where(Product.category_code == "SNEAKERS"))
     mark_test_product_real(product)
     product.source = "shopee-verified-2026-11-06"
     db.flush()
 
-    response = client.get("/api/v1/products?page_size=100")
+    response = client.get(f"/api/v1/products?q={product.product_code}")
 
     assert response.status_code == 200
-    assert product.id not in {item["id"] for item in response.json()["data"]}
+    assert product.id in {item["id"] for item in response.json()["data"]}
+    assert product not in ProductRepository(db).candidates(
+        {"categories": [product.category_code]}, {}
+    )
 
 
 def test_refresh_rotation_reuse_and_logout_revoke(client, signed_in, db):
