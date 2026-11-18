@@ -38,7 +38,7 @@ export function LookCard({ look, index = 0, href, children, }: {
     return (<article className="look-card">
       <Link href={href}>
         <div className="look-card-visual">
-          <Collage look={look}/>
+          {look.visual.try_on ? <img className="saved-try-on-image" src={look.visual.try_on.url} alt={`Ảnh mặc thử AI cho ${look.name}`} loading="lazy" /> : <Collage look={look}/>}
           <span className="match-badge">{percent(look.score)}{" " + tr("ph\u00F9 h\u1EE3p")}</span>
         </div>
         <div className="look-card-label">
@@ -110,7 +110,7 @@ function Recommendations({ id }: {
                 catalogMissing
                   ? isAdmin
                     ? "/admin/products#catalog-import"
-                    : "/shop"
+                    : "/catalog"
                   : undefined
               }
               cta={
@@ -450,7 +450,7 @@ function SavedLookDetail({ id }: {
       <ErrorBox error={query.error}/>
       {row ? (<>
           <div className="interactive-layout">
-            <Collage look={row} interactive selected={selected} onSelect={setSelected}/>
+            {row.visual.try_on ? <div className="saved-try-on-detail"><img src={row.visual.try_on.url} alt={`Ảnh mặc thử AI cho ${row.name}`} /><span>Ảnh AI · vùng sản phẩm chưa xác thực</span></div> : <Collage look={row} interactive selected={selected} onSelect={setSelected}/>}
             <section className="look-panel">
               <p className="eyebrow">{tr("SAVED IN YOUR LOOKBOOK")}</p>
               <h1>{tr(row.name)}</h1>

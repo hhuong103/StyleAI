@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+.saved-try-on-image{width:100%;height:100%;object-fit:contain;background:#e7e6e2}
+.saved-try-on-detail{position:relative;min-height:550px;background:#e7e6e2;display:flex;align-items:center;justify-content:center}
+.saved-try-on-detail img{max-height:720px;max-width:100%;object-fit:contain}
+.saved-try-on-detail span{position:absolute;bottom:12px;left:12px;background:#111b;color:#fff;padding:6px 10px;border-radius:8px;font-size:11px}
+
 :root {
   --bg: #f5f4f0;
   --surface: #fff;

@@ -74,11 +74,11 @@ function Catalog() {
             next.delete(key);
         if (key !== "page")
             next.delete("page");
-        router.replace(`/shop?${next}`);
+        router.replace(`/catalog?${next}`);
     }
     const page = Number(params.get("page") || 1), total = products.data?.meta.total || 0;
     return (<div className="container page">
-      <PageIntro eyebrow={tr("THE CONSIDERED COLLECTION")} title={tr("Ch\u1ECDn \u00EDt h\u01A1n. H\u1EE3p h\u01A1n.")} description={tr("Khám phá danh mục STYLEAI. Sản phẩm demo và chưa xác minh được đánh dấu rõ ràng.")}/>
+      <PageIntro eyebrow="PRODUCT CATALOG" title={tr("Ch\u1ECDn \u00EDt h\u01A1n. H\u1EE3p h\u01A1n.")} description={tr("Khám phá danh mục STYLEAI. Sản phẩm demo và chưa xác minh được đánh dấu rõ ràng.")}/>
       <div className="shop-layout">
         <aside className="filters">
           <form className="search-field" onSubmit={(e) => {
@@ -113,7 +113,7 @@ function Catalog() {
           </label>
           <label className="checkbox-label">
             <input type="checkbox" checked={params.get("available") === "true"} onChange={(e) => filter("available", e.target.checked ? "true" : "")}/>{tr("Ch\u1EC9 s\u1EA3n ph\u1EA9m c\u00F2n h\u00E0ng")}</label>
-          <button className="text-button" onClick={() => router.replace("/shop")}>{tr("X\u00F3a b\u1ED9 l\u1ECDc") + " "}<X size={15}/>
+          <button className="text-button" onClick={() => router.replace("/catalog")}>{tr("X\u00F3a b\u1ED9 l\u1ECDc") + " "}<X size={15}/>
           </button>
         </aside>
         <section>
@@ -127,7 +127,7 @@ function Catalog() {
           <ErrorBox error={products.error} retry={() => products.refetch()}/>
           {products.isPending ? (<Skeletons />) : products.data?.data.length ? (<div className="product-grid">
               {products.data.data.map((p) => (<ProductCard key={p.id} product={p}/>))}
-            </div>) : (!products.error && (<Empty title={tr("Không có sản phẩm phù hợp.")} description={tr("Hãy đổi hoặc xóa bộ lọc để xem thêm sản phẩm.")} href="/shop" cta={tr("Xem t\u1EA5t c\u1EA3")}/>))}
+            </div>) : (!products.error && (<Empty title={tr("Không có sản phẩm phù hợp.")} description={tr("Hãy đổi hoặc xóa bộ lọc để xem thêm sản phẩm.")} href="/catalog" cta={tr("Xem t\u1EA5t c\u1EA3")}/>))}
           <div className="pagination">
             <button className="button outline small" disabled={page <= 1} onClick={() => filter("page", String(page - 1))}>
               <ArrowLeft size={16}/>{tr("Tr\u01B0\u1EDBc")}</button>
@@ -280,8 +280,8 @@ function ProductPage({ id }: {
         queryFn: () => api<Product>(`/products/${id}`).then((r) => r.data),
     });
     return (<div className="container page">
-      <Link className="text-button back-link" href="/shop">
-        <ArrowLeft size={16}/>{tr("B\u1ED9 s\u01B0u t\u1EADp")}</Link>
+      <Link className="text-button back-link" href="/catalog">
+        <ArrowLeft size={16}/>Catalog</Link>
       <ErrorBox error={query.error} retry={() => query.refetch()}/>
       {query.data ? (<ProductContent product={query.data}/>) : (!query.error && <Skeletons count={2}/>)}
     </div>);

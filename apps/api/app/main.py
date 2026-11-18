@@ -32,6 +32,7 @@ from app.modules.outfits.router import router as outfits
 from app.modules.profiles.router import router as profiles
 from app.modules.recommendations.router import router as recommendations
 from app.modules.stylist.router import router as stylist
+from app.modules.vell.router import router as vell
 
 logger = logging.getLogger("styleai")
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -176,7 +177,18 @@ def ready(request: Request):
     return {"status": "ready"}
 
 
-for router in [auth, profiles, catalog, stylist, recommendations, looks, outfits, feedback, admin]:
+for router in [
+    auth,
+    profiles,
+    catalog,
+    stylist,
+    recommendations,
+    looks,
+    outfits,
+    feedback,
+    admin,
+    vell,
+]:
     app.include_router(router, prefix="/api/v1")
 
 settings.media_root.mkdir(parents=True, exist_ok=True)

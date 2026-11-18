@@ -675,11 +675,11 @@ function Stylist() {
             <h2>{tr("Your Waitlist")}</h2>
             <p>
               {tr(
-                "Add pieces from the Collection, then select the ones you want AI Stylist to use.",
+                "Add pieces from the catalog, then select the ones you want AI Stylist to use.",
               )}
             </p>
           </div>
-          <Link className="button outline small" href="/shop">
+          <Link className="button outline small" href="/catalog">
             {tr("B\u1ED9 s\u01B0u t\u1EADp")}
             <ArrowRight size={15} />
           </Link>

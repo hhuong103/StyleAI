@@ -56,11 +56,11 @@ test("Every runway product uses a browser-safe Shopee listing URL", () => {
   expect(byId["black-leather-bomber"]).not.toBe(byId["gray-fine-knit"]);
 });
 
-test("Collection and product detail use the saved product name", async ({
+test("Catalog and product detail use the saved product name", async ({
   page,
   isMobile,
 }) => {
-  await page.goto("/shop");
+  await page.goto("/catalog");
   await expect(page.locator(".product-card")).toHaveCount(24);
 
   const firstProductName = page.locator(".product-card h3").first();
@@ -281,7 +281,7 @@ test("Home, registration, stylist, replace, save and feedback persist", async ({
   await expect(
     page.getByRole("button", { name: "Yêu thích", exact: true }).last(),
   ).toHaveAttribute("aria-pressed", "true");
-  await page.goto("/shop");
+  await page.goto("/catalog");
   await expect(page.locator(".product-card")).toHaveCount(24);
   const firstProductName = page.locator(".product-card h3").first();
   const firstSavedName = await firstProductName.textContent();

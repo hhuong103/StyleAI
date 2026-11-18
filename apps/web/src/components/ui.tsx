@@ -16,6 +16,7 @@ export function Navigation() {
   const router = useRouter();
   const client = useQueryClient();
   const toast = useToast();
+  if (pathname === "/vell") return null;
   async function logout() {
     try {
       await api("/auth/logout", { method: "POST" });
@@ -36,7 +37,7 @@ export function Navigation() {
       </Link>
       <nav className={`nav ${open ? "open" : ""}`} aria-label={tr("\u0110i\u1EC1u h\u01B0\u1EDBng ch\u00EDnh")}>
         {[
-          ["/shop", tr("B\u1ED9 s\u01B0u t\u1EADp")],
+          ["/vell", "VELL"],
           ["/looks", tr("The Looks")],
           ["/stylist", tr("AI Stylist")],
         ].map(([href, text]) => (<Link onClick={() => setOpen(false)} className={pathname.startsWith(href) ? "active" : ""} key={href} href={href}>
@@ -55,7 +56,7 @@ export function Navigation() {
         </div>
       </nav>
       <div className="header-tools">
-        <Link className="icon-button desktop-tool" href="/shop" aria-label={tr("T\u00ECm s\u1EA3n ph\u1EA9m")}>
+        <Link className="icon-button desktop-tool" href="/catalog" aria-label={tr("T\u00ECm s\u1EA3n ph\u1EA9m")}>
           <Search size={19} />
         </Link>
         {user.data ? (<>
@@ -76,6 +77,8 @@ export function Navigation() {
 }
 export function Footer() {
   const { tr, label, money, productName, localeTag } = useI18n();
+  const pathname = usePathname();
+  if (pathname === "/vell") return null;
   return (<footer className="footer">
     <div className="container footer-inner">
       <Link className="wordmark" href="/">

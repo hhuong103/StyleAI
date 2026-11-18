@@ -9,7 +9,7 @@ from PIL import Image
 
 from app.core.errors import AppError
 from app.core.schemas import VirtualTryOnInput
-from app.modules.stylist.virtual_tryon import _generate_view
+from app.modules.stylist.virtual_tryon import _generate_view, _inline_reference, _prompt
 
 
 class FakeResponse:
@@ -41,6 +41,20 @@ def _request_body():
         background="CAFE",
         consent_external_processing=True,
     )
+
+
+def test_vell_model_reference_is_composited_and_prompt_preserves_identity(tmp_path):
+    path = tmp_path / "model.png"
+    Image.new("RGBA", (10, 10), (0, 0, 0, 0)).save(path)
+    reference = _inline_reference(path)
+    assert reference is not None
+    decoded = Image.open(io.BytesIO(base64.b64decode(reference["data"])))
+    assert decoded.getpixel((5, 5)) == (255, 255, 255)
+
+    body = _request_body().model_copy(update={"model_preset": "VELL_SEO_YEON"})
+    prompt = _prompt(body, [SimpleNamespace(name="Olive cargo pants")], "FRONT")
+    assert "fixed VELL model identity reference" in prompt
+    assert "Olive cargo pants" in prompt
 
 
 def test_generate_view_uses_generate_content_request_and_normalizes_output(monkeypatch):

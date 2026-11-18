@@ -1,0 +1,1729 @@
+.vell-shell {
+  --vell-ink: #fff;
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #9b9c99;
+  color: var(--vell-ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.35;
+}
+.vell-shell * {
+  box-sizing: border-box;
+}
+.vell-shell button,
+.vell-shell select,
+.vell-shell a {
+  color: #fff;
+}
+.vell-shell button {
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+.vell-shell button:active {
+  transform: scale(0.97);
+}
+.vell-shell button:focus-visible,
+.vell-shell a:focus-visible,
+.vell-shell select:focus-visible,
+.vell-shell input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.vell-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(90deg, #d5d9df12 0%, #57616e15 56%, #2a282646 100%),
+    url("/images/vell-studio.png") center/cover no-repeat;
+}
+.vell-backdrop[data-filter="Neutral Studio"] {
+  filter: saturate(0.92);
+}
+.vell-backdrop[data-filter="Warm Studio"] {
+  filter: sepia(0.14) saturate(0.9);
+}
+.vell-shell::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    #0c111822 0%,
+    transparent 20%,
+    transparent 70%,
+    #10111350 100%
+  );
+}
+.vell-shell .glass {
+  background: linear-gradient(110deg, #7177819c, #8d8d8a88 50%, #605c5882);
+  border: 1px solid #ffffff77;
+  box-shadow:
+    0 15px 35px #1a1c2030,
+    inset 0 1px #ffffff45;
+  backdrop-filter: blur(20px) saturate(105%);
+  -webkit-backdrop-filter: blur(20px) saturate(105%);
+}
+.vell-header {
+  height: 80px;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 13px 22px;
+}
+.vell-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  white-space: nowrap;
+}
+.vell-logo {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -0.11em;
+  line-height: 1;
+  text-shadow: 0 1px 20px #fff5;
+  padding-right: 8px;
+}
+.vell-brand span {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+}
+.vell-header-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.vell-header-actions > a,
+.vell-header-actions > button {
+  height: 49px;
+  width: 49px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff8a;
+  border-radius: 50%;
+  background: #54524c73;
+  backdrop-filter: blur(12px);
+}
+.vell-header-actions > a:hover,
+.vell-header-actions > button:hover {
+  background: #ffffff47;
+}
+.vell-profile {
+  position: absolute;
+  z-index: 8;
+  top: 98px;
+  left: 20px;
+  width: min(475px, 32vw);
+  height: 121px;
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  padding: 10px 16px;
+  border-radius: 23px;
+}
+.vell-profile img {
+  width: 98px;
+  height: 98px;
+  object-fit: cover;
+  object-position: center 8%;
+  border: 1px solid #fff;
+  border-radius: 18px;
+  background: #aeb0b0;
+}
+.vell-profile > div {
+  min-width: 0;
+  flex: 1;
+}
+.vell-profile strong {
+  display: block;
+  font-size: 26px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.vell-profile small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  color: #fafafa;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.vell-profile button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid #ffffffa0;
+  border-radius: 50%;
+  background: #343a42a0;
+}
+.vell-left {
+  position: absolute;
+  z-index: 7;
+  top: 236px;
+  left: 20px;
+  width: 170px;
+  padding: 15px 8px;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.vell-left button {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  font-size: 14px;
+  text-align: left;
+}
+.vell-left button span {
+  font-size: 21px;
+  line-height: 1;
+  width: 20px;
+  text-align: center;
+}
+.vell-left button.active {
+  border-color: #fff;
+  background: #d8e5f328;
+  box-shadow: 0 0 20px #d8ecff70;
+}
+.vell-left button:hover {
+  background: #ffffff36;
+}
+.vell-stage {
+  position: absolute;
+  inset: 0 30% 0 12%;
+  overflow: hidden;
+}
+.vell-model {
+  position: absolute;
+  left: 50%;
+  bottom: 115px;
+  height: 78%;
+  max-width: 90%;
+  transform: translateX(-50%);
+  aspect-ratio: 2/3;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.vell-model img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 8px 9px #16191a30);
+}
+.vell-model.generated {
+  height: 78%;
+  left: 51%;
+  max-width: 65%;
+}
+.vell-model.generated img {
+  border-radius: 16px;
+  object-fit: contain;
+}
+.vell-stage-note {
+  position: absolute;
+  bottom: 178px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  z-index: 3;
+}
+.vell-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 9px #fff;
+}
+.vell-regions {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 0;
+  height: 87%;
+  width: auto;
+  aspect-ratio: 2/3;
+  transform: translateX(-50%);
+  overflow: visible;
+}
+.vell-regions polygon {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 0.4;
+  cursor: pointer;
+}
+.vell-regions polygon:hover,
+.vell-regions polygon:focus-visible {
+  fill: #ffffff1c;
+  stroke: #fff;
+}
+.vell-tryon-callout {
+  position: absolute;
+  z-index: 4;
+  bottom: 225px;
+  right: 5%;
+  width: 235px;
+  padding: 17px;
+  border-radius: 18px;
+}
+.vell-tryon-callout strong,
+.vell-tryon-callout span {
+  display: block;
+}
+.vell-tryon-callout strong {
+  font-size: 16px;
+}
+.vell-tryon-callout span {
+  font-size: 11px;
+  margin: 6px 0 14px;
+}
+.vell-tryon-callout label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.vell-tryon-callout input {
+  min-height: 0;
+  width: auto;
+  accent-color: #fff;
+  margin: 1px 0 0;
+}
+.vell-tryon-callout button {
+  margin-top: 13px;
+  padding: 9px 12px;
+  border: 1px solid #fff;
+  border-radius: 11px;
+  font-size: 12px;
+  width: 100%;
+  background: #ffffff26;
+}
+.vell-right {
+  position: absolute;
+  z-index: 8;
+  right: 20px;
+  top: 98px;
+  bottom: 112px;
+  width: clamp(385px, 29vw, 470px);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 17px 13px;
+  border-radius: 24px;
+  overflow: hidden;
+}
+.vell-panel-head > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.vell-panel-head span {
+  font-size: 18px;
+}
+.vell-panel-head small {
+  font-size: 10px;
+  opacity: 0.9;
+}
+.vell-mobile-close {
+  display: none;
+}
+.vell-mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin: 11px 0 9px;
+  padding: 3px;
+  background: #302d2c59;
+  border-radius: 12px;
+}
+.vell-mode button {
+  font-size: 11px;
+  padding: 6px 4px;
+  border-radius: 9px;
+}
+.vell-mode button.active {
+  background: #ffffff3f;
+  border: 1px solid #ffffff90;
+}
+.vell-categories {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  overflow: visible;
+  padding: 2px 2px 9px;
+  margin-bottom: 4px;
+  flex: none;
+}
+.vell-categories button {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+}
+.vell-categories button span {
+  width: min(100%, 40px);
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffffa2;
+  border-radius: 12px;
+  background: #ffffff19;
+}
+.vell-categories button.active span {
+  border-color: #fff;
+  background: #ffffff40;
+  box-shadow: 0 0 9px #fff6;
+}
+.vell-categories button small {
+  font-size: 9px;
+  white-space: nowrap;
+}
+.vell-categories button svg {
+  width: 16px;
+  height: 16px;
+}
+.vell-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+  max-height: 286px;
+  flex: 0 1 286px;
+  padding: 2px 2px 5px;
+  scrollbar-width: thin;
+}
+.vell-outfit-card {
+  position: relative;
+  min-width: 0;
+  height: 136px;
+  overflow: hidden;
+  border: 1px solid #ffffff91;
+  border-radius: 15px;
+  background: #c1bbb6a3;
+}
+.vell-outfit-card.active {
+  border: 2px solid #fff;
+  box-shadow:
+    0 0 0 2px #ffffff57,
+    0 0 18px #fff9;
+}
+.vell-outfit-card > img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.vell-outfit-card > span {
+  position: absolute;
+  inset: auto 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 15px 5px 5px;
+  background: linear-gradient(transparent, #252525a3);
+  font-size: 9px;
+  text-align: center;
+}
+.vell-outfit-card.live {
+  background: #d4d1caab;
+}
+.vell-product-collage {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  height: 100%;
+  gap: 2px;
+  padding: 3px;
+}
+.vell-product-collage img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  background: #f0eee9;
+}
+.vell-grid-message {
+  grid-column: 1/-1;
+  color: #fff;
+  font-size: 12px;
+  margin: 16px 5px;
+  text-align: center;
+}
+.vell-error {
+  padding: 8px 10px;
+  margin: 0 0 8px;
+  border: 1px solid #ffffff65;
+  border-radius: 10px;
+  background: #4f3a39b5;
+  font-size: 11px;
+}
+.vell-error a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 7px;
+  text-decoration: underline;
+}
+.vell-groups {
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
+  scrollbar-width: thin;
+}
+.vell-group {
+  margin-top: 7px;
+  border: 1px solid #ffffff9a;
+  border-radius: 13px;
+  background: #ffffff26;
+  overflow: hidden;
+}
+.vell-group > button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 10px 13px;
+  font-size: 13px;
+  text-align: left;
+}
+.vell-group > button small {
+  margin-left: 3px;
+  font-size: 10px;
+  opacity: 0.7;
+}
+.vell-group > button svg {
+  margin-left: auto;
+  transition: transform 0.2s;
+}
+.vell-group > button[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.vell-group-items {
+  padding: 5px 10px 8px;
+  border-top: 1px solid #ffffff60;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.vell-group-items p {
+  margin: 5px;
+  color: #fff;
+  font-size: 11px;
+}
+.vell-product-row {
+  display: flex;
+  gap: 9px;
+  padding: 7px 0;
+  border-bottom: 1px solid #ffffff3a;
+}
+.vell-product-row:last-child {
+  border-bottom: 0;
+}
+.vell-product-row img {
+  width: 43px;
+  height: 53px;
+  flex: none;
+  border-radius: 6px;
+  object-fit: contain;
+  background: #e9e8e5;
+}
+.vell-product-row div {
+  min-width: 0;
+}
+.vell-product-row strong,
+.vell-product-row small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vell-product-row strong {
+  font-size: 11px;
+  font-weight: 500;
+}
+.vell-product-row small {
+  font-size: 10px;
+  opacity: 0.85;
+  margin: 2px 0;
+}
+.vell-product-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  text-decoration: underline;
+}
+.vell-toolbar {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 18px;
+  z-index: 9;
+}
+.vell-random {
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 13px;
+}
+.vell-toolbar-bottom {
+  display: grid;
+  grid-template-columns:
+    minmax(250px, 1.15fr) minmax(375px, 1.55fr) minmax(180px, 0.75fr)
+    minmax(220px, 0.75fr);
+  gap: 14px;
+  align-items: end;
+  margin-top: 18px;
+}
+.vell-realism,
+.vell-actions,
+.vell-filter,
+.vell-save {
+  height: 84px;
+  border-radius: 19px;
+}
+.vell-realism {
+  padding: 13px 18px;
+}
+.vell-realism > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.vell-realism input {
+  height: 8px;
+  min-height: 0;
+  padding: 0;
+  margin: 12px 0 3px;
+  border: 0;
+  accent-color: #fff;
+  cursor: pointer;
+}
+.vell-realism small,
+.vell-filter small {
+  font-size: 9px;
+  opacity: 0.85;
+}
+.vell-actions {
+  height: 53px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  gap: 2px;
+}
+.vell-actions button {
+  flex: 1;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 12px;
+  border-radius: 14px;
+}
+.vell-actions button.active {
+  border: 1px solid #fff;
+  background: #ffffff28;
+}
+.vell-filter {
+  padding: 10px 13px;
+}
+.vell-filter span {
+  display: block;
+  font-size: 12px;
+}
+.vell-filter select {
+  height: 30px;
+  min-height: 0;
+  padding: 2px 10px;
+  margin: 3px 0;
+  background: #ffffff20;
+  border: 1px solid #ffffffa0;
+  color: #fff;
+  font-size: 11px;
+}
+.vell-filter option {
+  color: #222;
+}
+.vell-save {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #ffffffb2;
+  border-radius: 19px;
+  font-size: 13px;
+  letter-spacing: 0.09em;
+}
+.vell-mobile-toggle {
+  display: none;
+}
+@media (max-width: 1260px) {
+  .vell-header {
+    grid-template-columns: 230px minmax(420px, 1fr) 210px;
+    gap: 10px;
+  }
+  .vell-brand span {
+    display: none;
+  }
+  .vell-logo {
+    font-size: 40px;
+  }
+  .vell-header-actions > a,
+  .vell-header-actions > button {
+    height: 43px;
+    width: 43px;
+  }
+  .vell-profile {
+    width: 365px;
+  }
+  .vell-profile strong {
+    font-size: 20px;
+  }
+  .vell-right {
+    width: 365px;
+  }
+  .vell-stage {
+    right: 27%;
+  }
+  .vell-toolbar-bottom {
+    grid-template-columns:
+      minmax(190px, 1fr) minmax(330px, 1.45fr) minmax(145px, 0.65fr)
+      minmax(170px, 0.7fr);
+    gap: 8px;
+  }
+  .vell-actions button {
+    font-size: 10px;
+    gap: 4px;
+  }
+  .vell-save {
+    font-size: 10px;
+  }
+}
+@media (max-width: 980px) {
+  .vell-header {
+    height: 68px;
+    grid-template-columns: 170px 1fr 160px;
+  }
+  .vell-header-actions {
+    gap: 5px;
+  }
+  .vell-header-actions > a,
+  .vell-header-actions > button {
+    height: 37px;
+    width: 37px;
+  }
+  .vell-header-actions svg {
+    width: 17px;
+  }
+  .vell-profile {
+    top: 80px;
+    width: 300px;
+    height: 86px;
+    gap: 10px;
+  }
+  .vell-profile img {
+    width: 66px;
+    height: 66px;
+  }
+  .vell-profile strong {
+    font-size: 17px;
+  }
+  .vell-profile small {
+    font-size: 10px;
+    margin-top: 5px;
+  }
+  .vell-profile button {
+    width: 28px;
+    height: 28px;
+  }
+  .vell-left {
+    top: 178px;
+    width: 126px;
+  }
+  .vell-left button {
+    min-height: 40px;
+    gap: 8px;
+    padding: 0 9px;
+    font-size: 11px;
+  }
+  .vell-stage {
+    left: 8%;
+    right: 30%;
+  }
+  .vell-right {
+    top: 80px;
+    right: 12px;
+    bottom: 150px;
+    width: 31vw;
+    min-width: 290px;
+    padding: 12px;
+  }
+  .vell-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-height: 270px;
+  }
+  .vell-outfit-card {
+    height: 120px;
+  }
+  .vell-toolbar {
+    left: 12px;
+    right: 12px;
+    bottom: 10px;
+  }
+  .vell-toolbar-bottom {
+    grid-template-columns: 1fr 1.4fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .vell-save {
+    grid-column: 3;
+    grid-row: 1;
+    height: 65px;
+  }
+  .vell-filter {
+    display: none;
+  }
+  .vell-realism {
+    height: 65px;
+    padding: 9px;
+  }
+  .vell-actions {
+    height: 50px;
+  }
+  .vell-stage-note {
+    bottom: 140px;
+  }
+}
+@media (max-width: 700px) {
+  .vell-shell {
+    min-height: 100svh;
+    height: 100svh;
+  }
+  .vell-backdrop {
+    background-position: 40% center;
+  }
+  .vell-header {
+    height: 62px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+  }
+  .vell-logo {
+    font-size: 36px;
+  }
+  .vell-header-actions > a:nth-child(1),
+  .vell-header-actions > a:nth-child(3) {
+    display: none;
+  }
+  .vell-header-actions > a,
+  .vell-header-actions > button {
+    width: 36px;
+    height: 36px;
+  }
+  .vell-profile {
+    top: 111px;
+    left: 10px;
+    width: 225px;
+    height: 65px;
+    padding: 5px 7px;
+    gap: 7px;
+    border-radius: 14px;
+  }
+  .vell-profile img {
+    width: 51px;
+    height: 51px;
+    border-radius: 10px;
+  }
+  .vell-profile strong {
+    font-size: 14px;
+  }
+  .vell-profile small {
+    font-size: 8px;
+  }
+  .vell-profile button {
+    display: none;
+  }
+  .vell-left {
+    top: 190px;
+    left: 8px;
+    width: 48px;
+    padding: 5px 3px;
+    border-radius: 13px;
+  }
+  .vell-left button {
+    height: 39px;
+    min-height: 39px;
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+  .vell-left button span {
+    font-size: 17px;
+  }
+  .vell-stage {
+    inset: 0 0 0 0;
+  }
+  .vell-model {
+    height: calc(100svh - 340px);
+    max-height: 74%;
+    left: 53%;
+    bottom: 155px;
+    max-width: 84%;
+  }
+  .vell-model.generated {
+    height: 68%;
+    left: 53%;
+    bottom: 175px;
+    max-width: 80%;
+  }
+  .vell-stage-note {
+    bottom: 183px;
+    left: 55%;
+    font-size: 8px;
+    max-width: 70vw;
+    white-space: normal;
+    text-align: center;
+  }
+  .vell-tryon-callout {
+    right: 10px;
+    bottom: 228px;
+    width: 186px;
+    padding: 10px;
+  }
+  .vell-tryon-callout strong {
+    font-size: 12px;
+  }
+  .vell-tryon-callout span,
+  .vell-tryon-callout label {
+    font-size: 9px;
+  }
+  .vell-right {
+    position: fixed;
+    z-index: 20;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: min(72svh, 650px);
+    border-radius: 24px 24px 0 0;
+    padding: 15px;
+    transform: translateY(105%);
+    visibility: hidden;
+    transition:
+      transform 0.25s ease,
+      visibility 0.25s;
+  }
+  .vell-right.mobile-open {
+    transform: translateY(0);
+    visibility: visible;
+  }
+  .vell-mobile-close {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    right: 13px;
+    top: 11px;
+  }
+  .vell-panel-head > div {
+    padding-right: 30px;
+  }
+  .vell-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-height: 240px;
+  }
+  .vell-outfit-card {
+    height: 115px;
+  }
+  .vell-mobile-toggle {
+    display: block;
+    position: absolute;
+    z-index: 9;
+    bottom: 119px;
+    right: 12px;
+  }
+  .vell-mobile-toggle button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border: 1px solid #fff;
+    border-radius: 14px;
+    background: #4c4c4cb8;
+    backdrop-filter: blur(15px);
+    font-size: 12px;
+  }
+  .vell-mobile-toggle span {
+    opacity: 0.8;
+  }
+  .vell-toolbar {
+    left: 8px;
+    right: 8px;
+    bottom: 7px;
+  }
+  .vell-random {
+    height: 32px;
+    padding: 0 9px;
+    border-radius: 10px;
+    font-size: 10px;
+  }
+  .vell-toolbar-bottom {
+    grid-template-columns: 1fr auto;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  .vell-realism,
+  .vell-save {
+    display: none;
+  }
+  .vell-actions {
+    height: 45px;
+  }
+  .vell-actions button {
+    height: 35px;
+    font-size: 0;
+    gap: 0;
+  }
+  .vell-actions svg {
+    width: 17px;
+  }
+  .vell-filter {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    height: 45px;
+    width: 128px;
+    padding: 4px 6px;
+    border-radius: 13px;
+  }
+  .vell-filter span,
+  .vell-filter small {
+    display: none;
+  }
+  .vell-filter select {
+    height: 34px;
+    margin: 0;
+    font-size: 10px;
+  }
+  .vell-save {
+    display: flex;
+    position: absolute;
+    right: 0;
+    bottom: 55px;
+    width: 128px;
+    height: 32px;
+    border-radius: 11px;
+    font-size: 0;
+  }
+  .vell-save svg {
+    width: 17px;
+  }
+  .vell-regions {
+    bottom: 175px;
+    height: 68%;
+  }
+}
+@media (max-height: 760px) and (min-width: 701px) {
+  .vell-right {
+    bottom: 108px;
+  }
+  .vell-profile {
+    top: 85px;
+    height: 110px;
+  }
+  .vell-profile img {
+    width: 88px;
+    height: 88px;
+  }
+  .vell-left {
+    top: 218px;
+    padding: 8px 6px;
+  }
+  .vell-left button {
+    min-height: 43px;
+  }
+  .vell-grid {
+    max-height: 220px;
+    flex-basis: 220px;
+  }
+  .vell-outfit-card {
+    height: 100px;
+  }
+  .vell-toolbar-bottom {
+    margin-top: 9px;
+  }
+  .vell-realism,
+  .vell-filter {
+    height: 68px;
+  }
+  .vell-save {
+    height: 64px;
+  }
+  .vell-stage-note {
+    bottom: 140px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vell-shell button,
+  .vell-right {
+    transition: none;
+  }
+}
+
+/* VELL studio controls */
+.vell-profile .vell-edit {
+  display: inline-grid;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  margin-left: 4px;
+  border: 0;
+  background: transparent;
+}
+.vell-left button svg {
+  flex: none;
+  width: 20px;
+}
+.vell-model.close {
+  height: 105%;
+  bottom: -35px;
+}
+.vell-model .vell-regions {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+.vell-outfit-card > span {
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+.vell-outfit-card:hover > span,
+.vell-outfit-card:focus-visible > span {
+  opacity: 1;
+}
+.vell-filter {
+  position: relative;
+  padding-right: 45%;
+}
+.vell-filter-swatches {
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  bottom: 9px;
+  display: flex;
+  gap: 5px;
+}
+.vell-filter-swatches button {
+  width: 34px;
+  border: 1px solid #ffffff80;
+  border-radius: 9px;
+  background: #a9b6bf;
+  overflow: hidden;
+}
+.vell-filter-swatches button[aria-pressed="true"] {
+  border: 2px solid white;
+}
+.vell-filter-swatches button:nth-child(2) {
+  background: #c1bdb4;
+}
+.vell-filter-swatches button:nth-child(3) {
+  background: #a39588;
+}
+.vell-filter-swatches img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 4%;
+}
+.vell-dialog-backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: #151b22a0;
+}
+.vell-dialog {
+  position: relative;
+  width: min(460px, 100%);
+  max-height: min(75vh, 650px);
+  overflow: auto;
+  padding: 26px;
+  border-radius: 23px;
+  color: white;
+}
+.vell-dialog h2 {
+  margin: 0 32px 14px 0;
+  font-size: 22px;
+  font-weight: 500;
+}
+.vell-dialog h3 {
+  font-size: 15px;
+  margin-top: 20px;
+}
+.vell-dialog p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.vell-dialog a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: underline;
+}
+.vell-dialog-close {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+}
+.vell-dialog-links {
+  display: grid;
+  gap: 14px;
+}
+.vell-dialog-button {
+  border: 1px solid #ffffffaa;
+  border-radius: 12px;
+  padding: 10px 13px;
+  margin: 8px 6px 0 0;
+  background: #ffffff20;
+}
+.vell-model-picker,
+.vell-library {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+.vell-model-picker button,
+.vell-library > div {
+  overflow: hidden;
+  border: 1px solid #ffffff80;
+  border-radius: 13px;
+  background: #ffffff22;
+  text-align: center;
+}
+.vell-model-picker img,
+.vell-library img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+}
+.vell-model-picker span,
+.vell-library button {
+  display: block;
+  width: 100%;
+  padding: 7px;
+  font-size: 12px;
+}
+.vell-library > div > button + button {
+  border-top: 1px solid #ffffff55;
+}
+@media (max-width: 700px) {
+  .vell-filter {
+    padding-right: 6px;
+  }
+  .vell-filter-swatches {
+    display: none;
+  }
+  .vell-model.close {
+    height: 95%;
+    bottom: 70px;
+  }
+}
+.vell-inline-action {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+  text-decoration: underline;
+}
+.vell-saved-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ffffff55;
+  font-size: 13px;
+}
+.vell-saved-row button {
+  text-decoration: underline;
+}
+
+@media (min-width: 701px) {
+  .vell-right {
+    bottom: auto;
+    max-height: calc(100svh - 210px);
+  }
+  .vell-right .vell-grid {
+    flex-shrink: 0;
+  }
+}
+
+.vell-model {
+  transform-origin: center 25%;
+  transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.vell-model .vell-avatar-previous {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.vell-model .vell-avatar-current {
+  position: relative;
+}
+.vell-avatar-enter {
+  animation: vell-outfit-reveal 1000ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes vell-outfit-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-8px);
+  }
+  to {
+    clip-path: inset(0);
+    transform: translateY(0);
+  }
+}
+@media (max-width: 700px) {
+}
+@media (prefers-reduced-motion: reduce) {
+  .vell-model {
+    transition: none;
+  }
+  .vell-avatar-enter {
+    animation: none;
+  }
+}
+
+/* Studio lighting presets and local photo rendering controls. */
+.vell-backdrop {
+  transition: filter 650ms ease;
+  filter: saturate(1.2) contrast(1.08) brightness(1.03);
+}
+.vell-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background: linear-gradient(120deg, #78baff38, transparent 60%, #4b84d524);
+  transition: background 650ms ease;
+}
+.vell-backdrop[data-filter="Neutral Studio"] {
+  filter: saturate(1.08) contrast(1.1) brightness(1.04);
+}
+.vell-backdrop[data-filter="Neutral Studio"]::after {
+  background: linear-gradient(120deg, #fffdf218, transparent 65%);
+}
+.vell-backdrop[data-filter="Warm Studio"] {
+  filter: sepia(0.24) saturate(1.35) contrast(1.08) brightness(1.06);
+}
+.vell-backdrop[data-filter="Warm Studio"]::after {
+  background: linear-gradient(120deg, #ffc97755, transparent 60%, #d89b602a);
+}
+.vell-model img {
+  filter: saturate(calc(0.7 + var(--vell-realism, 0.75) * 0.3))
+    contrast(calc(0.88 + var(--vell-realism, 0.75) * 0.12))
+    brightness(calc(1.06 - var(--vell-realism, 0.75) * 0.06))
+    blur(calc((1 - var(--vell-realism, 0.75)) * 0.55px))
+    drop-shadow(0 8px 9px #16191a30);
+  transition: filter 180ms ease;
+}
+.vell-filter-swatches button[data-filter="Cool Studio"] {
+  background: linear-gradient(145deg, #d6eeff, #6993b6);
+}
+.vell-filter-swatches button[data-filter="Neutral Studio"] {
+  background: linear-gradient(145deg, #eae9e3, #a8aca6);
+}
+.vell-filter-swatches button[data-filter="Warm Studio"] {
+  background: linear-gradient(145deg, #ffe5ba, #b48a60);
+}
+.vell-realism input {
+  width: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vell-backdrop,
+  .vell-backdrop::after,
+  .vell-model img {
+    transition: none;
+  }
+}
+
+/* Studio lighting picker */
+.vell-filter.glass {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 18px;
+  background: linear-gradient(125deg, #7b858da6, #656563a6);
+}
+.vell-filter-heading {
+  flex: 1;
+  min-width: 0;
+}
+.vell-filter-heading > span {
+  color: #edf0f1c7;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  margin-bottom: 7px;
+  white-space: nowrap;
+}
+.vell-filter-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  padding: 6px 8px;
+  border: 1px solid #ffffff50;
+  border-radius: 10px;
+  background: #ffffff14;
+}
+.vell-filter-trigger:hover,
+.vell-filter-trigger[aria-expanded="true"] {
+  background: #ffffff28;
+  border-color: #ffffffb0;
+}
+.vell-filter-trigger > span:not(.vell-filter-tone) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  text-align: left;
+  flex: 1;
+}
+.vell-filter-trigger svg {
+  flex: none;
+  opacity: 0.8;
+  transition: transform 0.2s;
+}
+.vell-filter-trigger[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.vell-filter .vell-filter-tone {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #badbfa;
+  box-shadow: 0 0 7px #badbfa50;
+}
+.vell-filter-tone[data-tone="neutral"] {
+  background: #e5e5d8;
+}
+.vell-filter-tone[data-tone="warm"] {
+  background: #f7c995;
+}
+.vell-filter .vell-filter-swatches {
+  position: static;
+  align-self: stretch;
+  display: flex;
+  gap: 5px;
+}
+.vell-filter-swatches button {
+  width: 28px;
+  border-color: #ffffff50;
+  border-radius: 8px;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
+.vell-filter-swatches button[aria-pressed="true"] {
+  border: 1.5px solid white;
+  box-shadow: 0 0 0 2px #ffffff20;
+}
+.vell-light-menu {
+  position: absolute;
+  z-index: 30;
+  bottom: calc(100% + 12px);
+  right: 0;
+  width: 265px;
+  padding: 7px;
+  border: 1px solid #ffffff40;
+  border-radius: 17px;
+  background: linear-gradient(140deg, #414e57f5, #454744f5);
+  box-shadow:
+    0 14px 40px #121a2540,
+    inset 0 1px #ffffff20;
+  backdrop-filter: blur(24px);
+  animation: vell-light-open 160ms ease-out;
+}
+.vell-light-menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  text-align: left;
+}
+.vell-light-menu button:hover,
+.vell-light-menu button:focus-visible {
+  background: #ffffff12;
+}
+.vell-light-menu button[aria-selected="true"] {
+  background: #ffffff17;
+  border-color: #ffffff35;
+}
+.vell-light-menu .vell-light-preview {
+  display: block;
+  width: 36px;
+  height: 40px;
+  flex: none;
+  border-radius: 9px;
+  border: 1px solid #ffffff45;
+  background: linear-gradient(140deg, #d7eeff, #769ac8 55%, #3e587a);
+}
+.vell-light-preview[data-tone="neutral"] {
+  background: linear-gradient(140deg, #f2f0e9, #b0b3a9 55%, #70796f);
+}
+.vell-light-preview[data-tone="warm"] {
+  background: linear-gradient(140deg, #ffebca, #d7a46d 55%, #906e4c);
+}
+.vell-light-menu .vell-light-copy {
+  display: block;
+  flex: 1;
+}
+.vell-light-copy strong {
+  display: block;
+  font-weight: 500;
+  font-size: 12px;
+}
+.vell-light-copy small {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+  color: #d5dbdc;
+  opacity: 0.85;
+}
+.vell-light-menu svg {
+  color: #dce9e3;
+  flex: none;
+}
+@keyframes vell-light-open {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 1260px) {
+  .vell-filter .vell-filter-swatches {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .vell-filter.glass {
+    padding: 4px 6px;
+  }
+  .vell-filter-heading > span {
+    display: none;
+  }
+  .vell-filter-trigger {
+    padding: 5px 6px;
+    min-height: 33px;
+  }
+  .vell-filter-trigger > span:not(.vell-filter-tone) {
+    font-size: 10px;
+  }
+  .vell-light-menu {
+    right: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vell-light-menu {
+    animation: none;
+  }
+  .vell-filter-trigger svg {
+    transition: none;
+  }
+}
+
+/* Horizontal scan light follows the top-to-bottom outfit reveal. */
+.vell-outfit-glow {
+  position: absolute;
+  left: -55%;
+  width: 210%;
+  height: 2px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ffffff90 16%,
+    #fff 40%,
+    #fff 60%,
+    #ffffff90 84%,
+    transparent
+  );
+  filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 12px #ccecff);
+  animation: vell-outfit-light 1000ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.vell-outfit-glow::after {
+  content: "";
+  position: absolute;
+  inset: -22px 8%;
+  background: radial-gradient(
+    ellipse at center,
+    #f6fcffb3 0%,
+    #d8edff45 40%,
+    transparent 72%
+  );
+  filter: blur(9px);
+}
+@keyframes vell-outfit-light {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  7% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vell-outfit-glow {
+    display: none;
+    animation: none;
+  }
+}
+.vell-model .vell-avatar-previous {
+  animation: vell-outfit-retire 1000ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes vell-outfit-retire {
+  from {
+    clip-path: inset(0);
+  }
+  to {
+    clip-path: inset(100% 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vell-model .vell-avatar-previous {
+    animation: none;
+    visibility: hidden;
+  }
+}
+
+/* Shopping hit areas share the image's contain/bottom alignment at every zoom. */
+.vell-model .vell-shopping-regions {
+  pointer-events: none;
+  overflow: hidden;
+}
+.vell-shopping-regions a {
+  pointer-events: auto;
+  outline: none;
+}
+.vell-shopping-regions polygon {
+  stroke-width: 1;
+  transition:
+    fill 160ms,
+    stroke 160ms;
+}
+.vell-shopping-regions a:hover polygon,
+.vell-shopping-regions a:focus-visible polygon {
+  fill: #ffffff19;
+  stroke: #ffffffb0;
+}
+.vell-shopping-ring {
+  fill: #ffffff18;
+  stroke: #ffffffc4;
+  stroke-width: 1.2;
+  cursor: pointer;
+}
+.vell-shopping-dot {
+  fill: white;
+  pointer-events: none;
+}
+.vell-shopping-regions a:hover .vell-shopping-ring,
+.vell-shopping-regions a:focus-visible .vell-shopping-ring {
+  fill: #ffffff50;
+  stroke: white;
+}
+.vell-shopping-tooltip {
+  position: fixed;
+  z-index: 100;
+  width: 260px;
+  padding: 15px 17px;
+  color: #fff;
+  background: #293236eb;
+  border: 1px solid #ffffff40;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px #0003;
+  backdrop-filter: blur(18px);
+  pointer-events: none;
+  font-family: inherit;
+  line-height: 1.4;
+}
+.vell-shopping-tooltip span {
+  display: block;
+  color: #d9e5df;
+  font-size: 10px;
+  letter-spacing: 0.09em;
+}
+.vell-shopping-tooltip strong {
+  display: block;
+  margin: 7px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.vell-shopping-tooltip small {
+  display: block;
+  font-size: 11px;
+  color: #d7dcde;
+}
+.vell-shopping-tooltip b {
+  display: block;
+  margin-top: 11px;
+  font-size: 12px;
+  font-weight: 500;
+}

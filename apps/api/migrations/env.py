@@ -4,6 +4,7 @@ from alembic import context
 
 from app.db import models  # noqa: F401
 from app.db.session import Base, engine
+from app.modules.vell import domain_models  # noqa: F401
 
 config = context.config
 if config.config_file_name:

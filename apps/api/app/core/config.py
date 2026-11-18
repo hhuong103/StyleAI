@@ -15,8 +15,11 @@ class Settings:
     media_root: Path = Path(os.getenv("MEDIA_ROOT", "./media"))
     access_ttl: int = int(os.getenv("ACCESS_TOKEN_TTL", "900"))
     refresh_ttl: int = int(os.getenv("REFRESH_TOKEN_TTL", "604800"))
+    vell_job_timeout_seconds: int = int(os.getenv("VELL_JOB_TIMEOUT_SECONDS", "540"))
 
     def validate(self):
+        if not 30 <= self.vell_job_timeout_seconds <= 1800:
+            raise RuntimeError("VELL_JOB_TIMEOUT_SECONDS must be between 30 and 1800")
         if self.app_env == "production":
             if len(self.secret) < 32 or self.secret.startswith("local-development"):
                 raise RuntimeError(

@@ -50,6 +50,7 @@ export type Look = {
   visual: {
     kind: string;
     hotspots: { slot_key: string; x: number; y: number }[];
+    try_on?: { request_id: string; url: string; model_preset: string | null; regions_verified: boolean };
   };
   reasons: Reason[];
   items: LookItem[];

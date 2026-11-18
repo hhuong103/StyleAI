@@ -4,6 +4,7 @@ CATEGORIES = {
     "SHIRT": ("Áo sơ mi", "TOP", 249000),
     "BLOUSE": ("Áo blouse", "TOP", 279000),
     "POLO": ("Áo polo", "TOP", 259000),
+    "LOUNGE_TOP": ("Áo mặc nhà", "TOP", 199000),
     "SWEATSHIRT": ("Áo sweatshirt", "TOP", 299000),
     "JEANS": ("Quần jeans", "BOTTOM", 329000),
     "TROUSERS": ("Quần âu", "BOTTOM", 349000),
@@ -12,6 +13,7 @@ CATEGORIES = {
     "CARGO": ("Quần cargo", "BOTTOM", 349000),
     "SHORTS": ("Quần short", "BOTTOM", 219000),
     "JOGGERS": ("Quần jogger", "BOTTOM", 299000),
+    "LOUNGE_PANTS": ("Quần mặc nhà", "BOTTOM", 219000),
     "BLAZER": ("Áo blazer", "OUTERWEAR", 499000),
     "CARDIGAN": ("Áo cardigan", "OUTERWEAR", 329000),
     "DENIM_JACKET": ("Áo khoác denim", "OUTERWEAR", 399000),
@@ -21,6 +23,7 @@ CATEGORIES = {
     "FLATS": ("Giày bệt", "SHOES", 229000),
     "SANDALS": ("Giày sandal", "SHOES", 179000),
     "DRESS_SHOES": ("Giày tây", "SHOES", 349000),
+    "SLIPPERS": ("Dép đi trong nhà", "SHOES", 159000),
 }
 STYLES = {
     "MINIMAL": "Tối giản",
@@ -40,6 +43,10 @@ OCCASIONS = {
     "PARTY": "Tiệc",
     "TRAVEL": "Du lịch",
     "DAILY": "Hằng ngày",
+    "SCHOOL": "Đi học",
+    "ATHLETIC": "Thể thao",
+    "STREET": "Đường phố",
+    "SLEEP": "Mặc nhà",
 }
 COLORS = {
     "BLACK": ("Đen", "#252525", "NEUTRAL"),
@@ -72,6 +79,14 @@ RULES = [
     ("DAILY", "STREETWEAR", ["OVERSIZED_TEE", "CARGO/JEANS", "SNEAKERS"]),
     ("DAILY", "CASUAL", ["T_SHIRT", "JEANS/SHORTS", "SNEAKERS"]),
     ("DAILY", "VINTAGE", ["SHIRT", "DENIM_JACKET", "JEANS", "LOAFERS"]),
+    ("SCHOOL", "CASUAL", ["SHIRT/POLO", "CARDIGAN", "JEANS/WIDE_LEG_PANTS", "SNEAKERS"]),
+    ("ATHLETIC", "SPORTY", ["T_SHIRT", "LIGHT_JACKET", "JOGGERS/SHORTS", "SNEAKERS"]),
+    (
+        "STREET",
+        "STREETWEAR",
+        ["OVERSIZED_TEE", "LIGHT_JACKET/DENIM_JACKET", "CARGO/JEANS", "SNEAKERS"],
+    ),
+    ("SLEEP", "CASUAL", ["LOUNGE_TOP", "LOUNGE_PANTS", "SLIPPERS"]),
 ]
 OCCASION_FALLBACK_RULES = [
     (
@@ -112,6 +127,10 @@ OCCASION_FALLBACK_RULES = [
             "SNEAKERS/LOAFERS/SANDALS",
         ],
     ),
+    ("SCHOOL", ["SHIRT/POLO", "CARDIGAN", "JEANS/WIDE_LEG_PANTS", "SNEAKERS"]),
+    ("ATHLETIC", ["T_SHIRT", "LIGHT_JACKET", "JOGGERS/SHORTS", "SNEAKERS"]),
+    ("STREET", ["OVERSIZED_TEE", "LIGHT_JACKET/DENIM_JACKET", "CARGO/JEANS", "SNEAKERS"]),
+    ("SLEEP", ["LOUNGE_TOP", "LOUNGE_PANTS", "SLIPPERS"]),
 ]
 
 

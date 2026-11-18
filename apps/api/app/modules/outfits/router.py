@@ -1,10 +1,12 @@
 import copy
+import json
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Query, Request, Response
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.errors import AppError, result
 from app.core.idempotency import execute_once
 from app.core.schemas import Envelope, OutfitUpdate, SaveOutfit
@@ -84,6 +86,34 @@ def save(
         revalidate(db, snapshots)
         if sum(i["price_vnd"] for i in snapshots) > rec.context_snapshot["budget_max_vnd"]:
             raise AppError(409, "BUDGET_EXCEEDED", "Look vượt ngân sách.")
+        visual = copy.deepcopy(look.visual)
+        if body.try_on_request_id:
+            request_id = str(body.try_on_request_id)
+            try_on_dir = settings.media_root / "uploads" / "virtual-try-on" / user.id / request_id
+            metadata_file = try_on_dir / "metadata.json"
+            front_file = try_on_dir / "2-front.jpg"
+            if not metadata_file.is_file() or not front_file.is_file():
+                raise AppError(422, "TRY_ON_NOT_FOUND", "Không tìm thấy ảnh mặc thử AI của bạn.")
+            try:
+                metadata = json.loads(metadata_file.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise AppError(422, "TRY_ON_INVALID", "Dữ liệu ảnh mặc thử không hợp lệ.") from exc
+            if (
+                not isinstance(metadata, dict)
+                or not isinstance(metadata.get("product_ids"), list)
+                or any(not isinstance(item, str) for item in metadata["product_ids"])
+            ):
+                raise AppError(422, "TRY_ON_INVALID", "Dữ liệu ảnh mặc thử không hợp lệ.")
+            if sorted(metadata["product_ids"]) != sorted(i["product_id"] for i in snapshots):
+                raise AppError(
+                    422, "TRY_ON_MISMATCH", "Ảnh mặc thử không khớp sản phẩm trong outfit."
+                )
+            visual["try_on"] = {
+                "request_id": request_id,
+                "url": f"/media/uploads/virtual-try-on/{user.id}/{request_id}/2-front.jpg",
+                "model_preset": metadata.get("model_preset"),
+                "regions_verified": False,
+            }
         row = Outfit(
             user_id=user.id,
             source_look_id=look.id,
@@ -93,7 +123,7 @@ def save(
             context_snapshot=rec.context_snapshot,
             total_price_vnd=look.total_price_vnd,
             score=look.score,
-            visual=look.visual,
+            visual=visual,
             reasons=look.reasons,
         )
         db.add(row)

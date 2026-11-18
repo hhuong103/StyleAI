@@ -678,6 +678,759 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/vell/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Vell Health */
+        get: operations["vell_health_api_v1_vell_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Vell Config */
+        get: operations["vell_config_api_v1_vell_config_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/capabilities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Vell Capabilities */
+        get: operations["vell_capabilities_api_v1_vell_capabilities_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Me */
+        get: operations["me_api_v1_vell_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preferences */
+        get: operations["preferences_api_v1_vell_preferences_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Preferences */
+        patch: operations["update_preferences_api_v1_vell_preferences_patch"];
+        trace?: never;
+    };
+    "/api/v1/vell/outfit-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Taxonomy */
+        get: operations["taxonomy_api_v1_vell_outfit_categories_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/occasions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Taxonomy */
+        get: operations["taxonomy_api_v1_vell_occasions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/styles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Taxonomy */
+        get: operations["taxonomy_api_v1_vell_styles_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/retailers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retailers */
+        get: operations["retailers_api_v1_vell_retailers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/filters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Filters */
+        get: operations["filters_api_v1_vell_filters_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/recommendations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Recommend */
+        post: operations["recommend_api_v1_vell_recommendations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Models */
+        get: operations["models_api_v1_vell_models_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/models/{model_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Model Detail */
+        get: operations["model_detail_api_v1_vell_models__model_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/admin/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Model */
+        post: operations["add_model_api_v1_vell_admin_models_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Session */
+        post: operations["create_session_api_v1_vell_sessions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/sessions/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Session Detail */
+        get: operations["session_detail_api_v1_vell_sessions__session_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Session */
+        patch: operations["update_session_api_v1_vell_sessions__session_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/vell/outfits/compose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Compose */
+        post: operations["compose_api_v1_vell_outfits_compose_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/outfits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Outfits */
+        get: operations["outfits_api_v1_vell_outfits_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/outfits/{outfit_id}/garments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Outfit Detail */
+        get: operations["outfit_detail_api_v1_vell_outfits__outfit_id__garments_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/outfits/{outfit_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Outfit Detail */
+        get: operations["outfit_detail_api_v1_vell_outfits__outfit_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/outfits/{outfit_id}/garments/{slot}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Replace Garment */
+        patch: operations["replace_garment_api_v1_vell_outfits__outfit_id__garments__slot__patch"];
+        trace?: never;
+    };
+    "/api/v1/vell/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Products */
+        get: operations["products_api_v1_vell_products_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/products/{product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Product Detail */
+        get: operations["product_detail_api_v1_vell_products__product_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/admin/products/{product_id}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify Product */
+        post: operations["verify_product_api_v1_vell_admin_products__product_id__verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-ons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit */
+        post: operations["submit_api_v1_vell_try_ons_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-ons/{job_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Job Detail */
+        get: operations["job_detail_api_v1_vell_try_ons__job_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-ons/{job_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Job */
+        post: operations["cancel_job_api_v1_vell_try_ons__job_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-on-results/{result_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Result Detail */
+        get: operations["result_detail_api_v1_vell_try_on_results__result_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-on-results/{result_id}/segmentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Segment */
+        post: operations["segment_api_v1_vell_try_on_results__result_id__segmentation_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-on-results/{result_id}/regions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Regions */
+        get: operations["regions_api_v1_vell_try_on_results__result_id__regions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-on-results/{result_id}/shopping-regions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Shopping */
+        get: operations["shopping_api_v1_vell_try_on_results__result_id__shopping_regions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/admin/try-on-results/{result_id}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Review */
+        post: operations["review_api_v1_vell_admin_try_on_results__result_id__review_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/saved-looks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Saved Looks */
+        get: operations["saved_looks_api_v1_vell_saved_looks_get"];
+        put?: never;
+        /** Save Look */
+        post: operations["save_look_api_v1_vell_saved_looks_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/saved-looks/{look_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Saved Look */
+        get: operations["saved_look_api_v1_vell_saved_looks__look_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Saved */
+        delete: operations["delete_saved_api_v1_vell_saved_looks__look_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/shopping-bag": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Shopping Items */
+        get: operations["shopping_items_api_v1_vell_shopping_bag_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/wishlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Shopping Items */
+        get: operations["shopping_items_api_v1_vell_wishlist_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/shopping-bag/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Shopping Item */
+        post: operations["add_shopping_item_api_v1_vell_shopping_bag_items_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/wishlist/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Shopping Item */
+        post: operations["add_shopping_item_api_v1_vell_wishlist_items_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/shopping-bag/items/{product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Shopping Item */
+        delete: operations["remove_shopping_item_api_v1_vell_shopping_bag_items__product_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/wishlist/items/{product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Shopping Item */
+        delete: operations["remove_shopping_item_api_v1_vell_wishlist_items__product_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/events/outbound-navigation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Outbound */
+        post: operations["outbound_api_v1_vell_events_outbound_navigation_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-on": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listing */
+        get: operations["listing_api_v1_vell_try_on_get"];
+        put?: never;
+        /** Submit */
+        post: operations["submit_api_v1_vell_try_on_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-on/{job_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detail */
+        get: operations["detail_api_v1_vell_try_on__job_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vell/try-on/{job_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel */
+        post: operations["cancel_api_v1_vell_try_on__job_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -691,6 +1444,80 @@ export interface components {
         Body_validate_import_api_v1_admin_catalog_imports_validate_post: {
             /** File */
             file: string;
+        };
+        /** BoundTryOnInput */
+        BoundTryOnInput: {
+            /**
+             * Session Id
+             * Format: uuid
+             */
+            session_id: string;
+            /** Session Version */
+            session_version: number;
+            /**
+             * Try On Mode
+             * @default MULTI_GARMENT
+             * @constant
+             */
+            try_on_mode: "MULTI_GARMENT";
+            /**
+             * Consent External Processing
+             * @constant
+             */
+            consent_external_processing: true;
+        };
+        /** Capability */
+        Capability: {
+            /** Implemented */
+            implemented: boolean;
+            /** Configured */
+            configured: boolean;
+            /** Available */
+            available: boolean;
+            /** Reasons */
+            reasons: string[];
+            /** Modes */
+            modes: string[];
+            /** Authentication Required */
+            authentication_required: boolean;
+        };
+        /** ComposeInput */
+        ComposeInput: {
+            /** Name */
+            name: string;
+            /** Garments */
+            garments: components["schemas"]["GarmentInput"][];
+            /** Source Id */
+            source_id?: string | null;
+        };
+        /** CompositionOutput */
+        CompositionOutput: {
+            /**
+             * Outfit Id
+             * Format: uuid
+             */
+            outfit_id: string;
+            /** Revision */
+            revision: number;
+            /** Name */
+            name: string;
+            /** Total Price Vnd */
+            total_price_vnd: number;
+            /**
+             * Currency
+             * @constant
+             */
+            currency: "VND";
+            /** Garments */
+            garments: components["schemas"]["GarmentOutput"][];
+            /** Accordion */
+            accordion: {
+                [key: string]: {
+                    [key: string]: unknown;
+                };
+            };
+        } & {
+            [key: string]: unknown;
         };
         /** Context */
         Context: {
@@ -709,9 +1536,25 @@ export interface components {
                 [key: string]: string;
             };
         };
+        /** Envelope[CompositionOutput] */
+        Envelope_CompositionOutput_: {
+            data: components["schemas"]["CompositionOutput"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
         /** Envelope[LookOutput] */
         Envelope_LookOutput_: {
             data: components["schemas"]["LookOutput"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[ModelOutput] */
+        Envelope_ModelOutput_: {
+            data: components["schemas"]["ModelOutput"];
             /** Meta */
             meta: {
                 [key: string]: unknown;
@@ -733,9 +1576,57 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** Envelope[SessionOutput] */
+        Envelope_SessionOutput_: {
+            data: components["schemas"]["SessionOutput"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[TryOnJobOutput] */
+        Envelope_TryOnJobOutput_: {
+            data: components["schemas"]["TryOnJobOutput"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
         /** Envelope[UserOutput] */
         Envelope_UserOutput_: {
             data: components["schemas"]["UserOutput"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[VellCapabilities] */
+        Envelope_VellCapabilities_: {
+            data: components["schemas"]["VellCapabilities"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[VellConfig] */
+        Envelope_VellConfig_: {
+            data: components["schemas"]["VellConfig"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[VellHealth] */
+        Envelope_VellHealth_: {
+            data: components["schemas"]["VellHealth"];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[VerifiedProductOutput] */
+        Envelope_VerifiedProductOutput_: {
+            data: components["schemas"]["VerifiedProductOutput"];
             /** Meta */
             meta: {
                 [key: string]: unknown;
@@ -752,10 +1643,46 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** Envelope[list[CompositionOutput]] */
+        Envelope_list_CompositionOutput__: {
+            /** Data */
+            data: components["schemas"]["CompositionOutput"][];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[list[ModelOutput]] */
+        Envelope_list_ModelOutput__: {
+            /** Data */
+            data: components["schemas"]["ModelOutput"][];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
         /** Envelope[list[ProductOutput]] */
         Envelope_list_ProductOutput__: {
             /** Data */
             data: components["schemas"]["ProductOutput"][];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[list[TryOnJobOutput]] */
+        Envelope_list_TryOnJobOutput__: {
+            /** Data */
+            data: components["schemas"]["TryOnJobOutput"][];
+            /** Meta */
+            meta: {
+                [key: string]: unknown;
+            };
+        };
+        /** Envelope[list[VerifiedProductOutput]] */
+        Envelope_list_VerifiedProductOutput__: {
+            /** Data */
+            data: components["schemas"]["VerifiedProductOutput"][];
             /** Meta */
             meta: {
                 [key: string]: unknown;
@@ -792,6 +1719,51 @@ export interface components {
             /** Reason Code */
             reason_code?: string | null;
         };
+        /** GarmentInput */
+        GarmentInput: {
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /**
+             * Variant Id
+             * Format: uuid
+             */
+            variant_id: string;
+            /**
+             * Slot
+             * @enum {string}
+             */
+            slot: "INNER_TOP" | "OUTERWEAR" | "BOTTOM" | "FULL_BODY" | "SHOES" | "BAG" | "ACCESSORY";
+        };
+        /** GarmentOutput */
+        GarmentOutput: {
+            /**
+             * Garment Id
+             * Format: uuid
+             */
+            garment_id: string;
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /**
+             * Variant Id
+             * Format: uuid
+             */
+            variant_id: string;
+            /** Slot */
+            slot: string;
+            /** Selected Variant */
+            selected_variant: {
+                [key: string]: unknown;
+            };
+            product: components["schemas"]["VerifiedProductOutput"];
+        } & {
+            [key: string]: unknown;
+        };
         /** GoogleLogin */
         GoogleLogin: {
             /** Credential */
@@ -810,6 +1782,13 @@ export interface components {
             alt_text: string;
         } & {
             [key: string]: unknown;
+        };
+        /** JobError */
+        JobError: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
         };
         /** Login */
         Login: {
@@ -903,6 +1882,73 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        /** ModelInput */
+        ModelInput: {
+            /** Name */
+            name: string;
+            /**
+             * Presentation
+             * @enum {string}
+             */
+            presentation: "FEMALE" | "MALE" | "ANDROGYNOUS";
+            /** Asset Key */
+            asset_key: string;
+            /** License Note */
+            license_note: string;
+        };
+        /** ModelOutput */
+        ModelOutput: {
+            /**
+             * Model Id
+             * Format: uuid
+             */
+            model_id: string;
+            /** Name */
+            name: string;
+            /**
+             * Presentation
+             * @enum {string}
+             */
+            presentation: "FEMALE" | "MALE" | "ANDROGYNOUS";
+            /** Full Body Image Url */
+            full_body_image_url: string;
+            /** Portrait Url */
+            portrait_url: string;
+            /** Model Version */
+            model_version: number;
+            /** Asset Version */
+            asset_version: number;
+            /** Asset Hash */
+            asset_hash: string;
+            /** Supported Try On Modes */
+            supported_try_on_modes: string[];
+            /** Customization */
+            customization: {
+                [key: string]: boolean;
+            };
+            /** Identity Quality Verification */
+            identity_quality_verification: string;
+        } & {
+            [key: string]: unknown;
+        };
+        /** OutboundInput */
+        OutboundInput: {
+            /**
+             * Result Id
+             * Format: uuid
+             */
+            result_id: string;
+            /**
+             * Region Id
+             * Format: uuid
+             */
+            region_id: string;
+            /**
+             * Interaction
+             * @enum {string}
+             */
+            interaction: "HOVER" | "TAP" | "CLICK";
+        };
         /** OutfitUpdate */
         OutfitUpdate: {
             /** Name */
@@ -926,6 +1972,17 @@ export interface components {
              */
             locale: "vi-VN" | "en-US";
             context?: components["schemas"]["Context"];
+        };
+        /** PreferencesPatch */
+        PreferencesPatch: {
+            /** Preferred Styles */
+            preferred_styles?: string[] | null;
+            /** Favorite Colors */
+            favorite_colors?: string[] | null;
+            /** Budget Min Vnd */
+            budget_min_vnd?: number | null;
+            /** Budget Max Vnd */
+            budget_max_vnd?: number | null;
         };
         /** ProductCreate */
         ProductCreate: {
@@ -1103,21 +2160,6 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** RecommendationInput */
-        RecommendationInput: {
-            /**
-             * Plan Id
-             * Format: uuid
-             */
-            plan_id: string;
-            /**
-             * Top K
-             * @default 5
-             */
-            top_k: number;
-            /** Selected Products */
-            selected_products?: components["schemas"]["SelectedProduct"][];
-        };
         /** RecommendationOutput */
         RecommendationOutput: {
             /** Recommendation Id */
@@ -1173,6 +2215,15 @@ export interface components {
              */
             variant_id: string;
         };
+        /** ReviewInput */
+        ReviewInput: {
+            /** Approve */
+            approve: boolean;
+            /** Evidence */
+            evidence: string;
+            /** Result Image Hash */
+            result_image_hash: string;
+        };
         /** RuleInput */
         RuleInput: {
             /** Rule Key */
@@ -1200,6 +2251,18 @@ export interface components {
             look_id: string;
             /** Name */
             name?: string | null;
+            /** Try On Request Id */
+            try_on_request_id?: string | null;
+        };
+        /** SavedLookInput */
+        SavedLookInput: {
+            /**
+             * Result Id
+             * Format: uuid
+             */
+            result_id: string;
+            /** Name */
+            name: string;
         };
         /** SelectedProduct */
         SelectedProduct: {
@@ -1213,6 +2276,62 @@ export interface components {
              * Format: uuid
              */
             variant_id: string;
+        };
+        /** SessionInput */
+        SessionInput: {
+            /**
+             * Model Id
+             * Format: uuid
+             */
+            model_id: string;
+        };
+        /** SessionOutput */
+        SessionOutput: {
+            /**
+             * Session Id
+             * Format: uuid
+             */
+            session_id: string;
+            /**
+             * Model Id
+             * Format: uuid
+             */
+            model_id: string;
+            /** Version */
+            version: number;
+            /** Outfit Id */
+            outfit_id: string | null;
+            /** Active Job Id */
+            active_job_id: string | null;
+            /** Filter Id */
+            filter_id: string;
+            /** Realism */
+            realism: number;
+            /** Realism Supported */
+            realism_supported: boolean;
+        } & {
+            [key: string]: unknown;
+        };
+        /** SessionPatch */
+        SessionPatch: {
+            /** Version */
+            version: number;
+            /** Model Id */
+            model_id?: string | null;
+            /** Outfit Id */
+            outfit_id?: string | null;
+            /** Filter Id */
+            filter_id?: ("COOL_STUDIO" | "NEUTRAL_STUDIO" | "WARM_STUDIO") | null;
+            /** Realism */
+            realism?: number | null;
+        };
+        /** ShoppingItemInput */
+        ShoppingItemInput: {
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
         };
         /** Slot */
         Slot: {
@@ -1264,6 +2383,126 @@ export interface components {
              * @default true
              */
             active: boolean;
+        };
+        /** TryOnJobInput */
+        TryOnJobInput: {
+            /** Selected Products */
+            selected_products: string[];
+            /**
+             * Gender
+             * @enum {string}
+             */
+            gender: "MALE" | "FEMALE" | "UNISEX";
+            /** Age */
+            age: number;
+            /** Height Cm */
+            height_cm: number;
+            /** Weight Kg */
+            weight_kg: number;
+            /** Bust Cm */
+            bust_cm?: number | null;
+            /** Waist Cm */
+            waist_cm?: number | null;
+            /** Hips Cm */
+            hips_cm?: number | null;
+            /**
+             * Background
+             * @enum {string}
+             */
+            background: "SCHOOL" | "CAFE" | "PARTY" | "TRAVEL" | "OFFICE" | "STUDIO";
+            /**
+             * Consent External Processing
+             * @constant
+             */
+            consent_external_processing: true;
+            /**
+             * Model Preset
+             * @default VELL_SEO_YEON
+             * @constant
+             */
+            model_preset: "VELL_SEO_YEON";
+            /**
+             * Identity Reference
+             * @default false
+             */
+            identity_reference: boolean;
+        };
+        /** TryOnJobOutput */
+        TryOnJobOutput: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLED";
+            /** Provider */
+            provider: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Started At */
+            started_at: string | null;
+            /** Finished At */
+            finished_at: string | null;
+            result: components["schemas"]["TryOnResult"] | null;
+            error: components["schemas"]["JobError"] | null;
+        };
+        /** TryOnResult */
+        TryOnResult: {
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /** Views */
+            views: components["schemas"]["TryOnView"][];
+            /** Product Ids */
+            product_ids: string[];
+            /** Background */
+            background: string;
+            /** Regions */
+            regions?: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Segmentation Status
+             * @constant
+             */
+            segmentation_status: "UNAVAILABLE";
+            /** Disclaimer */
+            disclaimer: string;
+            /** Model Id */
+            model_id?: string | null;
+            /** Model Asset Version */
+            model_asset_version?: number | null;
+            /** Outfit Id */
+            outfit_id?: string | null;
+            /** Outfit Revision */
+            outfit_revision?: number | null;
+            /** Avatar Configuration Version */
+            avatar_configuration_version?: number | null;
+            /** Result Image Hash */
+            result_image_hash?: string | null;
+            /** Quality Status */
+            quality_status?: string | null;
+            /** Generated At */
+            generated_at?: string | null;
+        };
+        /** TryOnView */
+        TryOnView: {
+            /**
+             * View
+             * @enum {string}
+             */
+            view: "LEFT" | "FRONT" | "RIGHT";
+            /** Url */
+            url: string;
         };
         /** UserOutput */
         UserOutput: {
@@ -1346,6 +2585,166 @@ export interface components {
             /** Active */
             active?: boolean | null;
         };
+        /** VellCapabilities */
+        VellCapabilities: {
+            model_selection: components["schemas"]["Capability"];
+            recommendation: components["schemas"]["Capability"];
+            virtual_try_on: components["schemas"]["Capability"];
+            garment_segmentation: components["schemas"]["Capability"];
+            shopping_links: components["schemas"]["Capability"];
+        };
+        /** VellConfig */
+        VellConfig: {
+            /**
+             * Api Base
+             * @default /api/v1/vell
+             * @constant
+             */
+            api_base: "/api/v1/vell";
+            /**
+             * Frontend Route
+             * @default /vell
+             * @constant
+             */
+            frontend_route: "/vell";
+            /**
+             * Catalog Route
+             * @default /catalog
+             * @constant
+             */
+            catalog_route: "/catalog";
+            /** Legacy Redirects */
+            legacy_redirects: {
+                [key: string]: string;
+            };
+            /** Model Presets */
+            model_presets: string[];
+            /** Default Model Preset */
+            default_model_preset: string | null;
+            /**
+             * Provider
+             * @default gemini
+             * @constant
+             */
+            provider: "gemini";
+            /** Provider Model */
+            provider_model: string;
+            /**
+             * Authentication
+             * @default cookie_jwt
+             * @constant
+             */
+            authentication: "cookie_jwt";
+            /**
+             * Mutations Require Csrf
+             * @default true
+             * @constant
+             */
+            mutations_require_csrf: true;
+            /**
+             * Max Products Per Try On
+             * @default 4
+             * @constant
+             */
+            max_products_per_try_on: 4;
+            /**
+             * Max New Jobs Per User Per Hour
+             * @default 5
+             * @constant
+             */
+            max_new_jobs_per_user_per_hour: 5;
+        };
+        /** VellHealth */
+        VellHealth: {
+            /**
+             * Module
+             * @default vell
+             * @constant
+             */
+            module: "vell";
+            /**
+             * Status
+             * @default ready
+             * @constant
+             */
+            status: "ready";
+            /**
+             * Database
+             * @default ready
+             * @constant
+             */
+            database: "ready";
+            /**
+             * Schema Status
+             * @default current
+             * @constant
+             */
+            schema_status: "current";
+        };
+        /** VerifiedProductOutput */
+        VerifiedProductOutput: {
+            /** Id */
+            id: string;
+            /** Product Code */
+            product_code: string;
+            /** Name */
+            name: string;
+            /** Brand */
+            brand: string | null;
+            /** Category */
+            category: string;
+            /** Gender */
+            gender: string;
+            /** Color */
+            color: string;
+            /** Price Vnd */
+            price_vnd: number;
+            /** Base Price Vnd */
+            base_price_vnd: number;
+            /** Description */
+            description: string;
+            /** Active */
+            active: boolean;
+            /** Product Url */
+            product_url: string | null;
+            /** Available */
+            available: boolean;
+            /**
+             * Price Source
+             * @enum {string}
+             */
+            price_source: "DEMO" | "REAL";
+            image: components["schemas"]["ImageOutput"] | null;
+            /** Images */
+            images: components["schemas"]["ImageOutput"][];
+            /** Styles */
+            styles: string[];
+            /** Occasions */
+            occasions: string[];
+            /** Variants */
+            variants: components["schemas"]["VariantOutput"][];
+            /**
+             * Verification Status
+             * @enum {string}
+             */
+            verification_status: "VERIFIED" | "UNVERIFIED";
+            /** Verification Method */
+            verification_method: string | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /** VerifyProductInput */
+        VerifyProductInput: {
+            /** Retailer Sku */
+            retailer_sku: string;
+            /** Evidence */
+            evidence: string;
+            /**
+             * Valid Hours
+             * @default 24
+             */
+            valid_hours: number;
+        };
         /** VirtualTryOnInput */
         VirtualTryOnInput: {
             /** Selected Products */
@@ -1377,6 +2776,48 @@ export interface components {
              * @constant
              */
             consent_external_processing: true;
+            /** Model Preset */
+            model_preset?: "VELL_SEO_YEON" | null;
+            /**
+             * Identity Reference
+             * @default false
+             */
+            identity_reference: boolean;
+        };
+        /** RecommendationInput */
+        app__core__schemas__RecommendationInput: {
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /**
+             * Top K
+             * @default 5
+             */
+            top_k: number;
+            /** Selected Products */
+            selected_products?: components["schemas"]["SelectedProduct"][];
+        };
+        /** RecommendationInput */
+        app__modules__vell__domain_schemas__RecommendationInput: {
+            /**
+             * Session Id
+             * Format: uuid
+             */
+            session_id: string;
+            /** Occasion */
+            occasion: string;
+            /** Style */
+            style: string;
+            /** Budget Max Vnd */
+            budget_max_vnd: number;
+            /** Preferred Colors */
+            preferred_colors?: string[];
+            /** Sizes */
+            sizes?: {
+                [key: string]: string;
+            };
         };
     };
     responses: never;
@@ -2081,7 +3522,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["RecommendationInput"];
+                "application/json": components["schemas"]["app__core__schemas__RecommendationInput"];
             };
         };
         responses: {
@@ -2869,6 +4310,1470 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    vell_health_api_v1_vell_health_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_VellHealth_"];
+                };
+            };
+            /** @description Database or VELL schema not ready */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    vell_config_api_v1_vell_config_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_VellConfig_"];
+                };
+            };
+        };
+    };
+    vell_capabilities_api_v1_vell_capabilities_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_VellCapabilities_"];
+                };
+            };
+            /** @description Database or catalog not ready */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    me_api_v1_vell_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+        };
+    };
+    preferences_api_v1_vell_preferences_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+        };
+    };
+    update_preferences_api_v1_vell_preferences_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreferencesPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    taxonomy_api_v1_vell_outfit_categories_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+        };
+    };
+    taxonomy_api_v1_vell_occasions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+        };
+    };
+    taxonomy_api_v1_vell_styles_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+        };
+    };
+    retailers_api_v1_vell_retailers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+        };
+    };
+    filters_api_v1_vell_filters_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+        };
+    };
+    recommend_api_v1_vell_recommendations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["app__modules__vell__domain_schemas__RecommendationInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    models_api_v1_vell_models_get: {
+        parameters: {
+            query?: {
+                presentation?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_ModelOutput__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    model_detail_api_v1_vell_models__model_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                model_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_ModelOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_model_api_v1_vell_admin_models_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModelInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_ModelOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_session_api_v1_vell_sessions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_SessionOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    session_detail_api_v1_vell_sessions__session_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_SessionOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_session_api_v1_vell_sessions__session_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_SessionOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    compose_api_v1_vell_outfits_compose_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ComposeInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_CompositionOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    outfits_api_v1_vell_outfits_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_CompositionOutput__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    outfit_detail_api_v1_vell_outfits__outfit_id__garments_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                outfit_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_CompositionOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    outfit_detail_api_v1_vell_outfits__outfit_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                outfit_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_CompositionOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    replace_garment_api_v1_vell_outfits__outfit_id__garments__slot__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                outfit_id: string;
+                slot: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GarmentInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    products_api_v1_vell_products_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_VerifiedProductOutput__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    product_detail_api_v1_vell_products__product_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_VerifiedProductOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    verify_product_api_v1_vell_admin_products__product_id__verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyProductInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_api_v1_vell_try_ons_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BoundTryOnInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    job_detail_api_v1_vell_try_ons__job_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_job_api_v1_vell_try_ons__job_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    result_detail_api_v1_vell_try_on_results__result_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                result_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    segment_api_v1_vell_try_on_results__result_id__segmentation_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                result_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    regions_api_v1_vell_try_on_results__result_id__regions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                result_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    shopping_api_v1_vell_try_on_results__result_id__shopping_regions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                result_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    review_api_v1_vell_admin_try_on_results__result_id__review_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                result_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    saved_looks_api_v1_vell_saved_looks_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_look_api_v1_vell_saved_looks_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SavedLookInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    saved_look_api_v1_vell_saved_looks__look_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                look_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_saved_api_v1_vell_saved_looks__look_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                look_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    shopping_items_api_v1_vell_shopping_bag_get: {
+        parameters: {
+            query?: {
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    shopping_items_api_v1_vell_wishlist_get: {
+        parameters: {
+            query?: {
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_dict__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_shopping_item_api_v1_vell_shopping_bag_items_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShoppingItemInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_shopping_item_api_v1_vell_wishlist_items_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShoppingItemInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_shopping_item_api_v1_vell_shopping_bag_items__product_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_shopping_item_api_v1_vell_wishlist_items__product_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    outbound_api_v1_vell_events_outbound_navigation_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OutboundInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_dict_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listing_api_v1_vell_try_on_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_list_TryOnJobOutput__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_api_v1_vell_try_on_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TryOnJobInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_TryOnJobOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    detail_api_v1_vell_try_on__job_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_TryOnJobOutput_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_api_v1_vell_try_on__job_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Envelope_TryOnJobOutput_"];
                 };
             };
             /** @description Validation Error */

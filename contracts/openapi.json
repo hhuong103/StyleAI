@@ -996,7 +996,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RecommendationInput"
+                "$ref": "#/components/schemas/app__core__schemas__RecommendationInput"
               }
             }
           }
@@ -2241,6 +2241,1980 @@
           }
         }
       }
+    },
+    "/api/v1/vell/health": {
+      "get": {
+        "tags": [
+          "VELL Integration"
+        ],
+        "summary": "Vell Health",
+        "operationId": "vell_health_api_v1_vell_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_VellHealth_"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database or VELL schema not ready"
+          }
+        }
+      }
+    },
+    "/api/v1/vell/config": {
+      "get": {
+        "tags": [
+          "VELL Integration"
+        ],
+        "summary": "Vell Config",
+        "operationId": "vell_config_api_v1_vell_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_VellConfig_"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/capabilities": {
+      "get": {
+        "tags": [
+          "VELL Integration"
+        ],
+        "summary": "Vell Capabilities",
+        "operationId": "vell_capabilities_api_v1_vell_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_VellCapabilities_"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database or catalog not ready"
+          }
+        }
+      }
+    },
+    "/api/v1/vell/me": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Me",
+        "operationId": "me_api_v1_vell_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/preferences": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Preferences",
+        "operationId": "preferences_api_v1_vell_preferences_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Update Preferences",
+        "operationId": "update_preferences_api_v1_vell_preferences_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/outfit-categories": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Taxonomy",
+        "operationId": "taxonomy_api_v1_vell_outfit_categories_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/occasions": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Taxonomy",
+        "operationId": "taxonomy_api_v1_vell_occasions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/styles": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Taxonomy",
+        "operationId": "taxonomy_api_v1_vell_styles_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/retailers": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Retailers",
+        "operationId": "retailers_api_v1_vell_retailers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/filters": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Filters",
+        "operationId": "filters_api_v1_vell_filters_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/recommendations": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Recommend",
+        "operationId": "recommend_api_v1_vell_recommendations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__modules__vell__domain_schemas__RecommendationInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/models": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Models",
+        "operationId": "models_api_v1_vell_models_get",
+        "parameters": [
+          {
+            "name": "presentation",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^(FEMALE|MALE|ANDROGYNOUS)$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Presentation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_ModelOutput__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/models/{model_id}": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Model Detail",
+        "operationId": "model_detail_api_v1_vell_models__model_id__get",
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Model Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ModelOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/admin/models": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Add Model",
+        "operationId": "add_model_api_v1_vell_admin_models_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModelInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_ModelOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/sessions": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Create Session",
+        "operationId": "create_session_api_v1_vell_sessions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_SessionOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Session Detail",
+        "operationId": "session_detail_api_v1_vell_sessions__session_id__get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_SessionOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Update Session",
+        "operationId": "update_session_api_v1_vell_sessions__session_id__patch",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_SessionOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/outfits/compose": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Compose",
+        "operationId": "compose_api_v1_vell_outfits_compose_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComposeInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_CompositionOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/outfits": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Outfits",
+        "operationId": "outfits_api_v1_vell_outfits_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 24,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_CompositionOutput__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/outfits/{outfit_id}/garments": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Outfit Detail",
+        "operationId": "outfit_detail_api_v1_vell_outfits__outfit_id__garments_get",
+        "parameters": [
+          {
+            "name": "outfit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Outfit Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_CompositionOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/outfits/{outfit_id}": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Outfit Detail",
+        "operationId": "outfit_detail_api_v1_vell_outfits__outfit_id__get",
+        "parameters": [
+          {
+            "name": "outfit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Outfit Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_CompositionOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/outfits/{outfit_id}/garments/{slot}": {
+      "patch": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Replace Garment",
+        "operationId": "replace_garment_api_v1_vell_outfits__outfit_id__garments__slot__patch",
+        "parameters": [
+          {
+            "name": "outfit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Outfit Id"
+            }
+          },
+          {
+            "name": "slot",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slot"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GarmentInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/products": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Products",
+        "operationId": "products_api_v1_vell_products_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 24,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_VerifiedProductOutput__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/products/{product_id}": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Product Detail",
+        "operationId": "product_detail_api_v1_vell_products__product_id__get",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_VerifiedProductOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/admin/products/{product_id}/verify": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Verify Product",
+        "operationId": "verify_product_api_v1_vell_admin_products__product_id__verify_post",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyProductInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-ons": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Submit",
+        "operationId": "submit_api_v1_vell_try_ons_post",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoundTryOnInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-ons/{job_id}": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Job Detail",
+        "operationId": "job_detail_api_v1_vell_try_ons__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-ons/{job_id}/cancel": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Cancel Job",
+        "operationId": "cancel_job_api_v1_vell_try_ons__job_id__cancel_post",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-on-results/{result_id}": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Result Detail",
+        "operationId": "result_detail_api_v1_vell_try_on_results__result_id__get",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Result Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-on-results/{result_id}/segmentation": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Segment",
+        "operationId": "segment_api_v1_vell_try_on_results__result_id__segmentation_post",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Result Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-on-results/{result_id}/regions": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Regions",
+        "operationId": "regions_api_v1_vell_try_on_results__result_id__regions_get",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Result Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-on-results/{result_id}/shopping-regions": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Shopping",
+        "operationId": "shopping_api_v1_vell_try_on_results__result_id__shopping_regions_get",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Result Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/admin/try-on-results/{result_id}/review": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Review",
+        "operationId": "review_api_v1_vell_admin_try_on_results__result_id__review_post",
+        "parameters": [
+          {
+            "name": "result_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Result Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/saved-looks": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Save Look",
+        "operationId": "save_look_api_v1_vell_saved_looks_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavedLookInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Saved Looks",
+        "operationId": "saved_looks_api_v1_vell_saved_looks_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 24,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/saved-looks/{look_id}": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Saved Look",
+        "operationId": "saved_look_api_v1_vell_saved_looks__look_id__get",
+        "parameters": [
+          {
+            "name": "look_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Look Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Delete Saved",
+        "operationId": "delete_saved_api_v1_vell_saved_looks__look_id__delete",
+        "parameters": [
+          {
+            "name": "look_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Look Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/shopping-bag": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Shopping Items",
+        "operationId": "shopping_items_api_v1_vell_shopping_bag_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/wishlist": {
+      "get": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Shopping Items",
+        "operationId": "shopping_items_api_v1_vell_wishlist_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_dict__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/shopping-bag/items": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Add Shopping Item",
+        "operationId": "add_shopping_item_api_v1_vell_shopping_bag_items_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingItemInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/wishlist/items": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Add Shopping Item",
+        "operationId": "add_shopping_item_api_v1_vell_wishlist_items_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingItemInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/shopping-bag/items/{product_id}": {
+      "delete": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Remove Shopping Item",
+        "operationId": "remove_shopping_item_api_v1_vell_shopping_bag_items__product_id__delete",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/wishlist/items/{product_id}": {
+      "delete": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Remove Shopping Item",
+        "operationId": "remove_shopping_item_api_v1_vell_wishlist_items__product_id__delete",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/events/outbound-navigation": {
+      "post": {
+        "tags": [
+          "VELL Domain"
+        ],
+        "summary": "Outbound",
+        "operationId": "outbound_api_v1_vell_events_outbound_navigation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OutboundInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_dict_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-on": {
+      "post": {
+        "tags": [
+          "VELL Try-On Jobs"
+        ],
+        "summary": "Submit",
+        "operationId": "submit_api_v1_vell_try_on_post",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TryOnJobInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_TryOnJobOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "VELL Try-On Jobs"
+        ],
+        "summary": "Listing",
+        "operationId": "listing_api_v1_vell_try_on_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 24,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_list_TryOnJobOutput__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-on/{job_id}": {
+      "get": {
+        "tags": [
+          "VELL Try-On Jobs"
+        ],
+        "summary": "Detail",
+        "operationId": "detail_api_v1_vell_try_on__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_TryOnJobOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vell/try-on/{job_id}/cancel": {
+      "post": {
+        "tags": [
+          "VELL Try-On Jobs"
+        ],
+        "summary": "Cancel",
+        "operationId": "cancel_api_v1_vell_try_on__job_id__cancel_post",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope_TryOnJobOutput_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2272,6 +4246,174 @@
           "file"
         ],
         "title": "Body_validate_import_api_v1_admin_catalog_imports_validate_post"
+      },
+      "BoundTryOnInput": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Session Id"
+          },
+          "session_version": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Session Version"
+          },
+          "try_on_mode": {
+            "type": "string",
+            "const": "MULTI_GARMENT",
+            "title": "Try On Mode",
+            "default": "MULTI_GARMENT"
+          },
+          "consent_external_processing": {
+            "type": "boolean",
+            "const": true,
+            "title": "Consent External Processing"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "session_version",
+          "consent_external_processing"
+        ],
+        "title": "BoundTryOnInput"
+      },
+      "Capability": {
+        "properties": {
+          "implemented": {
+            "type": "boolean",
+            "title": "Implemented"
+          },
+          "configured": {
+            "type": "boolean",
+            "title": "Configured"
+          },
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reasons"
+          },
+          "modes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Modes"
+          },
+          "authentication_required": {
+            "type": "boolean",
+            "title": "Authentication Required"
+          }
+        },
+        "type": "object",
+        "required": [
+          "implemented",
+          "configured",
+          "available",
+          "reasons",
+          "modes",
+          "authentication_required"
+        ],
+        "title": "Capability"
+      },
+      "ComposeInput": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "garments": {
+            "items": {
+              "$ref": "#/components/schemas/GarmentInput"
+            },
+            "type": "array",
+            "maxItems": 7,
+            "minItems": 1,
+            "title": "Garments"
+          },
+          "source_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "garments"
+        ],
+        "title": "ComposeInput"
+      },
+      "CompositionOutput": {
+        "properties": {
+          "outfit_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Outfit Id"
+          },
+          "revision": {
+            "type": "integer",
+            "title": "Revision"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "total_price_vnd": {
+            "type": "integer",
+            "title": "Total Price Vnd"
+          },
+          "currency": {
+            "type": "string",
+            "const": "VND",
+            "title": "Currency"
+          },
+          "garments": {
+            "items": {
+              "$ref": "#/components/schemas/GarmentOutput"
+            },
+            "type": "array",
+            "title": "Garments"
+          },
+          "accordion": {
+            "additionalProperties": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Accordion"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "outfit_id",
+          "revision",
+          "name",
+          "total_price_vnd",
+          "currency",
+          "garments",
+          "accordion"
+        ],
+        "title": "CompositionOutput"
       },
       "Context": {
         "properties": {
@@ -2353,6 +4495,24 @@
         "type": "object",
         "title": "Context"
       },
+      "Envelope_CompositionOutput_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CompositionOutput"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[CompositionOutput]"
+      },
       "Envelope_LookOutput_": {
         "properties": {
           "data": {
@@ -2370,6 +4530,24 @@
           "meta"
         ],
         "title": "Envelope[LookOutput]"
+      },
+      "Envelope_ModelOutput_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ModelOutput"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[ModelOutput]"
       },
       "Envelope_ProductOutput_": {
         "properties": {
@@ -2407,6 +4585,42 @@
         ],
         "title": "Envelope[RecommendationOutput]"
       },
+      "Envelope_SessionOutput_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SessionOutput"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[SessionOutput]"
+      },
+      "Envelope_TryOnJobOutput_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/TryOnJobOutput"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[TryOnJobOutput]"
+      },
       "Envelope_UserOutput_": {
         "properties": {
           "data": {
@@ -2424,6 +4638,78 @@
           "meta"
         ],
         "title": "Envelope[UserOutput]"
+      },
+      "Envelope_VellCapabilities_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/VellCapabilities"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[VellCapabilities]"
+      },
+      "Envelope_VellConfig_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/VellConfig"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[VellConfig]"
+      },
+      "Envelope_VellHealth_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/VellHealth"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[VellHealth]"
+      },
+      "Envelope_VerifiedProductOutput_": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/VerifiedProductOutput"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[VerifiedProductOutput]"
       },
       "Envelope_dict_": {
         "properties": {
@@ -2444,6 +4730,50 @@
           "meta"
         ],
         "title": "Envelope[dict]"
+      },
+      "Envelope_list_CompositionOutput__": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/CompositionOutput"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[list[CompositionOutput]]"
+      },
+      "Envelope_list_ModelOutput__": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ModelOutput"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[list[ModelOutput]]"
       },
       "Envelope_list_ProductOutput__": {
         "properties": {
@@ -2466,6 +4796,50 @@
           "meta"
         ],
         "title": "Envelope[list[ProductOutput]]"
+      },
+      "Envelope_list_TryOnJobOutput__": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/TryOnJobOutput"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[list[TryOnJobOutput]]"
+      },
+      "Envelope_list_VerifiedProductOutput__": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/VerifiedProductOutput"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "Envelope[list[VerifiedProductOutput]]"
       },
       "Envelope_list_dict__": {
         "properties": {
@@ -2538,6 +4912,83 @@
         ],
         "title": "FeedbackInput"
       },
+      "GarmentInput": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Product Id"
+          },
+          "variant_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Variant Id"
+          },
+          "slot": {
+            "type": "string",
+            "enum": [
+              "INNER_TOP",
+              "OUTERWEAR",
+              "BOTTOM",
+              "FULL_BODY",
+              "SHOES",
+              "BAG",
+              "ACCESSORY"
+            ],
+            "title": "Slot"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "product_id",
+          "variant_id",
+          "slot"
+        ],
+        "title": "GarmentInput"
+      },
+      "GarmentOutput": {
+        "properties": {
+          "garment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Garment Id"
+          },
+          "product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Product Id"
+          },
+          "variant_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Variant Id"
+          },
+          "slot": {
+            "type": "string",
+            "title": "Slot"
+          },
+          "selected_variant": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Selected Variant"
+          },
+          "product": {
+            "$ref": "#/components/schemas/VerifiedProductOutput"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "garment_id",
+          "product_id",
+          "variant_id",
+          "slot",
+          "selected_variant",
+          "product"
+        ],
+        "title": "GarmentOutput"
+      },
       "GoogleLogin": {
         "properties": {
           "credential": {
@@ -2585,6 +5036,24 @@
           "alt_text"
         ],
         "title": "ImageOutput"
+      },
+      "JobError": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "JobError"
       },
       "Login": {
         "properties": {
@@ -2822,6 +5291,153 @@
         ],
         "title": "LookOutput"
       },
+      "ModelInput": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "presentation": {
+            "type": "string",
+            "enum": [
+              "FEMALE",
+              "MALE",
+              "ANDROGYNOUS"
+            ],
+            "title": "Presentation"
+          },
+          "asset_key": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Asset Key"
+          },
+          "license_note": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 10,
+            "title": "License Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "presentation",
+          "asset_key",
+          "license_note"
+        ],
+        "title": "ModelInput"
+      },
+      "ModelOutput": {
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Model Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "presentation": {
+            "type": "string",
+            "enum": [
+              "FEMALE",
+              "MALE",
+              "ANDROGYNOUS"
+            ],
+            "title": "Presentation"
+          },
+          "full_body_image_url": {
+            "type": "string",
+            "title": "Full Body Image Url"
+          },
+          "portrait_url": {
+            "type": "string",
+            "title": "Portrait Url"
+          },
+          "model_version": {
+            "type": "integer",
+            "title": "Model Version"
+          },
+          "asset_version": {
+            "type": "integer",
+            "title": "Asset Version"
+          },
+          "asset_hash": {
+            "type": "string",
+            "title": "Asset Hash"
+          },
+          "supported_try_on_modes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Supported Try On Modes"
+          },
+          "customization": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "title": "Customization"
+          },
+          "identity_quality_verification": {
+            "type": "string",
+            "title": "Identity Quality Verification"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "model_id",
+          "name",
+          "presentation",
+          "full_body_image_url",
+          "portrait_url",
+          "model_version",
+          "asset_version",
+          "asset_hash",
+          "supported_try_on_modes",
+          "customization",
+          "identity_quality_verification"
+        ],
+        "title": "ModelOutput"
+      },
+      "OutboundInput": {
+        "properties": {
+          "result_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Result Id"
+          },
+          "region_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Region Id"
+          },
+          "interaction": {
+            "type": "string",
+            "enum": [
+              "HOVER",
+              "TAP",
+              "CLICK"
+            ],
+            "title": "Interaction"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_id",
+          "region_id",
+          "interaction"
+        ],
+        "title": "OutboundInput"
+      },
       "OutfitUpdate": {
         "properties": {
           "name": {
@@ -2885,6 +5501,69 @@
         "additionalProperties": false,
         "type": "object",
         "title": "PlanInput"
+      },
+      "PreferencesPatch": {
+        "properties": {
+          "preferred_styles": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 8
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Styles"
+          },
+          "favorite_colors": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 12
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Favorite Colors"
+          },
+          "budget_min_vnd": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Budget Min Vnd"
+          },
+          "budget_max_vnd": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100000000.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Budget Max Vnd"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "PreferencesPatch"
       },
       "ProductCreate": {
         "properties": {
@@ -3401,36 +6080,6 @@
         ],
         "title": "ReasonOutput"
       },
-      "RecommendationInput": {
-        "properties": {
-          "plan_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Plan Id"
-          },
-          "top_k": {
-            "type": "integer",
-            "maximum": 20.0,
-            "minimum": 1.0,
-            "title": "Top K",
-            "default": 5
-          },
-          "selected_products": {
-            "items": {
-              "$ref": "#/components/schemas/SelectedProduct"
-            },
-            "type": "array",
-            "maxItems": 4,
-            "title": "Selected Products"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "plan_id"
-        ],
-        "title": "RecommendationInput"
-      },
       "RecommendationOutput": {
         "properties": {
           "recommendation_id": {
@@ -3550,6 +6199,33 @@
         ],
         "title": "ReplacementInput"
       },
+      "ReviewInput": {
+        "properties": {
+          "approve": {
+            "type": "boolean",
+            "title": "Approve"
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 20,
+            "title": "Evidence"
+          },
+          "result_image_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Result Image Hash"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "approve",
+          "evidence",
+          "result_image_hash"
+        ],
+        "title": "ReviewInput"
+      },
       "RuleInput": {
         "properties": {
           "rule_key": {
@@ -3633,6 +6309,18 @@
               }
             ],
             "title": "Name"
+          },
+          "try_on_request_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Try On Request Id"
           }
         },
         "additionalProperties": false,
@@ -3641,6 +6329,28 @@
           "look_id"
         ],
         "title": "SaveOutfit"
+      },
+      "SavedLookInput": {
+        "properties": {
+          "result_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Result Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result_id",
+          "name"
+        ],
+        "title": "SavedLookInput"
       },
       "SelectedProduct": {
         "properties": {
@@ -3662,6 +6372,171 @@
           "variant_id"
         ],
         "title": "SelectedProduct"
+      },
+      "SessionInput": {
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Model Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "model_id"
+        ],
+        "title": "SessionInput"
+      },
+      "SessionOutput": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Session Id"
+          },
+          "model_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Model Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "outfit_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outfit Id"
+          },
+          "active_job_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active Job Id"
+          },
+          "filter_id": {
+            "type": "string",
+            "title": "Filter Id"
+          },
+          "realism": {
+            "type": "integer",
+            "title": "Realism"
+          },
+          "realism_supported": {
+            "type": "boolean",
+            "title": "Realism Supported"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "session_id",
+          "model_id",
+          "version",
+          "outfit_id",
+          "active_job_id",
+          "filter_id",
+          "realism",
+          "realism_supported"
+        ],
+        "title": "SessionOutput"
+      },
+      "SessionPatch": {
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Version"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "outfit_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outfit Id"
+          },
+          "filter_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "COOL_STUDIO",
+                  "NEUTRAL_STUDIO",
+                  "WARM_STUDIO"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filter Id"
+          },
+          "realism": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Realism"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version"
+        ],
+        "title": "SessionPatch"
+      },
+      "ShoppingItemInput": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Product Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "product_id"
+        ],
+        "title": "ShoppingItemInput"
       },
       "Slot": {
         "properties": {
@@ -3822,6 +6697,381 @@
           "label"
         ],
         "title": "TaxonomyInput"
+      },
+      "TryOnJobInput": {
+        "properties": {
+          "selected_products": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 1,
+            "title": "Selected Products"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "UNISEX"
+            ],
+            "title": "Gender"
+          },
+          "age": {
+            "type": "integer",
+            "maximum": 80.0,
+            "minimum": 18.0,
+            "title": "Age"
+          },
+          "height_cm": {
+            "type": "integer",
+            "maximum": 220.0,
+            "minimum": 130.0,
+            "title": "Height Cm"
+          },
+          "weight_kg": {
+            "type": "integer",
+            "maximum": 200.0,
+            "minimum": 35.0,
+            "title": "Weight Kg"
+          },
+          "bust_cm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 180.0,
+                "minimum": 50.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bust Cm"
+          },
+          "waist_cm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 180.0,
+                "minimum": 45.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waist Cm"
+          },
+          "hips_cm": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 200.0,
+                "minimum": 50.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hips Cm"
+          },
+          "background": {
+            "type": "string",
+            "enum": [
+              "SCHOOL",
+              "CAFE",
+              "PARTY",
+              "TRAVEL",
+              "OFFICE",
+              "STUDIO"
+            ],
+            "title": "Background"
+          },
+          "consent_external_processing": {
+            "type": "boolean",
+            "const": true,
+            "title": "Consent External Processing"
+          },
+          "model_preset": {
+            "type": "string",
+            "const": "VELL_SEO_YEON",
+            "title": "Model Preset",
+            "default": "VELL_SEO_YEON"
+          },
+          "identity_reference": {
+            "type": "boolean",
+            "title": "Identity Reference",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "selected_products",
+          "gender",
+          "age",
+          "height_cm",
+          "weight_kg",
+          "background",
+          "consent_external_processing"
+        ],
+        "title": "TryOnJobInput"
+      },
+      "TryOnJobOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "QUEUED",
+              "RUNNING",
+              "SUCCEEDED",
+              "FAILED",
+              "CANCELLED"
+            ],
+            "title": "Status"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TryOnResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/JobError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "provider",
+          "created_at",
+          "started_at",
+          "finished_at",
+          "result",
+          "error"
+        ],
+        "title": "TryOnJobOutput"
+      },
+      "TryOnResult": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "views": {
+            "items": {
+              "$ref": "#/components/schemas/TryOnView"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Views"
+          },
+          "product_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Product Ids"
+          },
+          "background": {
+            "type": "string",
+            "title": "Background"
+          },
+          "regions": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "segmentation_status": {
+            "type": "string",
+            "const": "UNAVAILABLE",
+            "title": "Segmentation Status"
+          },
+          "disclaimer": {
+            "type": "string",
+            "title": "Disclaimer"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "model_asset_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Asset Version"
+          },
+          "outfit_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outfit Id"
+          },
+          "outfit_revision": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outfit Revision"
+          },
+          "avatar_configuration_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatar Configuration Version"
+          },
+          "result_image_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Image Hash"
+          },
+          "quality_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quality Status"
+          },
+          "generated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_id",
+          "views",
+          "product_ids",
+          "background",
+          "segmentation_status",
+          "disclaimer"
+        ],
+        "title": "TryOnResult"
+      },
+      "TryOnView": {
+        "properties": {
+          "view": {
+            "type": "string",
+            "enum": [
+              "LEFT",
+              "FRONT",
+              "RIGHT"
+            ],
+            "title": "View"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "view",
+          "url"
+        ],
+        "title": "TryOnView"
       },
       "UserOutput": {
         "properties": {
@@ -4040,6 +7290,344 @@
         "type": "object",
         "title": "VariantUpdate"
       },
+      "VellCapabilities": {
+        "properties": {
+          "model_selection": {
+            "$ref": "#/components/schemas/Capability"
+          },
+          "recommendation": {
+            "$ref": "#/components/schemas/Capability"
+          },
+          "virtual_try_on": {
+            "$ref": "#/components/schemas/Capability"
+          },
+          "garment_segmentation": {
+            "$ref": "#/components/schemas/Capability"
+          },
+          "shopping_links": {
+            "$ref": "#/components/schemas/Capability"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_selection",
+          "recommendation",
+          "virtual_try_on",
+          "garment_segmentation",
+          "shopping_links"
+        ],
+        "title": "VellCapabilities"
+      },
+      "VellConfig": {
+        "properties": {
+          "api_base": {
+            "type": "string",
+            "const": "/api/v1/vell",
+            "title": "Api Base",
+            "default": "/api/v1/vell"
+          },
+          "frontend_route": {
+            "type": "string",
+            "const": "/vell",
+            "title": "Frontend Route",
+            "default": "/vell"
+          },
+          "catalog_route": {
+            "type": "string",
+            "const": "/catalog",
+            "title": "Catalog Route",
+            "default": "/catalog"
+          },
+          "legacy_redirects": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Legacy Redirects"
+          },
+          "model_presets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Model Presets"
+          },
+          "default_model_preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Model Preset"
+          },
+          "provider": {
+            "type": "string",
+            "const": "gemini",
+            "title": "Provider",
+            "default": "gemini"
+          },
+          "provider_model": {
+            "type": "string",
+            "title": "Provider Model"
+          },
+          "authentication": {
+            "type": "string",
+            "const": "cookie_jwt",
+            "title": "Authentication",
+            "default": "cookie_jwt"
+          },
+          "mutations_require_csrf": {
+            "type": "boolean",
+            "const": true,
+            "title": "Mutations Require Csrf",
+            "default": true
+          },
+          "max_products_per_try_on": {
+            "type": "integer",
+            "const": 4,
+            "title": "Max Products Per Try On",
+            "default": 4
+          },
+          "max_new_jobs_per_user_per_hour": {
+            "type": "integer",
+            "const": 5,
+            "title": "Max New Jobs Per User Per Hour",
+            "default": 5
+          }
+        },
+        "type": "object",
+        "required": [
+          "legacy_redirects",
+          "model_presets",
+          "default_model_preset",
+          "provider_model"
+        ],
+        "title": "VellConfig"
+      },
+      "VellHealth": {
+        "properties": {
+          "module": {
+            "type": "string",
+            "const": "vell",
+            "title": "Module",
+            "default": "vell"
+          },
+          "status": {
+            "type": "string",
+            "const": "ready",
+            "title": "Status",
+            "default": "ready"
+          },
+          "database": {
+            "type": "string",
+            "const": "ready",
+            "title": "Database",
+            "default": "ready"
+          },
+          "schema_status": {
+            "type": "string",
+            "const": "current",
+            "title": "Schema Status",
+            "default": "current"
+          }
+        },
+        "type": "object",
+        "title": "VellHealth"
+      },
+      "VerifiedProductOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "product_code": {
+            "type": "string",
+            "title": "Product Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "gender": {
+            "type": "string",
+            "title": "Gender"
+          },
+          "color": {
+            "type": "string",
+            "title": "Color"
+          },
+          "price_vnd": {
+            "type": "integer",
+            "title": "Price Vnd"
+          },
+          "base_price_vnd": {
+            "type": "integer",
+            "title": "Base Price Vnd"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          },
+          "product_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Url"
+          },
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "price_source": {
+            "type": "string",
+            "enum": [
+              "DEMO",
+              "REAL"
+            ],
+            "title": "Price Source"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ImageOutput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ImageOutput"
+            },
+            "type": "array",
+            "title": "Images"
+          },
+          "styles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Styles"
+          },
+          "occasions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Occasions"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/VariantOutput"
+            },
+            "type": "array",
+            "title": "Variants"
+          },
+          "verification_status": {
+            "type": "string",
+            "enum": [
+              "VERIFIED",
+              "UNVERIFIED"
+            ],
+            "title": "Verification Status"
+          },
+          "verification_method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verification Method"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "product_code",
+          "name",
+          "brand",
+          "category",
+          "gender",
+          "color",
+          "price_vnd",
+          "base_price_vnd",
+          "description",
+          "active",
+          "product_url",
+          "available",
+          "price_source",
+          "image",
+          "images",
+          "styles",
+          "occasions",
+          "variants",
+          "verification_status",
+          "verification_method"
+        ],
+        "title": "VerifiedProductOutput"
+      },
+      "VerifyProductInput": {
+        "properties": {
+          "retailer_sku": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Retailer Sku"
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 20,
+            "title": "Evidence"
+          },
+          "valid_hours": {
+            "type": "integer",
+            "maximum": 168.0,
+            "minimum": 1.0,
+            "title": "Valid Hours",
+            "default": 24
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "retailer_sku",
+          "evidence"
+        ],
+        "title": "VerifyProductInput"
+      },
       "VirtualTryOnInput": {
         "properties": {
           "selected_products": {
@@ -4134,6 +7722,23 @@
             "type": "boolean",
             "const": true,
             "title": "Consent External Processing"
+          },
+          "model_preset": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "VELL_SEO_YEON"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Preset"
+          },
+          "identity_reference": {
+            "type": "boolean",
+            "title": "Identity Reference",
+            "default": false
           }
         },
         "additionalProperties": false,
@@ -4148,6 +7753,88 @@
           "consent_external_processing"
         ],
         "title": "VirtualTryOnInput"
+      },
+      "app__core__schemas__RecommendationInput": {
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Plan Id"
+          },
+          "top_k": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Top K",
+            "default": 5
+          },
+          "selected_products": {
+            "items": {
+              "$ref": "#/components/schemas/SelectedProduct"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "title": "Selected Products"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "plan_id"
+        ],
+        "title": "RecommendationInput"
+      },
+      "app__modules__vell__domain_schemas__RecommendationInput": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Session Id"
+          },
+          "occasion": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Occasion"
+          },
+          "style": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Style"
+          },
+          "budget_max_vnd": {
+            "type": "integer",
+            "maximum": 100000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Budget Max Vnd"
+          },
+          "preferred_colors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Preferred Colors"
+          },
+          "sizes": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "maxProperties": 7,
+            "title": "Sizes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "occasion",
+          "style",
+          "budget_max_vnd"
+        ],
+        "title": "RecommendationInput"
       }
     }
   }

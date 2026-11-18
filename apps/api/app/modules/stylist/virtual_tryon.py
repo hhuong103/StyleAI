@@ -1,9 +1,10 @@
-import asyncio
 import base64
 import binascii
 import io
+import json
 import logging
 import mimetypes
+from pathlib import Path
 from urllib.parse import quote
 
 import httpx
@@ -14,7 +15,7 @@ from app.core.config import settings
 from app.core.errors import AppError
 from app.core.schemas import VirtualTryOnInput
 from app.db.models import User, uid
-from app.modules.catalog.repository import ProductRepository
+from app.modules.catalog.repository import ProductRepository, is_shopee_product_url
 
 BACKGROUND_PROMPTS = {
     "SCHOOL": "a bright contemporary school courtyard with natural daylight",
@@ -33,6 +34,7 @@ VIEW_LABELS = ("LEFT", "FRONT", "RIGHT")
 SUPPORTED_REFERENCES = {"image/jpeg", "image/png", "image/webp"}
 GEMINI_GENERATE_CONTENT_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 logger = logging.getLogger("styleai")
+VELL_MODEL_PATH = Path(__file__).resolve().parents[3] / "assets" / "vell-model.png"
 
 
 def _reference_files(products):
@@ -56,7 +58,9 @@ def _reference_files(products):
 def _inline_reference(path) -> dict | None:
     try:
         with Image.open(path) as source:
-            image = source.convert("RGB")
+            rgba = source.convert("RGBA")
+            image = Image.new("RGB", rgba.size, "white")
+            image.paste(rgba, mask=rgba.getchannel("A"))
             image.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
             output = io.BytesIO()
             image.save(output, format="JPEG", quality=88, optimize=True)
@@ -83,10 +87,23 @@ def _prompt(body: VirtualTryOnInput, products, view: str) -> str:
         if value is not None:
             measurements.append(f"{label} {value} cm")
     garment_names = ", ".join(product.name for product in products)
+    identity_instruction = (
+        "The first supplied image is the fixed VELL model identity reference. Preserve the same "
+        "adult person's face, hair, skin tone, body proportions, and identity. Replace their clothing "
+        "only with the selected product references that follow. "
+        if body.model_preset == "VELL_SEO_YEON" or body.identity_reference
+        else ""
+    )
+    description = (
+        "adult person in the identity reference, with exactly the reference body proportions. "
+        if body.identity_reference
+        else f"adult {gender}, age {body.age}, with {', '.join(measurements)}. "
+    )
     return (
-        "Create one photorealistic, full-body fashion virtual try-on image of the same "
-        f"adult {gender}, age {body.age}, with {', '.join(measurements)}. "
-        f"Dress the model in these exact referenced products: {garment_names}. "
+        identity_instruction
+        + "Create one photorealistic, full-body fashion virtual try-on image of the same "
+        + description
+        + f"Dress the model in these exact referenced products: {garment_names}. "
         "Preserve every product's silhouette, colour, material, seams, trims, footwear, "
         "and small construction details from the reference images. Do not add, remove, "
         "replace, recolour, or redesign a selected product. "
@@ -273,7 +290,7 @@ async def _generate_view(
     return jpeg
 
 
-async def generate_virtual_try_on(db: Session, user: User, body: VirtualTryOnInput) -> dict:
+def prepare_try_on(db: Session, body: VirtualTryOnInput):
     if not settings.gemini_api_key:
         raise AppError(
             503,
@@ -285,6 +302,8 @@ async def generate_virtual_try_on(db: Session, user: User, body: VirtualTryOnInp
     products = [repository.get(str(product_id)) for product_id in body.selected_products]
     if len({product.id for product in products}) != len(products):
         raise AppError(422, "DUPLICATE_PRODUCT", "Mỗi sản phẩm chỉ được chọn một lần.")
+    if any(not is_shopee_product_url(product.product_url) for product in products):
+        raise AppError(422, "PRODUCT_URL_INVALID", "Sản phẩm chưa có đường dẫn mua hợp lệ.")
     if any(
         not any(variant.active and variant.available for variant in product.variants)
         for product in products
@@ -296,50 +315,62 @@ async def generate_virtual_try_on(db: Session, user: User, body: VirtualTryOnInp
         for path in _reference_files(products)
         if (reference := _inline_reference(path)) is not None
     ]
-    if not references:
+    if len(references) != len(products):
         raise AppError(
             422,
             "NO_IMAGE_REFERENCE",
-            "Các sản phẩm đã chọn chưa có ảnh JPEG, PNG hoặc WebP phù hợp để tạo ảnh.",
+            "Mỗi sản phẩm đã chọn cần có ảnh JPEG, PNG hoặc WebP phù hợp để tạo ảnh.",
         )
+    if body.model_preset == "VELL_SEO_YEON":
+        model_reference = _inline_reference(VELL_MODEL_PATH)
+        if model_reference is None:
+            raise AppError(503, "MODEL_REFERENCE_UNAVAILABLE", "Ảnh người mẫu VELL chưa khả dụng.")
+        references.insert(0, model_reference)
 
-    try:
-        async with httpx.AsyncClient(timeout=270) as client:
-            front = await _generate_view(client, body, products, "FRONT", references)
-            front_reference = {
-                "type": "image",
-                "data": base64.b64encode(front).decode("ascii"),
-                "mime_type": "image/jpeg",
-            }
-            left, right = await asyncio.gather(
-                _generate_view(client, body, products, "LEFT", [*references, front_reference]),
-                _generate_view(client, body, products, "RIGHT", [*references, front_reference]),
-            )
-    except httpx.TimeoutException as exc:
-        raise AppError(504, "AI_IMAGE_TIMEOUT", "Tạo ảnh quá thời gian. Hãy thử lại.") from exc
-    except httpx.HTTPError as exc:
-        raise AppError(
-            502, "AI_IMAGE_UNAVAILABLE", "Không thể kết nối dịch vụ tạo ảnh Gemini."
-        ) from exc
+    return products, references
 
-    request_id = uid()
-    output_dir = settings.media_root / "uploads" / "virtual-try-on" / user.id / request_id
+
+def persist_try_on(user_id, body, products, images, request_id):
+    normalized = [_as_jpeg(images.get(view, b"")) for view in VIEW_LABELS]
+    if not all(normalized):
+        raise AppError(502, "AI_IMAGE_INVALID", "Dịch vụ AI chưa trả đủ ba ảnh hợp lệ.")
+    output_dir = settings.media_root / "uploads" / "virtual-try-on" / user_id / request_id
     output_dir.mkdir(parents=True, exist_ok=True)
     views = []
-    for index, (view, image) in enumerate(zip(VIEW_LABELS, (left, front, right))):
+    for index, (view, image) in enumerate(zip(VIEW_LABELS, normalized)):
         filename = f"{index + 1}-{view.lower()}.jpg"
         (output_dir / filename).write_bytes(image)
         views.append(
             {
                 "view": view,
-                "url": (f"/media/uploads/virtual-try-on/{user.id}/{request_id}/{filename}"),
+                "url": (f"/media/uploads/virtual-try-on/{user_id}/{request_id}/{filename}"),
             }
         )
+
+    (output_dir / "metadata.json").write_text(
+        json.dumps(
+            {
+                "product_ids": [product.id for product in products],
+                "model_preset": body.model_preset,
+            }
+        ),
+        encoding="utf-8",
+    )
 
     return {
         "request_id": request_id,
         "views": views,
         "background": body.background,
         "product_ids": [product.id for product in products],
+        "regions": [],
+        "segmentation_status": "UNAVAILABLE",
         "disclaimer": ("AI-generated preview. Verify garment fit and fine details before use."),
     }
+
+
+async def generate_virtual_try_on(db: Session, user: User, body: VirtualTryOnInput) -> dict:
+    from app.modules.vell.providers import GeminiTryOnProvider
+
+    products, references = prepare_try_on(db, body)
+    images = await GeminiTryOnProvider().generate(body, products, references)
+    return persist_try_on(user.id, body, products, images, uid())

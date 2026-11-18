@@ -28,6 +28,9 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_IMAGE_MODEL: ${GEMINI_IMAGE_MODEL:-gemini-3.1-flash-image}
+      VELL_SEGMENTATION_URL: ${VELL_SEGMENTATION_URL:-}
+      VELL_SEGMENTATION_TOKEN: ${VELL_SEGMENTATION_TOKEN:-}
+      VELL_JOB_TIMEOUT_SECONDS: ${VELL_JOB_TIMEOUT_SECONDS:-540}
     volumes:
       - media_data:/app/media
     depends_on:
@@ -50,6 +53,32 @@ services:
       postgres:
         condition: service_healthy
     restart: "no"
+  vell-worker:
+    build:
+      context: apps/api
+    environment: *api-environment
+    command: ["python", "-m", "app.modules.vell.worker"]
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  vell-segmentation-worker:
+    build:
+      context: apps/api
+    environment: *api-environment
+    command: ["python", "-m", "app.modules.vell.segmentation"]
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
   web:
     build:
       context: apps/web

@@ -52,6 +52,31 @@ class User(Identity, Base):
     )
 
 
+class TryOnJob(Identity, Base):
+    __tablename__ = "vell_try_on_jobs"
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    idempotency_key: Mapped[str] = mapped_column(String(36))
+    request_hash: Mapped[str] = mapped_column(String(64))
+    provider: Mapped[str] = mapped_column(String(40))
+    status: Mapped[str] = mapped_column(String(16), default="QUEUED")
+    payload: Mapped[dict] = mapped_column(J)
+    result: Mapped[dict | None] = mapped_column(J, nullable=True)
+    error: Mapped[dict | None] = mapped_column(J, nullable=True)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    lease_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    worker_token: Mapped[str | None] = mapped_column(String(36))
+    __table_args__ = (
+        UniqueConstraint("user_id", "idempotency_key", name="uq_vell_job_idempotency"),
+        CheckConstraint(
+            "status IN ('QUEUED','RUNNING','SUCCEEDED','FAILED','CANCELLED')",
+            name="ck_vell_job_status",
+        ),
+        CheckConstraint("status != 'SUCCEEDED' OR result IS NOT NULL", name="ck_vell_job_result"),
+        Index("ix_vell_job_queue", "status", "created_at"),
+    )
+
+
 class AuthSession(Identity, Base):
     __tablename__ = "auth_sessions"
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)

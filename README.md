@@ -2,6 +2,16 @@
 
 MVP full-stack từ hai tài liệu Phase 1: **Next.js 16 + React/TypeScript → FastAPI → PostgreSQL**, SQLAlchemy/Alembic, Docker Compose. UI tiếng Việt theo hướng fashion editorial, accent xanh lime, có desktop/mobile.
 
+## VELL Fashion Studio
+
+TASK 01: [tích hợp namespace, health/config/capabilities và dependency của Collection](docs/runbooks/vell-project-integration.md).
+
+Backend job API và worker mặc thử AI: [request/response, vận hành và kiểm thử](docs/runbooks/vell-try-on-jobs.md).
+
+Mở **`/vell`** từ mục VELL trong điều hướng; `/shop` cũ cũng chuyển tới VELL. Catalog sản phẩm chuyển sang `/catalog`, còn liên kết chi tiết `/shop/{productId}` được giữ nguyên. Trang studio toàn màn hình có 8 outfit minh họa, bộ lọc tình huống, người mẫu và nền showroom riêng, danh sách món đồ, Undo/Redo, Randomize, Reset và giao diện mobile dạng bottom sheet. Ảnh minh họa không có liên kết mua hàng.
+
+Chọn **Sản phẩm thật** sau khi đăng nhập để tạo outfit bằng bộ quy tắc gợi ý và catalog công khai. Chỉ outfit đủ sản phẩm `REAL`, ảnh upload và URL listing Shopee đúng định dạng mới hiển thị. Sau khi đồng ý gửi ảnh sản phẩm đến dịch vụ AI, chọn **Tạo ảnh mặc thử**; API dùng ảnh người mẫu VELL làm tham chiếu danh tính. **Save to Library** lưu outfit và, nếu đã tạo, ảnh mặc thử vào lookbook. Xem [hướng dẫn và giới hạn VELL](docs/runbooks/vell.md).
+
 ## Chạy bằng Docker
 
 Yêu cầu Docker Desktop/Engine có Compose v2; với WSL cần bật integration cho distro hiện tại.

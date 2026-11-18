@@ -118,6 +118,8 @@ class VirtualTryOnInput(Input):
     hips_cm: int | None = Field(default=None, ge=50, le=200)
     background: Literal["SCHOOL", "CAFE", "PARTY", "TRAVEL", "OFFICE", "STUDIO"]
     consent_external_processing: Literal[True]
+    model_preset: Literal["VELL_SEO_YEON"] | None = None
+    identity_reference: bool = False
 
 
 class SelectedProduct(Input):
@@ -139,6 +141,7 @@ class ReplacementInput(Input):
 class SaveOutfit(Input):
     look_id: UUID
     name: str | None = Field(default=None, min_length=1, max_length=120)
+    try_on_request_id: UUID | None = None
 
 
 class OutfitUpdate(Input):
