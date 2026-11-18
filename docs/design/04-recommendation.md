@@ -68,7 +68,7 @@ Hard constraints:
 4. Effective variant price ≤ tổng budget; sau khi ghép phải tiếp tục kiểm tra residual budget.
 5. Nếu user chọn size cho slot, variant phải khớp size; thiếu size không tự gán là phù hợp. Không bắt size nếu dữ liệu chưa hỗ trợ.
 
-Style, màu, occasion là soft preferences trong baseline. Nếu tất cả tag thiếu, vẫn có candidate category/gender/price đúng; reasons không được tuyên bố khớp tag không có. Có thể thêm strict color policy sau nhưng không tự biến màu thành hard constraint ở v1.
+Style, màu, occasion là ưu tiên xếp hạng trong baseline, không phải hard filter: nếu collection thiếu tag hoặc không có màu phù hợp, vẫn trả candidate hợp lệ tốt nhất thay vì tạo kết quả rỗng. Style và occasion luôn tham gia preference fit; màu chỉ tham gia khi user chọn màu. Candidate vẫn phải qua các hard constraint về sản phẩm active/public, category, gender, stock và ngân sách. Reasons không được tuyên bố khớp tag không có.
 
 Mỗi product chỉ có một representative variant trong xếp hạng: rẻ nhất khả dụng phù hợp size, tie-break SKU rồi variant_id. User được chọn variant khác qua revalidation. Không trả 5 size của cùng áo thành Top-5 khác nhau.
 
@@ -78,22 +78,22 @@ Giữ trọng số blueprint để có baseline dễ đối chiếu:
 
 ```text
 score = 0.30*category_match
-      + 0.25*style_match
-      + 0.15*color_match
-      + 0.15*occasion_match
-      + 0.15*budget_fit
+      + 0.65*preference_fit
+      + 0.05*budget_fit
+
+preference_fit = mean(style_match, occasion_match[, color_match nếu user chọn màu])
 
 category_match = 1 cho candidate hợp lệ
 style_match = 1 nếu đúng tag requested style, ngược lại 0
 color_match = 1 nếu đúng preferred color;
               0.7 nếu cùng family ưu tiên;
               0 nếu khác;
-              1 nếu user không ưu tiên màu
+              không tham gia preference_fit nếu user không ưu tiên màu
 occasion_match = 1 nếu có requested occasion tag, ngược lại 0
 budget_fit = clamp(1 - effective_price / total_budget, 0, 1)
 ```
 
-Budget >0 bắt buộc. Category là hard filter nên 0.30 là hằng số với mọi candidate; giữ để tương thích ví dụ tài liệu, không mô tả nó như tín hiệu phân biệt. Budget fit dùng tổng budget, không tạo giới hạn slot cố định có thể loại nhầm outfit khả thi. Preference budget_min là soft hint, không ép user tiêu ít nhất số đó.
+Budget >0 bắt buộc. Category là hard filter nên 0.30 là hằng số với mọi candidate, không phải tín hiệu phân biệt. Preference fit được ưu tiên hơn budget fit để lựa chọn màu/phong cách/bối cảnh không bị giá rẻ lấn át; budget vẫn là hard cap, còn budget fit chỉ dùng tie-break mềm. Budget fit dùng tổng budget, không tạo giới hạn slot cố định có thể loại nhầm outfit khả thi. Preference budget_min là soft hint, không ép user tiêu ít nhất số đó.
 
 Sort `score DESC, effective_price ASC, product_code ASC, variant_id ASC`; không random. Tính bằng Decimal, chỉ round ở serialize/display. Return score_components và các reason có evidence: CATEGORY_MATCH, STYLE_MATCH, COLOR_MATCH/COLOR_FAMILY_MATCH, OCCASION_MATCH, WITHIN_BUDGET. Không nhận text lý do do client gửi.
 

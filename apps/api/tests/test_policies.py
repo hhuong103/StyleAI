@@ -7,7 +7,7 @@ from PIL import Image
 from sqlalchemy import select
 from test_api import mark_test_catalog_real, mark_test_product_real, plan_and_generate
 
-from app.db.models import Category, Color, Product, User, Variant
+from app.db.models import Category, Color, Product, ProductOccasion, ProductStyle, User, Variant
 from app.modules.recommendations.engine import rank_products
 from app.modules.stylist.taxonomy import OCCASIONS, RULES, STYLES
 
@@ -86,6 +86,74 @@ def test_missing_tags_score_without_false_explanation(db):
     codes = {r["code"] for r in ranked[0]["reasons"]}
     assert not codes & {"STYLE_MATCH", "OCCASION_MATCH", "COLOR_MATCH"}
     assert 0 <= ranked[0]["score"] <= 1
+    assert ranked[0]["score_components"]["preference_fit"] == 0
+
+
+@pytest.mark.parametrize("preference", ["style", "occasion", "color"])
+def test_selected_preferences_outrank_cheaper_unmatched_products(db, preference):
+    products = list(
+        db.scalars(
+            select(Product)
+            .where(Product.category_code == "SHIRT")
+            .order_by(Product.product_code)
+            .limit(2)
+        )
+    )
+    assert len(products) == 2
+    preferred, cheaper = products
+    for product in products:
+        product.styles = []
+        product.occasions = []
+        for variant in product.variants:
+            variant.price_override_vnd = None
+    preferred.base_price_vnd = 1_500_000
+    cheaper.base_price_vnd = 0
+    context = {
+        "style": "MINIMAL",
+        "occasion": "INTERVIEW",
+        "preferred_colors": ["RED"] if preference == "color" else [],
+        "budget_max_vnd": 1_500_000,
+    }
+
+    if preference == "style":
+        preferred.styles = [ProductStyle(style_code="MINIMAL")]
+    elif preference == "occasion":
+        preferred.occasions = [ProductOccasion(occasion_code="INTERVIEW")]
+    else:
+        preferred.color_code = "RED"
+        cheaper.color_code = "WHITE"
+
+    families = {color.code: color.family for color in db.scalars(select(Color))}
+    ranked = rank_products(products, {"slot_key": "top", "role": "TOP"}, context, families)
+
+    assert ranked[0]["product_id"] == preferred.id
+    assert (
+        ranked[0]["score_components"]["preference_fit"]
+        > ranked[1]["score_components"]["preference_fit"]
+    )
+
+
+def test_same_color_family_counts_as_partial_preference_match(db):
+    product = db.scalar(select(Product).where(Product.category_code == "SHIRT"))
+    product.styles, product.occasions = [], []
+    product.color_code = "PINK"
+    families = {color.code: color.family for color in db.scalars(select(Color))}
+
+    ranked = rank_products(
+        [product],
+        {"slot_key": "top", "role": "TOP"},
+        {
+            "style": "MINIMAL",
+            "occasion": "INTERVIEW",
+            "preferred_colors": ["RED"],
+            "budget_max_vnd": 1_500_000,
+        },
+        families,
+    )
+
+    assert ranked[0]["score_components"]["color_match"] == 0.7
+    assert ranked[0]["score_components"]["preference_fit"] == pytest.approx(0.7 / 3)
+    assert any(reason["code"] == "COLOR_FAMILY_MATCH" for reason in ranked[0]["reasons"])
 
 
 def test_replacement_cannot_exceed_total_budget(client, signed_in, db):
@@ -214,6 +282,16 @@ def test_real_product_requires_original_upload_and_exact_shopee_listing(client, 
     response = client.post("/api/v1/products", json=body)
     assert response.status_code == 422
     assert response.json()["error"]["code"] == "INVALID_PRODUCT_URL"
+
+    body["product_url"] = (
+        "https://www.shopee.vn/example-product-i.123456789.12345678901?sp_atk=abc&utm_source=share"
+    )
+    response = client.post("/api/v1/products", json=body)
+    assert response.status_code == 201, response.text
+    assert (
+        response.json()["data"]["product_url"]
+        == "https://shopee.vn/example-product-i.123456789.12345678901"
+    )
 
 
 def test_taxonomy_cycle_rule_publish_and_image_validation(client, signed_in, db):

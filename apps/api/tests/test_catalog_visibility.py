@@ -7,6 +7,7 @@ from app.core.errors import AppError
 from app.db.models import Base, Category, Color, Product, ProductImage, Variant
 from app.modules.catalog.repository import (
     ProductRepository,
+    canonical_shopee_product_url,
     is_public_product_snapshot,
     is_shopee_product_url,
 )
@@ -97,14 +98,25 @@ def test_catalog_detail_is_available_for_demo_products(catalog_db):
     [
         ("https://shopee.vn/shirt-i.123456789.12345678901", True),
         ("https://www.shopee.vn/shirt-i.123456789.12345678901", True),
+        ("https://shopee.vn/shirt-i.123456789.12345678901?sp_atk=abc&utm_source=share", True),
+        ("https://www.shopee.vn/shirt-i.123456789.12345678901#share", True),
+        ("HTTPS://SHOPEE.VN/shirt-i.123456789.12345678901?utm_source=share", True),
         ("https://shopee.vn/search?keyword=shirt", False),
         ("https://example.com/shirt-i.123456789.12345678901", False),
         ("http://shopee.vn/shirt-i.123456789.12345678901", False),
+        ("https://user@shopee.vn/shirt-i.123456789.12345678901", False),
+        ("https://shopee.vn:444/shirt-i.123456789.12345678901", False),
         ("https://[invalid/shirt-i.123456789.12345678901", False),
     ],
 )
-def test_only_exact_shopee_product_urls_are_valid(url, valid):
+def test_shopee_product_urls_require_https_direct_item_path(url, valid):
     assert is_shopee_product_url(url) is valid
+
+
+def test_share_url_is_stored_as_canonical_product_url():
+    url = "https://www.shopee.vn/shirt-i.123456789.12345678901?sp_atk=abc#share"
+
+    assert canonical_shopee_product_url(url) == "https://shopee.vn/shirt-i.123456789.12345678901"
 
 
 def test_old_demo_snapshots_are_not_public():

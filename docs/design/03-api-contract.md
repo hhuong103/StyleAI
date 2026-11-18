@@ -147,7 +147,7 @@ LookSet response data gồm:
 {
   "recommendation_id": "20000000-0000-4000-8000-000000000001",
   "status": "COMPLETE",
-  "algorithm_version": "weighted-v1+composer-v1",
+  "algorithm_version": "preference-first-v2+composer-v1+waitlist-v1",
   "currency": "VND",
   "budget_max_vnd": 1500000,
   "slot_results": [],

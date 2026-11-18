@@ -13,7 +13,7 @@ from app.db.models import (
     Style,
     Variant,
 )
-from app.modules.catalog.repository import is_shopee_product_url
+from app.modules.catalog.repository import canonical_shopee_product_url
 from app.modules.profiles.router import validate_codes
 
 
@@ -28,6 +28,7 @@ def safe_media_path(key):
 def validate_product(db, body):
     if not body.image_key.startswith(("demo/", "uploads/")):
         raise AppError(422, "INVALID_IMAGE", "Image key phải thuộc thư mục ảnh public đã kiểm tra.")
+    product_url = body.product_url
     if body.price_source == "REAL":
         if not body.image_key.startswith("uploads/"):
             raise AppError(
@@ -35,11 +36,12 @@ def validate_product(db, body):
                 "REAL_PRODUCT_IMAGE_REQUIRED",
                 "Sản phẩm thật phải dùng ảnh sản phẩm đã tải lên, không dùng ảnh demo.",
             )
-        if not is_shopee_product_url(body.product_url):
+        product_url = canonical_shopee_product_url(product_url)
+        if not product_url:
             raise AppError(
                 422,
                 "INVALID_PRODUCT_URL",
-                "Sản phẩm thật cần liên kết Shopee chính xác dạng https://shopee.vn/...-i.shop_id.item_id.",
+                "Sản phẩm thật cần link HTTPS trực tiếp dạng https://shopee.vn/...-i.shop_id.item_id. Tham số chia sẻ sẽ được tự loại.",
             )
     category = db.get(Category, body.category_code)
     if (
@@ -52,10 +54,11 @@ def validate_product(db, body):
     validate_codes(db, Style, body.styles)
     validate_codes(db, Occasion, body.occasions)
     safe_media_path(body.image_key)
+    return product_url
 
 
 def write_product(db, body, product=None):
-    validate_product(db, body)
+    product_url = validate_product(db, body)
     existing = db.scalar(select(Product).where(Product.product_code == body.product_code))
     if existing and (not product or existing.id != product.id):
         raise AppError(409, "PRODUCT_CODE_EXISTS", "Mã sản phẩm đã tồn tại.")
@@ -75,7 +78,7 @@ def write_product(db, body, product=None):
         "product_url",
         "price_source",
     ]:
-        setattr(product, key, getattr(body, key))
+        setattr(product, key, product_url if key == "product_url" else getattr(body, key))
     if body.price_source == "REAL":
         product.source = "manual"
     db.flush()

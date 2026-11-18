@@ -2,20 +2,18 @@ from decimal import Decimal
 
 from app.modules.catalog.repository import price_of, product_data
 
-ALGORITHM_VERSION = "weighted-v1+composer-v1+waitlist-v1"
+ALGORITHM_VERSION = "preference-first-v2+composer-v1+waitlist-v1"
 
 
 def score_candidate(product, variant, slot, context, families):
     price = price_of(product, variant)
-    preferred = context.get("preferred_colors", [])
+    preferred = context.get("preferred_colors") or []
+    product_family = families.get(product.color_code)
+    preferred_families = {families.get(color) for color in preferred}
     color = (
         1
         if not preferred or product.color_code in preferred
-        else (
-            0.7
-            if any(families.get(c) == families.get(product.color_code) for c in preferred)
-            else 0
-        )
+        else (0.7 if product_family is not None and product_family in preferred_families else 0)
     )
     components = {
         "category_match": 1,
@@ -24,14 +22,20 @@ def score_candidate(product, variant, slot, context, families):
         "occasion_match": int(context["occasion"] in [o.occasion_code for o in product.occasions]),
         "budget_fit": max(0, float(1 - Decimal(price) / Decimal(context["budget_max_vnd"]))),
     }
+    preference_components = [
+        Decimal(str(components["style_match"])),
+        Decimal(str(components["occasion_match"])),
+    ]
+    if preferred:
+        preference_components.append(Decimal(str(color)))
+    preference_fit = sum(preference_components) / len(preference_components)
+    components["preference_fit"] = float(preference_fit)
     weights = {
         "category_match": ".30",
-        "style_match": ".25",
-        "color_match": ".15",
-        "occasion_match": ".15",
-        "budget_fit": ".15",
+        "preference_fit": ".65",
+        "budget_fit": ".05",
     }
-    score = sum(Decimal(weights[k]) * Decimal(str(v)) for k, v in components.items())
+    score = sum(Decimal(weight) * Decimal(str(components[key])) for key, weight in weights.items())
     reasons = [
         {"code": "CATEGORY_MATCH", "facts": {"category": product.category_code}},
         {

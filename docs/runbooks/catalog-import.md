@@ -1,6 +1,6 @@
 # Catalog thật và import
 
-Đăng nhập bằng ADMIN → Products → Import catalog. Dùng JSON array hoặc CSV UTF-8, tối đa 10 MB và 5.000 sản phẩm mỗi lần. Upload ảnh gốc của sản phẩm JPEG/PNG/WebP qua editor hoặc `/admin/uploads/images` trước; dùng `storage_key` nhận về trong `image_key`. API không tải arbitrary remote URL. Với Shopee, chỉ nhập URL sản phẩm cụ thể (không phải URL tìm kiếm), giá và tồn kho đã kiểm tra; không tạo ảnh sản phẩm bằng AI hoặc dùng ảnh minh họa.
+Đăng nhập bằng ADMIN → Products → Import catalog. Dùng JSON array hoặc CSV UTF-8, tối đa 10 MB và 5.000 sản phẩm mỗi lần. Upload ảnh gốc của sản phẩm JPEG/PNG/WebP qua editor hoặc `/admin/uploads/images` trước; dùng `storage_key` nhận về trong `image_key`. API không tải arbitrary remote URL. Với Shopee, nhập URL sản phẩm cụ thể có dạng `https://shopee.vn/...-i.shop_id.item_id` (không phải URL tìm kiếm); link chia sẻ có tham số tracking được chấp nhận và tự chuẩn hóa về URL gốc. Giá và tồn kho phải được kiểm tra; không tạo ảnh sản phẩm bằng AI hoặc dùng ảnh minh họa.
 
 Ví dụ một record (thay `image_key` bằng ảnh đã upload):
 

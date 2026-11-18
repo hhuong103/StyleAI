@@ -2,7 +2,7 @@
   "data": {
     "recommendation_id": "20000000-0000-4000-8000-000000000001",
     "status": "COMPLETE",
-    "algorithm_version": "weighted-v1+composer-v1",
+    "algorithm_version": "preference-first-v2+composer-v1+waitlist-v1",
     "currency": "VND",
     "budget_max_vnd": 1500000,
     "slot_results": [
@@ -18,12 +18,13 @@
             "product_id": "50000000-0000-4000-8000-000000000001",
             "variant_id": "30000000-0000-4000-8000-000000000001",
             "rank": 1,
-            "score": 0.9751,
+            "score": 0.9917,
             "score_components": {
               "category_match": 1,
               "style_match": 1,
               "color_match": 1,
               "occasion_match": 1,
+              "preference_fit": 1,
               "budget_fit": 0.834
             },
             "reasons": [
@@ -89,12 +90,13 @@
             "product_id": "50000000-0000-4000-8000-000000000002",
             "variant_id": "30000000-0000-4000-8000-000000000002",
             "rank": 1,
-            "score": 0.9301,
+            "score": 0.9767,
             "score_components": {
               "category_match": 1,
               "style_match": 1,
               "color_match": 1,
               "occasion_match": 1,
+              "preference_fit": 1,
               "budget_fit": 0.534
             },
             "reasons": [
@@ -160,12 +162,13 @@
             "product_id": "50000000-0000-4000-8000-000000000003",
             "variant_id": "30000000-0000-4000-8000-000000000003",
             "rank": 1,
-            "score": 0.9651,
+            "score": 0.988367,
             "score_components": {
               "category_match": 1,
               "style_match": 1,
               "color_match": 1,
               "occasion_match": 1,
+              "preference_fit": 1,
               "budget_fit": 0.767333
             },
             "reasons": [
@@ -231,12 +234,13 @@
             "product_id": "50000000-0000-4000-8000-000000000004",
             "variant_id": "30000000-0000-4000-8000-000000000004",
             "rank": 1,
-            "score": 0.9801,
+            "score": 0.993367,
             "score_components": {
               "category_match": 1,
               "style_match": 1,
               "color_match": 1,
               "occasion_match": 1,
+              "preference_fit": 1,
               "budget_fit": 0.867333
             },
             "reasons": [
@@ -298,7 +302,7 @@
         "name": "The Clean Edit",
         "revision": 1,
         "source_look_id": null,
-        "score": 0.9626,
+        "score": 0.987534,
         "total_price_vnd": 1496000,
         "budget_status": "WITHIN_BUDGET",
         "reasons": [
@@ -371,7 +375,7 @@
             "size_information_available": false,
             "price_vnd": 249000,
             "price_source": "DEMO",
-            "score": 0.9751,
+            "score": 0.9917,
             "reasons": [
               {
                 "code": "CATEGORY_MATCH",
@@ -420,7 +424,7 @@
             "size_information_available": false,
             "price_vnd": 699000,
             "price_source": "DEMO",
-            "score": 0.9301,
+            "score": 0.9767,
             "reasons": [
               {
                 "code": "CATEGORY_MATCH",
@@ -469,7 +473,7 @@
             "size_information_available": false,
             "price_vnd": 349000,
             "price_source": "DEMO",
-            "score": 0.9651,
+            "score": 0.988367,
             "reasons": [
               {
                 "code": "CATEGORY_MATCH",
@@ -518,7 +522,7 @@
             "size_information_available": false,
             "price_vnd": 199000,
             "price_source": "DEMO",
-            "score": 0.9801,
+            "score": 0.993367,
             "reasons": [
               {
                 "code": "CATEGORY_MATCH",

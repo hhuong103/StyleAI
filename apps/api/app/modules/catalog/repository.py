@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 
 from sqlalchemy import func, or_, select
 
@@ -56,20 +56,31 @@ def product_data(product):
     }
 
 
-def is_shopee_product_url(value):
+def canonical_shopee_product_url(value):
     if not isinstance(value, str):
-        return False
+        return None
     try:
-        parsed_url = urlsplit(value)
+        parsed_url = urlsplit(value.strip())
+        hostname = parsed_url.hostname
+        port = parsed_url.port
     except ValueError:
-        return False
-    return (
-        parsed_url.scheme == "https"
-        and parsed_url.netloc in {"shopee.vn", "www.shopee.vn"}
-        and re.search(r"-i\.\d+\.\d+$", parsed_url.path) is not None
-        and not parsed_url.query
-        and not parsed_url.fragment
-    )
+        return None
+    host = hostname.lower() if hostname else None
+    if (
+        parsed_url.scheme.lower() != "https"
+        or host not in {"shopee.vn", "www.shopee.vn"}
+        or parsed_url.username is not None
+        or parsed_url.password is not None
+        or port not in (None, 443)
+        or parsed_url.netloc.lower() not in {host, f"{host}:443"}
+        or re.fullmatch(r"/[^/]+-i\.\d+\.\d+", parsed_url.path) is None
+    ):
+        return None
+    return urlunsplit(("https", "shopee.vn", parsed_url.path, "", ""))
+
+
+def is_shopee_product_url(value):
+    return canonical_shopee_product_url(value) is not None
 
 
 def is_public_product_snapshot(item):
